@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://c82cqueavh1mq"]
+
+[ext_resource type="Texture2D" uid="uid://doby08u4umrfm" path="res://icon.svg" id="1_qxurq"]
+
+[sub_resource type="MeshLibrary" id="MeshLibrary_3mdbl"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="GridMap" type="GridMap" parent="."]
+mesh_library = SubResource("MeshLibrary_3mdbl")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+texture = ExtResource("1_qxurq")
