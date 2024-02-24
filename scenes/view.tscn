@@ -1,17 +1,33 @@
-[gd_scene load_steps=8 format=3 uid="uid://c82cqueavh1mq"]
+[gd_scene load_steps=12 format=3 uid="uid://c82cqueavh1mq"]
 
 [ext_resource type="Script" path="res://scenes/ViewScene.cs" id="1_iwres"]
 [ext_resource type="Texture2D" uid="uid://doby08u4umrfm" path="res://icons/icon.svg" id="1_qxurq"]
 [ext_resource type="Environment" uid="uid://c7hvhnwnxbxc0" path="res://environments/view_environment.tres" id="2_0at1c"]
 [ext_resource type="Script" path="res://cameras/SpectatorCamera.cs" id="3_ba1y1"]
+[ext_resource type="Shader" path="res://shaders/hexgrid.gdshader" id="4_m4n71"]
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_bthwb"]
 dof_blur_near_distance = 1.2
 
-[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_42tn2"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_aytjf"]
+render_priority = 0
+shader = ExtResource("4_m4n71")
+shader_parameter/size = Vector2(32, 28)
 
-[sub_resource type="BoxMesh" id="BoxMesh_jnukx"]
-material = SubResource("ORMMaterial3D_42tn2")
+[sub_resource type="QuadMesh" id="QuadMesh_4anga"]
+lightmap_size_hint = Vector2i(12, 12)
+material = SubResource("ShaderMaterial_aytjf")
+flip_faces = true
+size = Vector2(2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_l0drb"]
+
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_xrvm3"]
+albedo_texture = ExtResource("1_qxurq")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_e0dol"]
+material = SubResource("ORMMaterial3D_xrvm3")
+size = Vector2(10, 10)
 
 [node name="ViewScene" type="Node3D"]
 script = ExtResource("1_iwres")
@@ -24,10 +40,14 @@ camera_attributes = SubResource("CameraAttributesPractical_bthwb")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.237255, 2.20909, 1.71842)
 script = ExtResource("3_ba1y1")
 
-[node name="Sprite3D" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
-texture = ExtResource("1_qxurq")
+[node name="PostProcessingMesh" type="MeshInstance3D" parent="SpectatorCamera"]
+extra_cull_margin = 16384.0
+mesh = SubResource("QuadMesh_4anga")
+skeleton = NodePath("../..")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="Cube" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000500202, 0.627369, -0.000655413)
-mesh = SubResource("BoxMesh_jnukx")
+mesh = SubResource("BoxMesh_l0drb")
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_e0dol")
