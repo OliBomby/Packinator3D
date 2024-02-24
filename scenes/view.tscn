@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://c82cqueavh1mq"]
+[gd_scene load_steps=18 format=3 uid="uid://c82cqueavh1mq"]
 
 [ext_resource type="Script" path="res://scenes/ViewScene.cs" id="1_iwres"]
 [ext_resource type="Environment" uid="uid://c7hvhnwnxbxc0" path="res://environments/view_environment.tres" id="2_0at1c"]
@@ -6,6 +6,7 @@
 [ext_resource type="VoxelGIData" uid="uid://blub5fjgyakdb" path="res://scenes/view.VoxelGI_data.res" id="3_xv0y1"]
 [ext_resource type="Shader" path="res://shaders/hexgrid.gdshader" id="4_m4n71"]
 [ext_resource type="Shader" path="res://shaders/square_grid.gdshader" id="6_4xd4x"]
+[ext_resource type="Script" path="res://scenes/Cube.cs" id="6_igvm3"]
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_bthwb"]
 dof_blur_near_distance = 1.2
@@ -73,8 +74,10 @@ mesh = SubResource("QuadMesh_4anga")
 skeleton = NodePath("../..")
 
 [node name="Cube" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000500202, 0.627369, -0.000655413)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000500202, 0.834049, -0.000655413)
+gi_mode = 2
 mesh = SubResource("BoxMesh_l0drb")
+script = ExtResource("6_igvm3")
 
 [node name="Torus" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.78372, 1.25474, 0.740104)
