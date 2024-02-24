@@ -66,6 +66,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.237255, 2.20909, 1.71842)
 script = ExtResource("3_ba1y1")
 
 [node name="PostProcessingMesh" type="MeshInstance3D" parent="SpectatorCamera"]
+visible = false
 extra_cull_margin = 16384.0
 gi_mode = 0
 mesh = SubResource("QuadMesh_4anga")
