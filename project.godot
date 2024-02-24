@@ -11,9 +11,9 @@ config_version=5
 [application]
 
 config/name="BlockPuzzleViewerSolverEditor"
-run/main_scene="res://node_3d.tscn"
+run/main_scene="res://scenes/view.tscn"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="res://Resources/icon.svg"
 
 [dotnet]
 

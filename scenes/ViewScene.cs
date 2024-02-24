@@ -1,7 +1,9 @@
-using Godot;
 using System;
+using Godot;
 
-public partial class node_3d : Node3D
+namespace BlockPuzzleViewerSolverEditor.scenes;
+
+public partial class ViewScene : Node3D
 {
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()

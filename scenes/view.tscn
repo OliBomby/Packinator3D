@@ -1,11 +1,11 @@
 [gd_scene load_steps=4 format=3 uid="uid://c82cqueavh1mq"]
 
-[ext_resource type="Script" path="res://node_3d.cs" id="1_n5wwb"]
-[ext_resource type="Texture2D" uid="uid://doby08u4umrfm" path="res://icon.svg" id="1_qxurq"]
-[ext_resource type="Script" path="res://SpectatorCamera.cs" id="3_ba1y1"]
+[ext_resource type="Script" path="res://scenes/ViewScene.cs" id="1_iwres"]
+[ext_resource type="Texture2D" uid="uid://doby08u4umrfm" path="res://icons/icon.svg" id="1_qxurq"]
+[ext_resource type="Script" path="res://cameras/SpectatorCamera.cs" id="3_ba1y1"]
 
 [node name="Node3D" type="Node3D"]
-script = ExtResource("1_n5wwb")
+script = ExtResource("1_iwres")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
