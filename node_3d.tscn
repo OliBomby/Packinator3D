@@ -1,13 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://c82cqueavh1mq"]
+[gd_scene load_steps=4 format=3 uid="uid://c82cqueavh1mq"]
 
 [ext_resource type="Script" path="res://node_3d.cs" id="1_n5wwb"]
 [ext_resource type="Texture2D" uid="uid://doby08u4umrfm" path="res://icon.svg" id="1_qxurq"]
+[ext_resource type="Script" path="res://SpectatorCamera.cs" id="3_ba1y1"]
 
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_n5wwb")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(12.15, 0, 0, 0, -5.31093e-07, 12.15, 0, -12.15, -5.31093e-07, 0, 0, 0)
 texture = ExtResource("1_qxurq")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(0.996064, 0, -0.0886335, 0.00547734, 0.998089, 0.0615544, 0.0884641, -0.0617976, 0.994161, -0.237255, 0.483159, 1.71842)
+script = ExtResource("3_ba1y1")
