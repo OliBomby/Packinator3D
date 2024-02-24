@@ -12,5 +12,5 @@ transform = Transform3D(12.15, 0, 0, 0, -5.31093e-07, 12.15, 0, -12.15, -5.31093
 texture = ExtResource("1_qxurq")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.996064, 0, -0.0886335, 0.00547734, 0.998089, 0.0615544, 0.0884641, -0.0617976, 0.994161, -0.237255, 0.483159, 1.71842)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.237255, 2.20909, 1.71842)
 script = ExtResource("3_ba1y1")
