@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://c82cqueavh1mq"]
+[gd_scene load_steps=22 format=3 uid="uid://c82cqueavh1mq"]
 
 [ext_resource type="Script" path="res://scenes/ViewScene.cs" id="1_iwres"]
 [ext_resource type="Environment" uid="uid://c7hvhnwnxbxc0" path="res://environments/view_environment.tres" id="2_0at1c"]
@@ -7,6 +7,8 @@
 [ext_resource type="Shader" path="res://shaders/hexgrid.gdshader" id="4_m4n71"]
 [ext_resource type="Shader" path="res://shaders/square_grid.gdshader" id="6_4xd4x"]
 [ext_resource type="Script" path="res://scenes/Cube.cs" id="6_igvm3"]
+[ext_resource type="Script" path="res://scenes/PuzzlePiece.cs" id="8_bjrle"]
+[ext_resource type="Script" path="res://scenes/Puzzle.cs" id="8_h4vnk"]
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_bthwb"]
 dof_blur_near_distance = 1.2
@@ -51,6 +53,13 @@ roughness = 0.2
 material = SubResource("StandardMaterial3D_bq6ap")
 size = Vector2(11, 11)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_72wpv"]
+albedo_color = Color(1, 0.188235, 1, 1)
+metallic_specular = 0.0
+emission = Color(0.45098, 0.678431, 0.686275, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gyqoh"]
+
 [node name="ViewScene" type="Node3D"]
 script = ExtResource("1_iwres")
 
@@ -75,12 +84,14 @@ skeleton = NodePath("../..")
 
 [node name="Cube" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000500202, 0.834049, -0.000655413)
+visible = false
 gi_mode = 2
 mesh = SubResource("BoxMesh_l0drb")
 script = ExtResource("6_igvm3")
 
 [node name="Torus" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.78372, 1.25474, 0.740104)
+visible = false
 mesh = SubResource("TorusMesh_vb7n2")
 skeleton = NodePath("../Cube")
 
@@ -89,3 +100,15 @@ mesh = SubResource("PlaneMesh_e0dol")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.88371, 0.271481, 1.22855)
+
+[node name="Puzzle" type="Node3D" parent="."]
+script = ExtResource("8_h4vnk")
+
+[node name="PuzzlePiece" type="Node3D" parent="Puzzle"]
+script = ExtResource("8_bjrle")
+
+[node name="Voxel" type="MeshInstance3D" parent="Puzzle/PuzzlePiece"]
+visible = false
+material_override = SubResource("StandardMaterial3D_72wpv")
+mesh = SubResource("BoxMesh_gyqoh")
+skeleton = NodePath("../../..")
