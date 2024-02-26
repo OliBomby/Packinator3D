@@ -106,6 +106,7 @@ script = ExtResource("8_h4vnk")
 
 [node name="PuzzlePiece" type="Node3D" parent="Puzzle"]
 script = ExtResource("8_bjrle")
+Color = Color(1, 0, 0, 1)
 
 [node name="Voxel" type="MeshInstance3D" parent="Puzzle/PuzzlePiece"]
 visible = false
