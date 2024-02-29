@@ -9,7 +9,12 @@ public partial class Cube : MeshInstance3D
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready() {
-		Mesh = new BoxMesh { Material = new StandardMaterial3D { AlbedoColor = Color }};
+		Mesh = new BoxMesh { Material = new StandardMaterial3D {
+			AlbedoColor = Color,
+			DistanceFadeMode = BaseMaterial3D.DistanceFadeModeEnum.PixelDither,
+			DistanceFadeMaxDistance = 1,
+			DistanceFadeMinDistance = 0.3f,
+		}};
 		GIMode = GIModeEnum.Dynamic;
 	}
 

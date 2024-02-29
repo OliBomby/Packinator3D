@@ -1,10 +1,11 @@
-[gd_scene load_steps=19 format=3 uid="uid://c82cqueavh1mq"]
+[gd_scene load_steps=22 format=3 uid="uid://c82cqueavh1mq"]
 
 [ext_resource type="Script" path="res://scenes/ViewScene.cs" id="1_iwres"]
 [ext_resource type="Environment" uid="uid://c7hvhnwnxbxc0" path="res://environments/view_environment.tres" id="2_0at1c"]
 [ext_resource type="Script" path="res://cameras/SpectatorCamera.cs" id="3_ba1y1"]
 [ext_resource type="VoxelGIData" uid="uid://blub5fjgyakdb" path="res://scenes/view.VoxelGI_data.res" id="3_xv0y1"]
 [ext_resource type="Shader" path="res://shaders/hexgrid.gdshader" id="4_m4n71"]
+[ext_resource type="Shader" path="res://shaders/outline.gdshader" id="6_0enan"]
 [ext_resource type="Shader" path="res://shaders/square_grid.gdshader" id="6_4xd4x"]
 [ext_resource type="Script" path="res://scenes/Cube.cs" id="6_igvm3"]
 [ext_resource type="Script" path="res://scenes/PuzzleNode.cs" id="8_tq7y4"]
@@ -20,6 +21,26 @@ shader_parameter/size = Vector2(8, 7)
 [sub_resource type="QuadMesh" id="QuadMesh_4anga"]
 lightmap_size_hint = Vector2i(12, 12)
 material = SubResource("ShaderMaterial_aytjf")
+flip_faces = true
+size = Vector2(2, 2)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_iu6b4"]
+render_priority = 0
+shader = ExtResource("6_0enan")
+shader_parameter/outlineColor = Color(0, 0, 0, 0.87451)
+shader_parameter/depth_threshold = 0.025
+shader_parameter/normal_threshold = 0.5
+shader_parameter/normal_smoothing = 0.25
+shader_parameter/max_thickness = 1.849
+shader_parameter/min_thickness = 0.5
+shader_parameter/max_distance = 75.0
+shader_parameter/min_distance = 2.0
+shader_parameter/grazing_fresnel_power = 5.0
+shader_parameter/grazing_angle_mask_power = 1.0
+shader_parameter/grazing_angle_modulation_factor = 50.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_5rwvi"]
+material = SubResource("ShaderMaterial_iu6b4")
 flip_faces = true
 size = Vector2(2, 2)
 
@@ -74,8 +95,12 @@ gi_mode = 0
 mesh = SubResource("QuadMesh_4anga")
 skeleton = NodePath("../..")
 
+[node name="OutlinePost" type="MeshInstance3D" parent="SpectatorCamera"]
+extra_cull_margin = 16384.0
+mesh = SubResource("QuadMesh_5rwvi")
+
 [node name="Cube" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000500202, 0.834049, -0.000655413)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000500202, 0.834049, -2.80975)
 visible = false
 gi_mode = 2
 mesh = SubResource("BoxMesh_l0drb")

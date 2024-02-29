@@ -21,6 +21,7 @@ public partial class PuzzlePieceNode : Node3D
 			var cube = new Cube();
 			cube.Position = pos;
 			cube.Color = Color;
+			cube.Scale = new Vector3(0.95f, 0.95f, 0.95f);
 			AddChild(cube);
 		}
 	}
