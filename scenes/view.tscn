@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://c82cqueavh1mq"]
+[gd_scene load_steps=26 format=3 uid="uid://c82cqueavh1mq"]
 
 [ext_resource type="Script" path="res://scenes/ViewScene.cs" id="1_iwres"]
 [ext_resource type="Environment" uid="uid://c7hvhnwnxbxc0" path="res://environments/view_environment.tres" id="2_0at1c"]
@@ -7,8 +7,12 @@
 [ext_resource type="Shader" path="res://shaders/hexgrid.gdshader" id="4_m4n71"]
 [ext_resource type="Shader" path="res://shaders/outline.gdshader" id="6_0enan"]
 [ext_resource type="Shader" path="res://shaders/square_grid.gdshader" id="6_4xd4x"]
-[ext_resource type="Script" path="res://scenes/Cube.cs" id="6_igvm3"]
+[ext_resource type="Texture2D" uid="uid://iwb5r64unno8" path="res://scenes/wood/wood_0002_normal_opengl_1k.png" id="7_b5u34"]
+[ext_resource type="Texture2D" uid="uid://o0gqwva7mdqb" path="res://scenes/wood/wood_0002_ao_1k.jpg" id="8_8g1ir"]
+[ext_resource type="Texture2D" uid="uid://8jc65lmc0aph" path="res://scenes/wood/wood_0002_color_1k.jpg" id="8_lxst1"]
 [ext_resource type="Script" path="res://scenes/PuzzleNode.cs" id="8_tq7y4"]
+[ext_resource type="Texture2D" uid="uid://bd4hotbxw2ayl" path="res://scenes/wood/wood_0002_height_1k.png" id="9_2e74f"]
+[ext_resource type="Texture2D" uid="uid://bo1d17tqvby3p" path="res://scenes/wood/wood_0002_roughness_1k.jpg" id="11_mdcmk"]
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_bthwb"]
 dof_blur_near_distance = 1.2
@@ -44,14 +48,28 @@ material = SubResource("ShaderMaterial_aytjf")
 flip_faces = true
 size = Vector2(2, 2)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ywuqh"]
+albedo_texture = ExtResource("8_lxst1")
+roughness_texture = ExtResource("11_mdcmk")
+normal_enabled = true
+normal_scale = 0.65
+normal_texture = ExtResource("7_b5u34")
+clearcoat_enabled = true
+clearcoat = 0.2
+anisotropy = 0.68
+ao_enabled = true
+ao_texture = ExtResource("8_8g1ir")
+heightmap_texture = ExtResource("9_2e74f")
+
 [sub_resource type="BoxMesh" id="BoxMesh_bi5at"]
+material = SubResource("StandardMaterial3D_ywuqh")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dkf1r"]
 
 [sub_resource type="TorusMesh" id="TorusMesh_vb7n2"]
 material = SubResource("StandardMaterial3D_dkf1r")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_rm8vq"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_64qjs"]
 render_priority = 1
 shader = ExtResource("6_4xd4x")
 shader_parameter/n_rows = 11
@@ -59,7 +77,7 @@ shader_parameter/n_columns = 11
 shader_parameter/thickness = 0.1
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bq6ap"]
-next_pass = SubResource("ShaderMaterial_rm8vq")
+next_pass = SubResource("ShaderMaterial_64qjs")
 albedo_color = Color(0, 0.831373, 0.839216, 1)
 metallic = 1.0
 roughness = 0.2
@@ -99,7 +117,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000500202, 0.834049, -2.809
 visible = false
 gi_mode = 2
 mesh = SubResource("BoxMesh_bi5at")
-script = ExtResource("6_igvm3")
 
 [node name="Torus" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.78372, 1.25474, 0.740104)

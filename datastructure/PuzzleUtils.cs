@@ -16,6 +16,24 @@ public static class PuzzleUtils {
         Colors.LightGreen,
     };
 
+    public static bool IsFull(bool[,,] voxels, Vector3 pos) => IsFull(voxels, Mathf.RoundToInt(pos.X), Mathf.RoundToInt(pos.Y), Mathf.RoundToInt(pos.Z));
+
+    public static bool IsAir(bool[,,] voxels, Vector3 pos) => IsAir(voxels, Mathf.RoundToInt(pos.X), Mathf.RoundToInt(pos.Y), Mathf.RoundToInt(pos.Z));
+
+    public static bool IsFull(bool[,,] voxels, int x, int y, int z) {
+        if (x < 0 || x >= voxels.GetLength(0)) return false;
+        if (y < 0 || y >= voxels.GetLength(1)) return false;
+        if (z < 0 || z >= voxels.GetLength(2)) return false;
+        return voxels[x, y, z];
+    }
+
+    public static bool IsAir(bool[,,] voxels, int x, int y, int z) {
+        if (x < 0 || x >= voxels.GetLength(0)) return true;
+        if (y < 0 || y >= voxels.GetLength(1)) return true;
+        if (z < 0 || z >= voxels.GetLength(2)) return true;
+        return !voxels[x, y, z];
+    }
+
     public static (bool[,,], Vector3) ShapeToVoxels(List<Vector3> shape) {
         var (min, max) = GetDimensions(shape);
         var size = max - min + Vector3.One;
