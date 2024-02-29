@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://c82cqueavh1mq"]
+[gd_scene load_steps=21 format=3 uid="uid://c82cqueavh1mq"]
 
 [ext_resource type="Script" path="res://scenes/ViewScene.cs" id="1_iwres"]
 [ext_resource type="Environment" uid="uid://c7hvhnwnxbxc0" path="res://environments/view_environment.tres" id="2_0at1c"]
@@ -13,6 +13,26 @@
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_bthwb"]
 dof_blur_near_distance = 1.2
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_iu6b4"]
+render_priority = 0
+shader = ExtResource("6_0enan")
+shader_parameter/outlineColor = Color(0, 0, 0, 0.87451)
+shader_parameter/depth_threshold = 0.025
+shader_parameter/normal_threshold = 0.5
+shader_parameter/normal_smoothing = 0.25
+shader_parameter/max_thickness = 2.0
+shader_parameter/min_thickness = 1.0
+shader_parameter/max_distance = 75.0
+shader_parameter/min_distance = 2.0
+shader_parameter/grazing_fresnel_power = 5.0
+shader_parameter/grazing_angle_mask_power = 1.0
+shader_parameter/grazing_angle_modulation_factor = 50.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_5rwvi"]
+material = SubResource("ShaderMaterial_iu6b4")
+flip_faces = true
+size = Vector2(2, 2)
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_aytjf"]
 render_priority = -3
 shader = ExtResource("4_m4n71")
@@ -24,25 +44,7 @@ material = SubResource("ShaderMaterial_aytjf")
 flip_faces = true
 size = Vector2(2, 2)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_iu6b4"]
-render_priority = 0
-shader = ExtResource("6_0enan")
-shader_parameter/outlineColor = Color(0, 0, 0, 0.87451)
-shader_parameter/depth_threshold = 0.025
-shader_parameter/normal_threshold = 0.5
-shader_parameter/normal_smoothing = 0.25
-shader_parameter/max_thickness = 1.849
-shader_parameter/min_thickness = 0.5
-shader_parameter/max_distance = 75.0
-shader_parameter/min_distance = 2.0
-shader_parameter/grazing_fresnel_power = 5.0
-shader_parameter/grazing_angle_mask_power = 1.0
-shader_parameter/grazing_angle_modulation_factor = 50.0
-
-[sub_resource type="QuadMesh" id="QuadMesh_5rwvi"]
-material = SubResource("ShaderMaterial_iu6b4")
-flip_faces = true
-size = Vector2(2, 2)
+[sub_resource type="BoxMesh" id="BoxMesh_bi5at"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dkf1r"]
 
@@ -81,6 +83,10 @@ data = ExtResource("3_xv0y1")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.237255, 2.20909, 1.71842)
 script = ExtResource("3_ba1y1")
 
+[node name="OutlinePost" type="MeshInstance3D" parent="SpectatorCamera"]
+extra_cull_margin = 16384.0
+mesh = SubResource("QuadMesh_5rwvi")
+
 [node name="PostProcessingMesh" type="MeshInstance3D" parent="SpectatorCamera"]
 visible = false
 extra_cull_margin = 16384.0
@@ -88,14 +94,10 @@ gi_mode = 0
 mesh = SubResource("QuadMesh_4anga")
 skeleton = NodePath("../..")
 
-[node name="OutlinePost" type="MeshInstance3D" parent="SpectatorCamera"]
-extra_cull_margin = 16384.0
-mesh = SubResource("QuadMesh_5rwvi")
-
 [node name="Cube" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000500202, 0.834049, -2.80975)
-visible = false
 gi_mode = 2
+mesh = SubResource("BoxMesh_bi5at")
 script = ExtResource("6_igvm3")
 
 [node name="Torus" type="MeshInstance3D" parent="."]
