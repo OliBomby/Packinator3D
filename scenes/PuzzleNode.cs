@@ -22,7 +22,12 @@ public partial class PuzzleNode : Node3D
 		LoadData(new Puzzle {
 			Pieces = new List<PuzzlePiece> {
 				new() {
-					Shape = new[,,] {{{true, true, false}, {false, true, true}}},
+					Shape = new List<Vector3> {
+						new(0, 0, 0),
+						new(0, 0, 1),
+						new(0, 1, 1),
+						new(0, 1, 2),
+					},
 					Color = Colors.Aqua,
 					State = new() {
 						Offset = new Vector3(1, 1, 1),
@@ -30,7 +35,12 @@ public partial class PuzzleNode : Node3D
 					}
 				},
 				new() {
-					Shape = new[,,] {{{true, true, false}, {false, true, true}}},
+					Shape = new List<Vector3> {
+						new(0, 0, 0),
+						new(0, 0, 1),
+						new(0, 1, 1),
+						new(0, 1, 2),
+					},
 					Color = Colors.Red,
 					State = new() {
 						Offset = new Vector3(0, 0, 0),

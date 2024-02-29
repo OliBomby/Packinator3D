@@ -17,16 +17,11 @@ public partial class PuzzlePieceNode : Node3D
 		LoadState(puzzlePiece.State);
 
 		// Create the mesh out of the shape voxels
-		for (int x = 0; x < puzzlePiece.Shape.GetLength(0); x++) {
-			for (int y = 0; y < puzzlePiece.Shape.GetLength(1); y++) {
-				for (int z = 0; z < puzzlePiece.Shape.GetLength(2); z++) {
-					if (!puzzlePiece.Shape[x, y, z]) continue;
-					var cube = new Cube();
-					cube.Position = new Vector3(x, y, z);
-					cube.Color = Color;
-					AddChild(cube);
-				}
-			}
+		foreach (var pos in puzzlePiece.Shape) {
+			var cube = new Cube();
+			cube.Position = pos;
+			cube.Color = Color;
+			AddChild(cube);
 		}
 	}
 
