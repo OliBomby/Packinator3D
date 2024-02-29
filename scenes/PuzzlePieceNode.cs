@@ -36,13 +36,13 @@ public partial class PuzzlePieceNode : Node3D
 
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	private float rotation;
-	public override void _Process(double delta) {
-		rotation += (float)delta;
-		if (rotation > 1) {
-			RotateY(Mathf.Pi / 2);
-			rotation -= 1;
-		}
-	}
+	// // Called every frame. 'delta' is the elapsed time since the previous frame.
+	// private float rotation;
+	// public override void _Process(double delta) {
+	// 	rotation += (float)delta;
+	// 	if (rotation > 1) {
+	// 		RotateY(Mathf.Pi / 2);
+	// 		rotation -= 1;
+	// 	}
+	// }
 }
