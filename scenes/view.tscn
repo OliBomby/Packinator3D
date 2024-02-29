@@ -96,6 +96,7 @@ skeleton = NodePath("../..")
 
 [node name="Cube" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000500202, 0.834049, -2.80975)
+visible = false
 gi_mode = 2
 mesh = SubResource("BoxMesh_bi5at")
 script = ExtResource("6_igvm3")
