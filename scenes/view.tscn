@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://c82cqueavh1mq"]
+[gd_scene load_steps=20 format=3 uid="uid://c82cqueavh1mq"]
 
 [ext_resource type="Script" path="res://scenes/ViewScene.cs" id="1_iwres"]
 [ext_resource type="Environment" uid="uid://c7hvhnwnxbxc0" path="res://environments/view_environment.tres" id="2_0at1c"]
@@ -43,13 +43,6 @@ shader_parameter/grazing_angle_modulation_factor = 50.0
 material = SubResource("ShaderMaterial_iu6b4")
 flip_faces = true
 size = Vector2(2, 2)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l7amd"]
-subsurf_scatter_strength = 1.0
-subsurf_scatter_skin_mode = true
-
-[sub_resource type="BoxMesh" id="BoxMesh_l0drb"]
-material = SubResource("StandardMaterial3D_l7amd")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dkf1r"]
 
@@ -103,7 +96,6 @@ mesh = SubResource("QuadMesh_5rwvi")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000500202, 0.834049, -2.80975)
 visible = false
 gi_mode = 2
-mesh = SubResource("BoxMesh_l0drb")
 script = ExtResource("6_igvm3")
 
 [node name="Torus" type="MeshInstance3D" parent="."]
@@ -115,9 +107,10 @@ skeleton = NodePath("../Cube")
 [node name="Ground" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_e0dol")
 
-[node name="OmniLight3D" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.88371, 0.271481, 1.22855)
-
 [node name="PuzzleNode" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 script = ExtResource("8_tq7y4")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.961262, 0.21022, -0.178279, 0, 0.64679, 0.762668, 0.275637, -0.733124, 0.621734, -0.632015, 4.56161, 2.25)
+shadow_enabled = true
