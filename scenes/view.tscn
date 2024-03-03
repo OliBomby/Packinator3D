@@ -1,18 +1,42 @@
-[gd_scene load_steps=23 format=3 uid="uid://c82cqueavh1mq"]
+[gd_scene load_steps=27 format=3 uid="uid://c82cqueavh1mq"]
 
 [ext_resource type="Script" path="res://scenes/ViewScene.cs" id="1_iwres"]
 [ext_resource type="Environment" uid="uid://c7hvhnwnxbxc0" path="res://environments/view_environment.tres" id="2_0at1c"]
 [ext_resource type="Script" path="res://cameras/SpectatorCamera.cs" id="3_ba1y1"]
 [ext_resource type="VoxelGIData" uid="uid://blub5fjgyakdb" path="res://scenes/view.VoxelGI_data.res" id="3_xv0y1"]
 [ext_resource type="Shader" path="res://shaders/hexgrid.gdshader" id="4_m4n71"]
+[ext_resource type="Shader" path="res://shaders/outline.gdshader" id="6_0enan"]
 [ext_resource type="Shader" path="res://shaders/square_grid.gdshader" id="6_4xd4x"]
-[ext_resource type="Script" path="res://scenes/Cube.cs" id="6_igvm3"]
-[ext_resource type="Script" path="res://scenes/PuzzlePiece.cs" id="8_bjrle"]
-[ext_resource type="Script" path="res://scenes/Puzzle.cs" id="8_h4vnk"]
-[ext_resource type="Script" path="res://scenes/PauseMenu.cs" id="10_j08du"]
+[ext_resource type="Texture2D" uid="uid://iwb5r64unno8" path="res://scenes/wood/wood_0002_normal_opengl_1k.png" id="7_b5u34"]
+[ext_resource type="Texture2D" uid="uid://o0gqwva7mdqb" path="res://scenes/wood/wood_0002_ao_1k.jpg" id="8_8g1ir"]
+[ext_resource type="Texture2D" uid="uid://8jc65lmc0aph" path="res://scenes/wood/wood_0002_color_1k.jpg" id="8_lxst1"]
+[ext_resource type="Script" path="res://scenes/PuzzleNode.cs" id="8_tq7y4"]
+[ext_resource type="Texture2D" uid="uid://bd4hotbxw2ayl" path="res://scenes/wood/wood_0002_height_1k.png" id="9_2e74f"]
+[ext_resource type="Texture2D" uid="uid://bo1d17tqvby3p" path="res://scenes/wood/wood_0002_roughness_1k.jpg" id="11_mdcmk"]
+[ext_resource type="PackedScene" uid="uid://cmn7yl0c860nf" path="res://pause_menu.tscn" id="14_i0rss"]
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_bthwb"]
 dof_blur_near_distance = 1.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_iu6b4"]
+render_priority = 0
+shader = ExtResource("6_0enan")
+shader_parameter/outlineColor = Color(0, 0, 0, 0.87451)
+shader_parameter/depth_threshold = 0.025
+shader_parameter/normal_threshold = 0.5
+shader_parameter/normal_smoothing = 0.25
+shader_parameter/max_thickness = 2.0
+shader_parameter/min_thickness = 1.0
+shader_parameter/max_distance = 75.0
+shader_parameter/min_distance = 2.0
+shader_parameter/grazing_fresnel_power = 5.0
+shader_parameter/grazing_angle_mask_power = 1.0
+shader_parameter/grazing_angle_modulation_factor = 50.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_5rwvi"]
+material = SubResource("ShaderMaterial_iu6b4")
+flip_faces = true
+size = Vector2(2, 2)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_aytjf"]
 render_priority = -3
@@ -25,19 +49,28 @@ material = SubResource("ShaderMaterial_aytjf")
 flip_faces = true
 size = Vector2(2, 2)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l7amd"]
-subsurf_scatter_strength = 1.0
-subsurf_scatter_skin_mode = true
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ywuqh"]
+albedo_texture = ExtResource("8_lxst1")
+roughness_texture = ExtResource("11_mdcmk")
+normal_enabled = true
+normal_scale = 0.65
+normal_texture = ExtResource("7_b5u34")
+clearcoat_enabled = true
+clearcoat = 0.2
+anisotropy = 0.68
+ao_enabled = true
+ao_texture = ExtResource("8_8g1ir")
+heightmap_texture = ExtResource("9_2e74f")
 
-[sub_resource type="BoxMesh" id="BoxMesh_l0drb"]
-material = SubResource("StandardMaterial3D_l7amd")
+[sub_resource type="BoxMesh" id="BoxMesh_bi5at"]
+material = SubResource("StandardMaterial3D_ywuqh")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dkf1r"]
 
 [sub_resource type="TorusMesh" id="TorusMesh_vb7n2"]
 material = SubResource("StandardMaterial3D_dkf1r")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_rm8vq"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_64qjs"]
 render_priority = 1
 shader = ExtResource("6_4xd4x")
 shader_parameter/n_rows = 11
@@ -45,7 +78,7 @@ shader_parameter/n_columns = 11
 shader_parameter/thickness = 0.1
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bq6ap"]
-next_pass = SubResource("ShaderMaterial_rm8vq")
+next_pass = SubResource("ShaderMaterial_64qjs")
 albedo_color = Color(0, 0.831373, 0.839216, 1)
 metallic = 1.0
 roughness = 0.2
@@ -53,13 +86,6 @@ roughness = 0.2
 [sub_resource type="PlaneMesh" id="PlaneMesh_e0dol"]
 material = SubResource("StandardMaterial3D_bq6ap")
 size = Vector2(11, 11)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_72wpv"]
-albedo_color = Color(1, 0.188235, 1, 1)
-metallic_specular = 0.0
-emission = Color(0.45098, 0.678431, 0.686275, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_gyqoh"]
 
 [node name="ViewScene" type="Node3D"]
 script = ExtResource("1_iwres")
@@ -76,6 +102,10 @@ data = ExtResource("3_xv0y1")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.237255, 2.20909, 1.71842)
 script = ExtResource("3_ba1y1")
 
+[node name="OutlinePost" type="MeshInstance3D" parent="SpectatorCamera"]
+extra_cull_margin = 16384.0
+mesh = SubResource("QuadMesh_5rwvi")
+
 [node name="PostProcessingMesh" type="MeshInstance3D" parent="SpectatorCamera"]
 visible = false
 extra_cull_margin = 16384.0
@@ -84,11 +114,10 @@ mesh = SubResource("QuadMesh_4anga")
 skeleton = NodePath("../..")
 
 [node name="Cube" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000500202, 0.834049, -0.000655413)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000500202, 0.834049, -2.80975)
 visible = false
 gi_mode = 2
-mesh = SubResource("BoxMesh_l0drb")
-script = ExtResource("6_igvm3")
+mesh = SubResource("BoxMesh_bi5at")
 
 [node name="Torus" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.78372, 1.25474, 0.740104)
@@ -99,55 +128,12 @@ skeleton = NodePath("../Cube")
 [node name="Ground" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_e0dol")
 
-[node name="OmniLight3D" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.88371, 0.271481, 1.22855)
+[node name="PuzzleNode" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+script = ExtResource("8_tq7y4")
 
-[node name="Puzzle" type="Node3D" parent="."]
-script = ExtResource("8_h4vnk")
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.961262, 0.21022, -0.178279, 0, 0.64679, 0.762668, 0.275637, -0.733124, 0.621734, -0.632015, 4.56161, 2.25)
+shadow_enabled = true
 
-[node name="PuzzlePiece" type="Node3D" parent="Puzzle"]
-script = ExtResource("8_bjrle")
-
-[node name="Voxel" type="MeshInstance3D" parent="Puzzle/PuzzlePiece"]
-visible = false
-material_override = SubResource("StandardMaterial3D_72wpv")
-mesh = SubResource("BoxMesh_gyqoh")
-skeleton = NodePath("../../..")
-
-[node name="PauseMenu" type="Node2D" parent="."]
-process_mode = 2
-script = ExtResource("10_j08du")
-
-[node name="ColorRect" type="ColorRect" parent="PauseMenu"]
-custom_minimum_size = Vector2(1920, 1080)
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = 1920.0
-offset_bottom = 1080.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 0.466667)
-
-[node name="CloseButton" type="Button" parent="PauseMenu"]
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = 1134.0
-offset_right = 1152.0
-offset_bottom = 31.0
-grow_horizontal = 0
-text = "X"
-
-[node name="Label" type="Label" parent="PauseMenu"]
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = 404.0
-offset_right = 756.0
-offset_bottom = 137.0
-grow_horizontal = 2
-theme_override_font_sizes/font_size = 100
-text = "Paused"
-
-[connection signal="pressed" from="PauseMenu/CloseButton" to="PauseMenu" method="_on_close_button_pressed"]
+[node name="PauseMenu" parent="." instance=ExtResource("14_i0rss")]

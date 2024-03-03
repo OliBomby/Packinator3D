@@ -1,0 +1,45 @@
+[gd_scene load_steps=2 format=3 uid="uid://cmn7yl0c860nf"]
+
+[ext_resource type="Script" path="res://scenes/PauseMenu.cs" id="1_ia2ak"]
+
+[node name="PauseMenu" type="Node2D"]
+process_mode = 2
+script = ExtResource("1_ia2ak")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(1920, 1080)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 1920.0
+offset_bottom = 1080.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.466667)
+
+[node name="CloseButton" type="Button" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = 1134.0
+offset_right = 1152.0
+offset_bottom = 31.0
+grow_horizontal = 0
+text = "X"
+
+[node name="Label" type="Label" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 404.0
+offset_right = 756.0
+offset_bottom = 137.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 100
+text = "Paused"
+
+[node name="PieceWidth" type="HSlider" parent="."]
+offset_right = 8.0
+offset_bottom = 16.0
+
+[connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
