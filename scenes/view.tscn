@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://c82cqueavh1mq"]
+[gd_scene load_steps=23 format=3 uid="uid://c82cqueavh1mq"]
 
 [ext_resource type="Script" path="res://scenes/ViewScene.cs" id="1_iwres"]
 [ext_resource type="Environment" uid="uid://c7hvhnwnxbxc0" path="res://environments/view_environment.tres" id="2_0at1c"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://scenes/Cube.cs" id="6_igvm3"]
 [ext_resource type="Script" path="res://scenes/PuzzlePiece.cs" id="8_bjrle"]
 [ext_resource type="Script" path="res://scenes/Puzzle.cs" id="8_h4vnk"]
+[ext_resource type="Script" path="res://scenes/PauseMenu.cs" id="10_j08du"]
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_bthwb"]
 dof_blur_near_distance = 1.2
@@ -112,3 +113,41 @@ visible = false
 material_override = SubResource("StandardMaterial3D_72wpv")
 mesh = SubResource("BoxMesh_gyqoh")
 skeleton = NodePath("../../..")
+
+[node name="PauseMenu" type="Node2D" parent="."]
+process_mode = 2
+script = ExtResource("10_j08du")
+
+[node name="ColorRect" type="ColorRect" parent="PauseMenu"]
+custom_minimum_size = Vector2(1920, 1080)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 1920.0
+offset_bottom = 1080.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.466667)
+
+[node name="CloseButton" type="Button" parent="PauseMenu"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = 1134.0
+offset_right = 1152.0
+offset_bottom = 31.0
+grow_horizontal = 0
+text = "X"
+
+[node name="Label" type="Label" parent="PauseMenu"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 404.0
+offset_right = 756.0
+offset_bottom = 137.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 100
+text = "Paused"
+
+[connection signal="pressed" from="PauseMenu/CloseButton" to="PauseMenu" method="_on_close_button_pressed"]
