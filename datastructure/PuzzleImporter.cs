@@ -10,6 +10,7 @@ public static class PuzzleImporter {
         using var file = FileAccess.Open(path, FileAccess.ModeFlags.Read);
         var pieces = new List<PuzzlePiece>();
         var solution = new Solution { States = new List<PuzzlePieceState>(), Time = DateTime.Now };
+        var targetShape = new List<Vector3>();
         var index = 0;
 
         while (!file.EofReached()) {
@@ -21,6 +22,7 @@ public static class PuzzleImporter {
                 Offset = piece.State.Offset,
                 Rotation = piece.State.Rotation,
             });
+            targetShape.AddRange(piece.Shape.Select(v => piece.State.Offset + PuzzleUtils.Rotate(v, piece.State.Rotation)));
         }
 
         // Move the pieces to the start position
@@ -32,7 +34,7 @@ public static class PuzzleImporter {
         return new Puzzle {
             Name = path.GetFile(),
             Pieces = pieces,
-            TargetShape = pieces.SelectMany(o => o.Shape).ToList(),
+            TargetShape = targetShape,
             Solutions = new List<Solution> { solution }
         };
     }

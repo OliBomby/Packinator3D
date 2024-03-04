@@ -13,6 +13,16 @@ public partial class PuzzleNode : Node3D {
 		puzzlePieceNodes.Clear();
 
 		// Add the target shape
+		AddChild(new MeshInstance3D {
+			Mesh = PuzzleUtils.ShapeToMesh(puzzle.TargetShape),
+			MaterialOverride = new StandardMaterial3D {
+				AlbedoColor = Color.Color8(255, 100, 0, 100),
+				Transparency = BaseMaterial3D.TransparencyEnum.Alpha,
+				DistanceFadeMode = BaseMaterial3D.DistanceFadeModeEnum.PixelAlpha,
+				DistanceFadeMaxDistance = 1,
+				DistanceFadeMinDistance = 0.3f,
+			}
+		});
 
 		// Add puzzle piece nodes as children
 		foreach (var piece in puzzle.Pieces) {

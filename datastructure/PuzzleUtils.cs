@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Godot;
 
@@ -65,7 +66,7 @@ public static class PuzzleUtils {
     }
 
     public static (Vector3, Vector3) RotateDimensions(Vector3 min, Vector3 max, Vector3 rotation) {
-        (min, max) = (Rotate(min, rotation).Round(), Rotate(max, rotation).Round());
+        (min, max) = (Rotate(min, rotation), Rotate(max, rotation));
         if (min.X > max.X) (min.X, max.X) = (max.X, min.X);
         if (min.Y > max.Y) (min.Y, max.Y) = (max.Y, min.Y);
         if (min.Z > max.Z) (min.Z, max.Z) = (max.Z, min.Z);
@@ -74,7 +75,7 @@ public static class PuzzleUtils {
 
     public static Vector3 Rotate(Vector3 vec, Vector3 rotation) {
         if (rotation == Vector3.Zero) return vec;
-        return vec.Rotated(rotation.Normalized(), rotation.Length());
+        return vec.Rotated(rotation.Normalized(), rotation.Length()).Round();
     }
 
     public static Vector3 GetRotationToMinimizeAxis(Vector3 dims, Vector3.Axis axis) {
@@ -103,4 +104,96 @@ public static class PuzzleUtils {
         float z = Mathf.Round(shape.Select(o => o.Z).Average());
         return new Vector3(x, y, z);
     }
+
+    public static Mesh ShapeToMesh(List<Vector3> shape, float width=1) {
+        // Create the mesh out of the shape voxels
+        (bool[,,] voxels, var offset) = ShapeToVoxels(shape);
+        var st = new SurfaceTool();
+        st.Begin(Mesh.PrimitiveType.Triangles);
+        // Create a quad mesh for each side of a voxel that is exposed to air
+        for (var x = 0; x < voxels.GetLength(0); x++) {
+            for (var y = 0; y < voxels.GetLength(1); y++) {
+                for (var z = 0; z < voxels.GetLength(2); z++) {
+                    if (!voxels[x, y, z]) continue;
+                    var p = new Vector3(x, y, z);
+                    // Check if the voxel is exposed to air
+                    AddSide(st, voxels, p, offset, Vector3.Left, width);
+                    AddSide(st, voxels, p, offset, Vector3.Right, width);
+                    AddSide(st, voxels, p, offset, Vector3.Down, width);
+                    AddSide(st, voxels, p, offset, Vector3.Up, width);
+                    AddSide(st, voxels, p, offset, Vector3.Forward, width);
+                    AddSide(st, voxels, p, offset, Vector3.Back, width);
+                }
+            }
+        }
+
+        st.Index();
+        st.GenerateTangents();
+        return st.Commit();
+    }
+
+	private static void AddSide(SurfaceTool st, bool[,,] voxels, Vector3 p, Vector3 offset, Vector3 dir, float width) {
+		var right = dir.Cross(Vector3.Up).Normalized();
+		if (right == Vector3.Zero) right = dir.Cross(Vector3.Forward).Normalized();
+		var up = dir.Cross(right).Normalized();
+		var left = -right;
+		var down = -up;
+		bool l = IsFull(voxels, p + left);
+		bool r = IsFull(voxels, p + right);
+		bool u = IsFull(voxels, p + up);
+		bool d = IsFull(voxels, p + down);
+		bool lu = IsFull(voxels, p + left + up);
+		bool ru = IsFull(voxels, p + right + up);
+		bool ld = IsFull(voxels, p + left + down);
+		bool rd = IsFull(voxels, p + right + down);
+		bool f = IsFull(voxels, p + dir);
+		bool fl = IsFull(voxels, p + dir + left);
+		bool fr = IsFull(voxels, p + dir + right);
+		bool fu = IsFull(voxels, p + dir + up);
+		bool fd = IsFull(voxels, p + dir + down);
+		bool flu = IsFull(voxels, p + dir + left + up);
+		bool fru = IsFull(voxels, p + dir + right + up);
+		bool fld = IsFull(voxels, p + dir + left + down);
+		bool frd = IsFull(voxels, p + dir + right + down);
+
+		void addQuad(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3) {
+			var uv0 = new Vector2(p0.Dot(right) / 2 + 0.5f, p0.Dot(up) / 2 + 0.5f);
+			var uv1 = new Vector2(p1.Dot(right) / 2 + 0.5f, p1.Dot(up) / 2 + 0.5f);
+			var uv2 = new Vector2(p2.Dot(right) / 2 + 0.5f, p2.Dot(up) / 2 + 0.5f);
+			var uv3 = new Vector2(p3.Dot(right) / 2 + 0.5f, p3.Dot(up) / 2 + 0.5f);
+			p0 = p + offset + dir * 0.5f * width + p0 * 0.5f;
+			p1 = p + offset + dir * 0.5f * width + p1 * 0.5f;
+			p2 = p + offset + dir * 0.5f * width + p2 * 0.5f;
+			p3 = p + offset + dir * 0.5f * width + p3 * 0.5f;
+			st.SetUV(uv0);
+			st.SetNormal(dir);
+			st.AddVertex(p0);
+			st.SetUV(uv3);
+			st.SetNormal(dir);
+			st.AddVertex(p3);
+			st.SetUV(uv1);
+			st.SetNormal(dir);
+			st.AddVertex(p1);
+			st.SetUV(uv1);
+			st.SetNormal(dir);
+			st.AddVertex(p1);
+			st.SetUV(uv3);
+			st.SetNormal(dir);
+			st.AddVertex(p3);
+			st.SetUV(uv2);
+			st.SetNormal(dir);
+			st.AddVertex(p2);
+		}
+
+		if (!f) addQuad(left * width + down * width, right * width + down * width, right * width + up * width, left * width + up * width);
+		if (Math.Abs(width - 1) < 1e-5) return;
+		if (l && !(fl && f)) addQuad(left + down * width, left * width + down * width, left * width + up * width, left + up * width);
+		if (r && !(fr && f)) addQuad(right * width + down * width, right + down * width, right + up * width, right * width + up * width);
+		if (u && !(fu && f)) addQuad(left * width + up * width, right * width + up * width, right * width + up, left * width + up);
+		if (d && !(fd && f)) addQuad(left * width + down, right * width + down, right * width + down * width, left * width + down * width);
+		if (l && u && lu && !(fl && fu && flu)) addQuad(left + up * width, left * width + up * width, left * width + up, left + up);
+		if (r && u && ru && !(fr && fu && fru)) addQuad(right * width + up * width, right + up * width, right + up, right * width + up);
+		if (l && d && ld && !(fl && fd && fld)) addQuad(left + down, left * width + down, left * width + down * width, left + down * width);
+		if (r && d && rd && !(fr && fd && frd)) addQuad(right * width + down, right + down, right + down * width, right * width + down * width);
+	}
 }
