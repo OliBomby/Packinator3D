@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://c82cqueavh1mq"]
+[gd_scene load_steps=28 format=3 uid="uid://c82cqueavh1mq"]
 
 [ext_resource type="Script" path="res://scenes/ViewScene.cs" id="1_iwres"]
 [ext_resource type="Environment" uid="uid://c7hvhnwnxbxc0" path="res://environments/view_environment.tres" id="2_0at1c"]
@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://bd4hotbxw2ayl" path="res://scenes/wood/wood_0002_height_1k.png" id="9_2e74f"]
 [ext_resource type="Texture2D" uid="uid://bo1d17tqvby3p" path="res://scenes/wood/wood_0002_roughness_1k.jpg" id="11_mdcmk"]
 [ext_resource type="PackedScene" uid="uid://cmn7yl0c860nf" path="res://pause_menu.tscn" id="14_i0rss"]
+[ext_resource type="Script" path="res://scenes/FpsCounter.cs" id="15_doi0l"]
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_bthwb"]
 dof_blur_near_distance = 1.2
@@ -137,3 +138,8 @@ transform = Transform3D(0.961262, 0.21022, -0.178279, 0, 0.64679, 0.762668, 0.27
 shadow_enabled = true
 
 [node name="PauseMenu" parent="." instance=ExtResource("14_i0rss")]
+
+[node name="FpsCounter" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+script = ExtResource("15_doi0l")
