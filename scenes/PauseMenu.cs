@@ -1,5 +1,5 @@
 using Godot;
-
+using BlockPuzzleViewerSolverEditor.datastructure;
 namespace BlockPuzzleViewerSolverEditor.scenes;
 
 public partial class PauseMenu : Node2D
@@ -7,11 +7,23 @@ public partial class PauseMenu : Node2D
 	private bool pauseReleased;
 
 	private puzzle.PuzzleNode puzzleNode;
+	private ClipPlane xClipPlane;
+	private ClipPlane yClipPlane;
+	private ClipPlane zClipPlane;
+	private Node3D xClip;
+	private Node3D yClip;
+	private Node3D zClip;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		puzzleNode = GetNode<puzzle.PuzzleNode>("../PuzzleNode");
+		xClip = GetNode<Node3D>("../XClip");
+		xClipPlane = new ClipPlane(vec => vec.X);
+		yClip = GetNode<Node3D>("../YClip");
+		yClipPlane = new ClipPlane(vec => vec.Y);
+		zClip = GetNode<Node3D>("../ZClip");
+		zClipPlane = new ClipPlane(vec => vec.Z);
 	}
 
 	public void ShowPauseMenu() {
@@ -20,6 +32,10 @@ public partial class PauseMenu : Node2D
 			pauseReleased = false;
 			Show();
 		}
+		
+		xClip.Show();
+		yClip.Show();
+		zClip.Show();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -39,8 +55,27 @@ public partial class PauseMenu : Node2D
 	private void OnCloseButtonPressed()
 	{
 		Hide();
+		xClip.Hide();
+		yClip.Hide();
+		zClip.Hide();
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 		GetTree().Paused = false;
+	}
+		
+	private void HideClippedPieces() {
+		foreach(var node in puzzleNode.PuzzlePieceNodes) {
+			node.Show();
+			Transform3D transform = node.Transform;
+			foreach(Vector3 voxel in node.PieceData.Shape) {
+				Vector3 position = (transform * voxel);
+				if (xClipPlane.ClipTest(position) ||
+					yClipPlane.ClipTest(position) ||
+					zClipPlane.ClipTest(position)
+					) {
+					node.Hide();
+				}
+			}
+		}
 	}
 
 	private void _on_close_button_pressed()
@@ -52,21 +87,83 @@ public partial class PauseMenu : Node2D
 	{
 		puzzleNode.SetWidth((float) value);
 	}
-
-	private void _on_height_clip_value_changed(double value)
+	private void _on_x_clip_value_changed(double value)
 	{
-		Node3D Clip = GetNode<Node3D>("../HeightClip");
-		if (value == 0.0) {
-			Clip.Hide();
-		}
-		else {
-			Clip.Show();
-		}
-
-
-		Clip.Position = new Vector3(0.0f, (float) value, 0.0f);
+		xClip.Position = new Vector3((float) value, 0.0f, 0.0f);
+		xClipPlane.AxisOffset = (float) value;
+		HideClippedPieces();
 	}
 
+	private void _on_invert_x_toggled(bool toggled_on)
+	{
+		xClipPlane.Inverted = toggled_on;
+		HideClippedPieces();
+	}
+	
+	//private void _on_x_clip_drag_started()
+	//{
+		//xClip.Show();
+	//}
+//
+	//private void _on_x_clip_drag_ended(bool value_changed)
+	//{
+		//xClip.Hide();
+	//}
+	
+	private void _on_y_clip_value_changed(double value)
+	{
+		if (value == 0.0) {
+			yClip.Hide();
+		}
+		else {
+			yClip.Show();
+		}
+		
+		yClip.Position = new Vector3(0.0f, (float) value, 0.0f);
+		yClipPlane.AxisOffset = (float) value;
+		HideClippedPieces();
+	}
+	
+	//private void _on_y_clip_drag_started()
+	//{
+		//yClip.Show();
+	//}
+//
+	//private void _on_y_clip_drag_ended(bool value_changed)
+	//{
+		//yClip.Hide();
+	//}
+	
+	
+	private void _on_invert_y_toggled(bool toggled_on)
+	{
+		yClipPlane.Inverted = toggled_on;
+		HideClippedPieces();
+	}
+	
+	private void _on_z_clip_value_changed(double value)
+	{
+		zClip.Position = new Vector3(0.0f, 0.0f, (float) value);
+		zClipPlane.AxisOffset = (float) value;
+		HideClippedPieces();
+	}
+
+
+	private void _on_invert_z_toggled(bool toggled_on)
+	{
+		zClipPlane.Inverted = toggled_on;
+		HideClippedPieces();
+	}
+	
+	//private void _on_z_clip_drag_started()
+	//{
+		//zClip.Show();
+	//}
+//
+	//private void _on_z_clip_drag_ended(bool value_changed)
+	//{
+		//zClip.Hide();
+	//}
 	private void _on_check_box_toggled(bool toggledOn)
 	{
 		puzzleNode.SetTargetShapeVisible(toggledOn);

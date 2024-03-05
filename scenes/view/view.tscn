@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://c82cqueavh1mq"]
+[gd_scene load_steps=36 format=3 uid="uid://c82cqueavh1mq"]
 
 [ext_resource type="Script" path="res://scenes/view/ViewScene.cs" id="1_iwres"]
 [ext_resource type="Environment" uid="uid://c7hvhnwnxbxc0" path="res://scenes/environments/view_environment.tres" id="2_0at1c"]
@@ -91,12 +91,28 @@ size = Vector2(11, 11)
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_jxyt3"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vtvlk"]
+transparency = 1
+cull_mode = 2
+albedo_color = Color(0.196078, 0.0470588, 0.827451, 0.431373)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_a4ckk"]
+orientation = 0
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n3jp7"]
 transparency = 1
 cull_mode = 2
-albedo_color = Color(1, 0.227451, 0.0313726, 0.431373)
+albedo_color = Color(0.968627, 0.227451, 0.443137, 0.431373)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1huvf"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2j3tv"]
+transparency = 1
+cull_mode = 2
+albedo_color = Color(0, 0.682353, 0.403922, 0.431373)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_4agl5"]
+orientation = 2
 
 [node name="ViewScene" type="Node3D"]
 script = ExtResource("1_iwres")
@@ -162,11 +178,22 @@ offset_right = 40.0
 offset_bottom = 23.0
 script = ExtResource("15_doi0l")
 
-[node name="HeightClip" type="MeshInstance3D" parent="."]
+[node name="XClip" type="MeshInstance3D" parent="."]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
-visible = false
+material_override = SubResource("StandardMaterial3D_vtvlk")
+mesh = SubResource("PlaneMesh_a4ckk")
+skeleton = NodePath("../YClip")
+
+[node name="YClip" type="MeshInstance3D" parent="."]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_n3jp7")
 mesh = SubResource("PlaneMesh_1huvf")
+
+[node name="ZClip" type="MeshInstance3D" parent="."]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_2j3tv")
+mesh = SubResource("PlaneMesh_4agl5")
+skeleton = NodePath("../YClip")
 
 [node name="BlockPlacementController" type="Node3D" parent="."]
 script = ExtResource("16_h81hl")

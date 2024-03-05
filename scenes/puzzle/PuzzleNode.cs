@@ -15,10 +15,9 @@ public partial class PuzzleNode : Node3D {
 		get => width;
 		set => SetWidth(value);
 	}
-
 	public Puzzle PuzzleData { get; private set; }
 
-	private readonly List<PuzzlePieceNode> puzzlePieceNodes = new();
+	public readonly List<PuzzlePieceNode> PuzzlePieceNodes = new();
 	private MeshInstance3D targetShape;
 
 	private void LoadMeshes() {
@@ -29,7 +28,7 @@ public partial class PuzzleNode : Node3D {
 
 	private void LoadData(Puzzle puzzle) {
 		PuzzleData = puzzle;
-		puzzlePieceNodes.Clear();
+		PuzzlePieceNodes.Clear();
 
 		// Add the target shape
 		AddChild(targetShape = new MeshInstance3D {
@@ -47,19 +46,19 @@ public partial class PuzzleNode : Node3D {
 		foreach (var piece in puzzle.Pieces) {
 			var puzzlePieceNode = new PuzzlePieceNode(piece, Width);
 			AddChild(puzzlePieceNode);
-			puzzlePieceNodes.Add(puzzlePieceNode);
+			PuzzlePieceNodes.Add(puzzlePieceNode);
 		}
 	}
 
 	public void SetWidth(float value) {
 		width = value;
-		foreach (var piece in puzzlePieceNodes) {
+		foreach (var piece in PuzzlePieceNodes) {
 			piece.SetWidth(value);
 		}
 	} 
 	
 	public void SetHeightClip(float clip) {
-
+		GD.Print("A");
 	}
 
 	public void SetTargetShapeVisible(bool visible) {
@@ -69,18 +68,18 @@ public partial class PuzzleNode : Node3D {
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready() {
 		LoadMeshes();
-		for (var i = 0; i < puzzlePieceNodes.Count; i++) {
-			puzzlePieceNodes[i].Position = PuzzleData.Solutions[0].States[i].Offset;
-			puzzlePieceNodes[i].Rotation = PuzzleData.Solutions[0].States[i].Rotation;
+		for (var i = 0; i < PuzzlePieceNodes.Count; i++) {
+			PuzzlePieceNodes[i].Position = PuzzleData.Solutions[0].States[i].Offset;
+			PuzzlePieceNodes[i].Rotation = PuzzleData.Solutions[0].States[i].Rotation;
 		}
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta) {
 		// float t = Mathf.Min((float)(Time.Singleton.GetTicksMsec() % 10000) / 8000, 1);
-		// for (var i = 0; i < puzzlePieceNodes.Count; i++) {
-			// puzzlePieceNodes[i].Position = currentPuzzle.Pieces[i].State.Offset.Lerp(currentPuzzle.Solutions[0].States[i].Offset, t);
-			// puzzlePieceNodes[i].Rotation = currentPuzzle.Pieces[i].State.Rotation.Lerp(currentPuzzle.Solutions[0].States[i].Rotation, t);
+		// for (var i = 0; i < PuzzlePieceNodes.Count; i++) {
+			// PuzzlePieceNodes[i].Position = PuzzleData.Pieces[i].State.Offset.Lerp(currentPuzzle.Solutions[0].States[i].Offset, t);
+			// PuzzlePieceNodes[i].Rotation = PuzzleData.Pieces[i].State.Rotation.Lerp(currentPuzzle.Solutions[0].States[i].Rotation, t);
 		// }
 	}
 }

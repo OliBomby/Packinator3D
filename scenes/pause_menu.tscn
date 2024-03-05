@@ -27,7 +27,7 @@ offset_bottom = 31.0
 grow_horizontal = 0
 text = "X"
 
-[node name="Label" type="Label" parent="."]
+[node name="PauseLabel" type="Label" parent="."]
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
@@ -54,30 +54,130 @@ offset_top = -23.0
 offset_right = 112.0
 text = "Voxel Width"
 
-[node name="Height Clip" type="HSlider" parent="."]
-offset_left = 50.0
-offset_top = 221.0
-offset_right = 270.0
-offset_bottom = 237.0
-max_value = 10.0
-step = 0.01
-
-[node name="Label2" type="Label" parent="Height Clip"]
-layout_mode = 0
-offset_top = -23.0
-offset_right = 112.0
-text = "Height Clip
-"
-
 [node name="CheckBox" type="CheckBox" parent="."]
-offset_left = 41.0
+offset_left = 50.0
 offset_top = 251.0
 offset_right = 259.0
 offset_bottom = 282.0
 button_pressed = true
 text = "Show target shape"
 
+[node name="ClipLabel" type="Label" parent="."]
+offset_left = 336.0
+offset_top = 134.0
+offset_right = 390.0
+offset_bottom = 176.0
+theme_override_font_sizes/font_size = 30
+text = "Clip"
+
+[node name="X Clip" type="HSlider" parent="ClipLabel"]
+offset_left = 3.0
+offset_top = 71.0
+offset_right = 223.0
+offset_bottom = 87.0
+min_value = -10.0
+max_value = 10.0
+step = 0.01
+
+[node name="Label2" type="Label" parent="ClipLabel/X Clip"]
+layout_mode = 0
+offset_top = -23.0
+offset_right = 112.0
+text = "X
+"
+
+[node name="InvertX" type="CheckBox" parent="ClipLabel/X Clip"]
+layout_mode = 0
+offset_left = 222.0
+offset_top = -5.0
+offset_right = 246.0
+offset_bottom = 19.0
+pivot_offset = Vector2(-272, -32)
+
+[node name="InvertLabel" type="Label" parent="ClipLabel/X Clip"]
+layout_mode = 0
+offset_left = 212.0
+offset_top = -26.0
+offset_right = 259.0
+offset_bottom = -3.0
+text = "Invert"
+
+[node name="Y Clip" type="HSlider" parent="ClipLabel"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 121.0
+offset_right = 223.0
+offset_bottom = 137.0
+max_value = 10.0
+step = 0.01
+
+[node name="Label2" type="Label" parent="ClipLabel/Y Clip"]
+layout_mode = 0
+offset_top = -23.0
+offset_right = 112.0
+text = "Y
+"
+
+[node name="InvertY" type="CheckBox" parent="ClipLabel/Y Clip"]
+layout_mode = 0
+offset_left = 222.0
+offset_top = -5.0
+offset_right = 246.0
+offset_bottom = 19.0
+pivot_offset = Vector2(-272, -32)
+
+[node name="InvertLabel" type="Label" parent="ClipLabel/Y Clip"]
+layout_mode = 0
+offset_left = 212.0
+offset_top = -26.0
+offset_right = 259.0
+offset_bottom = -3.0
+text = "Invert"
+
+[node name="Z Clip" type="HSlider" parent="ClipLabel"]
+offset_left = 4.0
+offset_top = 167.0
+offset_right = 224.0
+offset_bottom = 183.0
+min_value = -10.0
+max_value = 10.0
+step = 0.01
+
+[node name="Label2" type="Label" parent="ClipLabel/Z Clip"]
+layout_mode = 0
+offset_top = -23.0
+offset_right = 112.0
+text = "Z
+"
+
+[node name="InvertZ" type="CheckBox" parent="ClipLabel/Z Clip"]
+layout_mode = 0
+offset_left = 222.0
+offset_top = -5.0
+offset_right = 246.0
+offset_bottom = 19.0
+pivot_offset = Vector2(-272, -32)
+
+[node name="InvertLabel" type="Label" parent="ClipLabel/Z Clip"]
+layout_mode = 0
+offset_left = 212.0
+offset_top = -26.0
+offset_right = 259.0
+offset_bottom = -3.0
+text = "Invert"
+
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="value_changed" from="PieceWidth" to="." method="_on_piece_width_value_changed"]
-[connection signal="value_changed" from="Height Clip" to="." method="_on_height_clip_value_changed"]
 [connection signal="toggled" from="CheckBox" to="." method="_on_check_box_toggled"]
+[connection signal="drag_ended" from="ClipLabel/X Clip" to="." method="_on_x_clip_drag_ended"]
+[connection signal="drag_started" from="ClipLabel/X Clip" to="." method="_on_x_clip_drag_started"]
+[connection signal="value_changed" from="ClipLabel/X Clip" to="." method="_on_x_clip_value_changed"]
+[connection signal="toggled" from="ClipLabel/X Clip/InvertX" to="." method="_on_invert_x_toggled"]
+[connection signal="drag_ended" from="ClipLabel/Y Clip" to="." method="_on_y_clip_drag_ended"]
+[connection signal="drag_started" from="ClipLabel/Y Clip" to="." method="_on_y_clip_drag_started"]
+[connection signal="value_changed" from="ClipLabel/Y Clip" to="." method="_on_y_clip_value_changed"]
+[connection signal="toggled" from="ClipLabel/Y Clip/InvertY" to="." method="_on_invert_y_toggled"]
+[connection signal="drag_ended" from="ClipLabel/Z Clip" to="." method="_on_z_clip_drag_ended"]
+[connection signal="drag_started" from="ClipLabel/Z Clip" to="." method="_on_z_clip_drag_started"]
+[connection signal="value_changed" from="ClipLabel/Z Clip" to="." method="_on_z_clip_value_changed"]
+[connection signal="toggled" from="ClipLabel/Z Clip/InvertZ" to="." method="_on_invert_z_toggled"]
