@@ -63,7 +63,7 @@ public partial class SpectatorCamera : Camera3D {
 
 	private const float RayLength = 1000;
 
-	private PuzzlePieceNode? lastPiece;
+	private PuzzlePieceNode lastPiece;
 
 	public override void _PhysicsProcess(double delta) {
 		var spaceState = GetWorld3D().DirectSpaceState;

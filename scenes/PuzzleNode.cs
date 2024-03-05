@@ -5,14 +5,27 @@ using Godot;
 namespace BlockPuzzleViewerSolverEditor.scenes;
 
 public partial class PuzzleNode : Node3D {
-	private Puzzle currentPuzzle;
-	private List<PuzzlePieceNode> puzzlePieceNodes = new();
+	[Export]
+	public string PuzzlePath { get; set; }
 
-	public void LoadMeshes(double Width) {
-		var puzzle = PuzzleImporter.FromSolution("res://puzzles/cubishmerhan-4x4x4.txt");
-		LoadData(puzzle, Width);
+	private float width = 0.8f;
+
+	[Export]
+	public float Width {
+		get => width;
+		set => SetWidth(value);
 	}
-	private void LoadData(Puzzle puzzle, double Width) {
+
+	private Puzzle currentPuzzle;
+	private readonly List<PuzzlePieceNode> puzzlePieceNodes = new();
+
+	private void LoadMeshes() {
+		if (string.IsNullOrEmpty(PuzzlePath)) return;
+		var puzzle = PuzzleImporter.FromSolution(PuzzlePath);
+		LoadData(puzzle);
+	}
+
+	private void LoadData(Puzzle puzzle) {
 		currentPuzzle = puzzle;
 		puzzlePieceNodes.Clear();
 
@@ -30,24 +43,26 @@ public partial class PuzzleNode : Node3D {
 
 		// Add puzzle piece nodes as children
 		foreach (var piece in puzzle.Pieces) {
-			var puzzlePieceNode = new PuzzlePieceNode(piece, (float)Width);
+			var puzzlePieceNode = new PuzzlePieceNode(piece, Width);
 			AddChild(puzzlePieceNode);
 			puzzlePieceNodes.Add(puzzlePieceNode);
 		}
 	}
-	public void SetWidth(float Width) {
-		for (var i = 0; i < puzzlePieceNodes.Count; i++) {
-			puzzlePieceNodes[i].SetWidth(Width);
+
+	public void SetWidth(float width) {
+		this.width = width;
+		foreach (var piece in puzzlePieceNodes) {
+			piece.SetWidth(width);
 		}
 	} 
 	
-	public void SetHeightClip(float Clip) {
+	public void SetHeightClip(float clip) {
 
 	} 
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready() {
-		LoadMeshes(0.8);
+		LoadMeshes();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

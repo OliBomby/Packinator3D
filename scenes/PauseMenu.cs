@@ -1,10 +1,11 @@
 using Godot;
-using System;
-using BlockPuzzleViewerSolverEditor.scenes;
+
+namespace BlockPuzzleViewerSolverEditor.scenes;
 
 public partial class PauseMenu : Node2D
 {
-	private bool PauseReleased = false;
+	private bool pauseReleased;
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -13,32 +14,32 @@ public partial class PauseMenu : Node2D
 	public void ShowPauseMenu() {
 		if (!GetTree().Paused) {
 			GetTree().Paused = true;
-			PauseReleased = false;
+			pauseReleased = false;
 			Show();
 		}
 	}
-	
+
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
 		Input.MouseMode = Input.MouseModeEnum.Visible;
-		
-		if (!PauseReleased && !Input.IsActionJustPressed("pause")) {
-			PauseReleased = true;
+
+		if (!pauseReleased && !Input.IsActionJustPressed("pause")) {
+			pauseReleased = true;
 		}
-		
-		if (GetTree().Paused && Input.IsActionJustPressed("pause") && PauseReleased) {
+
+		if (GetTree().Paused && Input.IsActionJustPressed("pause") && pauseReleased) {
 			OnCloseButtonPressed();
 		}
 	}
-	
+
 	private void OnCloseButtonPressed()
 	{
 		Hide();
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 		GetTree().Paused = false;
 	}
-	
+
 	private void _on_close_button_pressed()
 	{
 		OnCloseButtonPressed();
@@ -57,13 +58,8 @@ public partial class PauseMenu : Node2D
 		else {
 			Clip.Show();
 		}
-		
+
 
 		Clip.Position = new Vector3(0.0f, (float) value, 0.0f);
 	}
 }
-
-
-
-
-
