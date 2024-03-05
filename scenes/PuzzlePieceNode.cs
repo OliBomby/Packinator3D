@@ -11,15 +11,24 @@ public partial class PuzzlePieceNode : MeshInstance3D
 	[Export]
 	private float Width { get; set; } = 0.90f;
 
+	public PuzzlePiece CachedPiece { get; set; }
+
 	public PuzzlePieceNode() {
 		GIMode = GIModeEnum.Dynamic;
 	}
 
-	public PuzzlePieceNode(PuzzlePiece puzzlePiece) : this() {
+	public PuzzlePieceNode(PuzzlePiece puzzlePiece, float Width) : this() {
+		this.Width = Width;
+		this.CachedPiece = puzzlePiece;
 		LoadData(puzzlePiece);
 	}
 
-	private void LoadData(PuzzlePiece puzzlePiece) {
+	public void SetWidth(float Width) {
+		this.Width = Width;
+		LoadData(CachedPiece);
+	}
+	
+	private SurfaceTool BuildSurfaceTool(PuzzlePiece puzzlePiece) {
 		Color = puzzlePiece.Color;
 		LoadState(puzzlePiece.State);
 
@@ -62,6 +71,11 @@ public partial class PuzzlePieceNode : MeshInstance3D
 			DistanceFadeMaxDistance = 1,
 			DistanceFadeMinDistance = 0.3f,
 		});
+		return st;
+	}
+
+	private void LoadData(PuzzlePiece puzzlePiece) {
+		SurfaceTool st = BuildSurfaceTool(puzzlePiece);
 		Mesh = st.Commit();
 	}
 

@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using BlockPuzzleViewerSolverEditor.scenes;
 
 public partial class PauseMenu : Node2D
 {
@@ -42,6 +43,27 @@ public partial class PauseMenu : Node2D
 	{
 		OnCloseButtonPressed();
 	}
+	private void _on_piece_width_value_changed(double value)
+	{
+		PuzzleNode PN = GetNode<PuzzleNode>("../PuzzleNode");
+		PN.SetWidth((float) value);
+	}
+	private void _on_height_clip_value_changed(double value)
+	{
+		Node3D Clip = GetNode<Node3D>("../HeightClip");
+		if (value == 0.0) {
+			Clip.Hide();
+		}
+		else {
+			Clip.Show();
+		}
+		
+
+		Clip.Position = new Vector3(0.0f, (float) value, 0.0f);
+	}
 }
+
+
+
 
 
