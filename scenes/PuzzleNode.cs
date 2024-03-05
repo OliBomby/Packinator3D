@@ -63,14 +63,18 @@ public partial class PuzzleNode : Node3D {
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready() {
 		LoadMeshes();
+		for (var i = 0; i < puzzlePieceNodes.Count; i++) {
+			puzzlePieceNodes[i].Position = currentPuzzle.Solutions[0].States[i].Offset;
+			puzzlePieceNodes[i].Rotation = currentPuzzle.Solutions[0].States[i].Rotation;
+		}
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta) {
-		float t = Mathf.Min((float)(Time.Singleton.GetTicksMsec() % 10000) / 8000, 1);
-		for (var i = 0; i < puzzlePieceNodes.Count; i++) {
-			puzzlePieceNodes[i].Position = currentPuzzle.Pieces[i].State.Offset.Lerp(currentPuzzle.Solutions[0].States[i].Offset, t);
-			puzzlePieceNodes[i].Rotation = currentPuzzle.Pieces[i].State.Rotation.Lerp(currentPuzzle.Solutions[0].States[i].Rotation, t);
-		}
+		// float t = Mathf.Min((float)(Time.Singleton.GetTicksMsec() % 10000) / 8000, 1);
+		// for (var i = 0; i < puzzlePieceNodes.Count; i++) {
+			// puzzlePieceNodes[i].Position = currentPuzzle.Pieces[i].State.Offset.Lerp(currentPuzzle.Solutions[0].States[i].Offset, t);
+			// puzzlePieceNodes[i].Rotation = currentPuzzle.Pieces[i].State.Rotation.Lerp(currentPuzzle.Solutions[0].States[i].Rotation, t);
+		// }
 	}
 }
