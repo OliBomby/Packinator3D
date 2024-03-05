@@ -15,6 +15,7 @@ public partial class BlockPlacementController : Node3D {
 	private PuzzleNode puzzleNode;
 	private PuzzlePieceNode heldPiece;
 	private PuzzlePieceState heldPieceOriginalState;
+	private Vector3 targetRotation;
 	private Array<Rid> exclude = new();
 
 	[Export]
@@ -26,9 +27,20 @@ public partial class BlockPlacementController : Node3D {
 	}
 
 	public override void _UnhandledInput(InputEvent @event) {
-		if (@event.IsActionPressed("move_piece")) {
+		if (heldPiece == null) return;
 
-		}
+		if (@event.IsActionPressed("rotate_x+")) DoRotation(new Vector3(Mathf.Pi / 2, 0, 0));
+		if (@event.IsActionPressed("rotate_x-")) DoRotation(new Vector3(-Mathf.Pi / 2, 0, 0));
+		if (@event.IsActionPressed("rotate_y+")) DoRotation(new Vector3(0, Mathf.Pi / 2, 0));
+		if (@event.IsActionPressed("rotate_y-")) DoRotation(new Vector3(0, -Mathf.Pi / 2, 0));
+		if (@event.IsActionPressed("rotate_z+")) DoRotation(new Vector3(0, 0, Mathf.Pi / 2));
+		if (@event.IsActionPressed("rotate_z-")) DoRotation(new Vector3(0, 0, -Mathf.Pi / 2));
+	}
+
+	private void DoRotation(Vector3 rotation) {
+		targetRotation += rotation;
+		var tween = CreateTween().SetTrans(Tween.TransitionType.Quint).SetEase(Tween.EaseType.Out);
+		tween.TweenProperty(heldPiece, "rotation", targetRotation, 0.3);
 	}
 
 	public override void _PhysicsProcess(double delta) {
@@ -45,6 +57,7 @@ public partial class BlockPlacementController : Node3D {
 				if (!result.TryGetValue("collider", out var collider) || collider.Obj is not PuzzlePieceNode piece) return;
 				heldPiece = piece;
 				heldPieceOriginalState = new PuzzlePieceState(piece.Position, piece.Rotation);
+				targetRotation = piece.Rotation;
 				exclude.Add(heldPiece.GetRid());
 			}
 			else {
