@@ -1,3 +1,4 @@
+using BlockPuzzleViewerSolverEditor.scenes;
 using Godot;
 
 namespace BlockPuzzleViewerSolverEditor.cameras;
@@ -58,5 +59,27 @@ public partial class SpectatorCamera : Camera3D {
 		moveDir = moveDir.Rotated(Vector3.Up, Rotation.Y);
 		t.Origin += moveDir.Normalized() * (float)delta * Speed;
 		Transform = t;
+	}
+
+	private const float RayLength = 1000;
+
+	private PuzzlePieceNode? lastPiece;
+
+	public override void _PhysicsProcess(double delta) {
+		var spaceState = GetWorld3D().DirectSpaceState;
+		var mousePos = GetViewport().GetMousePosition();
+
+		var origin = ProjectRayOrigin(mousePos);
+		var end = origin + ProjectRayNormal(mousePos) * RayLength;
+		var query = PhysicsRayQueryParameters3D.Create(origin, end);
+
+		var result = spaceState.IntersectRay(query);
+		if (!result.TryGetValue("collider", out var collider) || collider.Obj is not PuzzlePieceNode piece) return;
+		if (lastPiece != piece) {
+			if (lastPiece != null)
+				lastPiece.Visible = true;
+			piece.Visible = false;
+		}
+		lastPiece = piece;
 	}
 }
