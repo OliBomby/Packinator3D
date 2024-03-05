@@ -56,10 +56,7 @@ public static class PuzzleUtils {
             (min, max) = RotateDimensions(min, max, rotation);
             var pos = new Vector3(x - min.X, -min.Y, -4 - min.Z);
             x += max.X - min.X + 2;
-            states.Add(new PuzzlePieceState {
-                Offset = pos,
-                Rotation = rotation,
-            });
+            states.Add(new PuzzlePieceState(pos, rotation));
         }
 
         return states;

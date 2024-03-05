@@ -16,7 +16,8 @@ public partial class PuzzleNode : Node3D {
 		set => SetWidth(value);
 	}
 
-	private Puzzle currentPuzzle;
+	public Puzzle PuzzleData { get; private set; }
+
 	private readonly List<PuzzlePieceNode> puzzlePieceNodes = new();
 	private MeshInstance3D targetShape;
 
@@ -27,7 +28,7 @@ public partial class PuzzleNode : Node3D {
 	}
 
 	private void LoadData(Puzzle puzzle) {
-		currentPuzzle = puzzle;
+		PuzzleData = puzzle;
 		puzzlePieceNodes.Clear();
 
 		// Add the target shape
@@ -69,8 +70,8 @@ public partial class PuzzleNode : Node3D {
 	public override void _Ready() {
 		LoadMeshes();
 		for (var i = 0; i < puzzlePieceNodes.Count; i++) {
-			puzzlePieceNodes[i].Position = currentPuzzle.Solutions[0].States[i].Offset;
-			puzzlePieceNodes[i].Rotation = currentPuzzle.Solutions[0].States[i].Rotation;
+			puzzlePieceNodes[i].Position = PuzzleData.Solutions[0].States[i].Offset;
+			puzzlePieceNodes[i].Rotation = PuzzleData.Solutions[0].States[i].Rotation;
 		}
 	}
 

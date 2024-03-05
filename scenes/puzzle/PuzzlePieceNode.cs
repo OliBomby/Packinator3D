@@ -11,13 +11,13 @@ public partial class PuzzlePieceNode : StaticBody3D
 	[Export]
 	private float Width { get; set; }
 
-	private readonly PuzzlePiece pieceData;
+	public PuzzlePiece PieceData { get; private set; }
 
 	private readonly MeshInstance3D renderMesh;
 
 	public PuzzlePieceNode(PuzzlePiece puzzlePieceData, float width = 0.9f) {
 		Width = width;
-		pieceData = puzzlePieceData;
+		PieceData = puzzlePieceData;
 		AddChild(renderMesh = new MeshInstance3D {
 			GIMode = GeometryInstance3D.GIModeEnum.Dynamic
 		});
@@ -31,12 +31,12 @@ public partial class PuzzlePieceNode : StaticBody3D
 	}
 
 	private void UpdateMesh() {
-		renderMesh.Mesh = PuzzleUtils.ShapeToMesh(pieceData.Shape, Width);
+		renderMesh.Mesh = PuzzleUtils.ShapeToMesh(PieceData.Shape, Width);
 	}
 	
 	private void LoadData(PuzzlePiece puzzlePiece) {
 		Color = puzzlePiece.Color;
-		LoadState(puzzlePiece.State);
+		SetState(puzzlePiece.State);
 		UpdateMesh();
 
 		renderMesh.MaterialOverride = new StandardMaterial3D {
@@ -62,9 +62,13 @@ public partial class PuzzlePieceNode : StaticBody3D
 		ShapeOwnerAddShape(shapeOwner, renderMesh.Mesh.CreateTrimeshShape());
 	}
 
-	private void LoadState(PuzzlePieceState puzzlePieceState) {
+	public void SetState(PuzzlePieceState puzzlePieceState) {
 		Position = puzzlePieceState.Offset;
 		Rotation = puzzlePieceState.Rotation;
+	}
+
+	public PuzzlePieceState GetState() {
+		return new PuzzlePieceState(Position, Rotation);
 	}
 
 	// Called when the node enters the scene tree for the first time.

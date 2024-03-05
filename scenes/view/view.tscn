@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://c82cqueavh1mq"]
+[gd_scene load_steps=32 format=3 uid="uid://c82cqueavh1mq"]
 
 [ext_resource type="Script" path="res://scenes/view/ViewScene.cs" id="1_iwres"]
 [ext_resource type="Environment" uid="uid://c7hvhnwnxbxc0" path="res://scenes/environments/view_environment.tres" id="2_0at1c"]
@@ -15,6 +15,7 @@
 [ext_resource type="Texture2D" uid="uid://bo1d17tqvby3p" path="res://scenes/puzzle/wood/wood_0002_roughness_1k.jpg" id="11_mdcmk"]
 [ext_resource type="PackedScene" uid="uid://cmn7yl0c860nf" path="res://scenes/pause_menu.tscn" id="14_i0rss"]
 [ext_resource type="Script" path="res://scenes/FpsCounter.cs" id="15_doi0l"]
+[ext_resource type="Script" path="res://scenes/puzzle/BlockPlacementController.cs" id="16_h81hl"]
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_bthwb"]
 dof_blur_near_distance = 1.2
@@ -88,6 +89,8 @@ roughness = 0.2
 material = SubResource("StandardMaterial3D_bq6ap")
 size = Vector2(11, 11)
 
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_jxyt3"]
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n3jp7"]
 transparency = 1
 cull_mode = 2
@@ -136,6 +139,13 @@ skeleton = NodePath("../Cube")
 [node name="Ground" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_e0dol")
 
+[node name="StaticBody3D" type="StaticBody3D" parent="Ground"]
+collision_layer = 2
+collision_mask = 0
+
+[node name="GroundCollision" type="CollisionShape3D" parent="Ground/StaticBody3D"]
+shape = SubResource("WorldBoundaryShape3D_jxyt3")
+
 [node name="PuzzleNode" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 script = ExtResource("8_tq7y4")
@@ -157,3 +167,7 @@ transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
 visible = false
 material_override = SubResource("StandardMaterial3D_n3jp7")
 mesh = SubResource("PlaneMesh_1huvf")
+
+[node name="BlockPlacementController" type="Node3D" parent="."]
+script = ExtResource("16_h81hl")
+ViewSolution = true

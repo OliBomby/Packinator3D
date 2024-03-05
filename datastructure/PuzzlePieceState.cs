@@ -2,7 +2,6 @@
 
 namespace BlockPuzzleViewerSolverEditor.datastructure;
 
-public record PuzzlePieceState {
-    public Vector3 Offset { get; set; }
-    public Vector3 Rotation { get; set; }
+public record PuzzlePieceState(Vector3 Offset, Vector3 Rotation) {
+    public PuzzlePieceState Copy() => new(Offset, Rotation);
 }

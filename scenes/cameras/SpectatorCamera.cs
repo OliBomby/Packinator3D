@@ -59,26 +59,4 @@ public partial class SpectatorCamera : Camera3D {
 		t.Origin += moveDir.Normalized() * (float)delta * Speed;
 		Transform = t;
 	}
-
-	private const float RayLength = 1000;
-
-	private puzzle.PuzzlePieceNode lastPiece;
-
-	public override void _PhysicsProcess(double delta) {
-		var spaceState = GetWorld3D().DirectSpaceState;
-		var mousePos = GetViewport().GetMousePosition();
-
-		var origin = ProjectRayOrigin(mousePos);
-		var end = origin + ProjectRayNormal(mousePos) * RayLength;
-		var query = PhysicsRayQueryParameters3D.Create(origin, end);
-
-		var result = spaceState.IntersectRay(query);
-		if (!result.TryGetValue("collider", out var collider) || collider.Obj is not puzzle.PuzzlePieceNode piece) return;
-		if (lastPiece != piece) {
-			if (lastPiece != null)
-				lastPiece.Visible = true;
-			piece.Visible = false;
-		}
-		lastPiece = piece;
-	}
 }

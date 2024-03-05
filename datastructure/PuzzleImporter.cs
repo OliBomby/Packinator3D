@@ -18,10 +18,7 @@ public static class PuzzleImporter {
 			if (string.IsNullOrWhiteSpace(line) || line[0] == '#') continue;
 			var piece = PieceFromString(line, PuzzleUtils.DefaultColors[index++ % PuzzleUtils.DefaultColors.Length]);
 			pieces.Add(piece);
-			solution.States.Add(new PuzzlePieceState {
-				Offset = piece.State.Offset,
-				Rotation = piece.State.Rotation,
-			});
+			solution.States.Add(piece.State.Copy());
 			targetShape.AddRange(piece.Shape.Select(v => piece.State.Offset + PuzzleUtils.Rotate(v, piece.State.Rotation)));
 		}
 
@@ -49,10 +46,7 @@ public static class PuzzleImporter {
 		return new PuzzlePiece {
 			Shape = shape,
 			Color = color,
-			State = new PuzzlePieceState {
-				Offset = center,
-				Rotation = Vector3.Zero,
-			},
+			State = new PuzzlePieceState(center, Vector3.Zero),
 		};
 	}
 
