@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://c82cqueavh1mq"]
+[gd_scene load_steps=30 format=3 uid="uid://c82cqueavh1mq"]
 
 [ext_resource type="Script" path="res://scenes/ViewScene.cs" id="1_iwres"]
 [ext_resource type="Environment" uid="uid://c7hvhnwnxbxc0" path="res://environments/view_environment.tres" id="2_0at1c"]

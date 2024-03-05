@@ -11,28 +11,32 @@ public partial class PuzzlePieceNode : MeshInstance3D
 	[Export]
 	private float Width { get; set; } = 0.90f;
 
-	public PuzzlePiece CachedPiece { get; set; }
+	public PuzzlePiece PieceData { get; set; }
 
 	public PuzzlePieceNode() {
 		GIMode = GIModeEnum.Dynamic;
 	}
 
-	public PuzzlePieceNode(PuzzlePiece puzzlePiece, float Width) : this() {
-		this.Width = Width;
-		this.CachedPiece = puzzlePiece;
-		LoadData(puzzlePiece);
+	public PuzzlePieceNode(PuzzlePiece puzzlePieceData, float width) : this() {
+		Width = width;
+		LoadData(puzzlePieceData);
 	}
 
-	public void SetWidth(float Width) {
-		this.Width = Width;
-		LoadData(CachedPiece);
+	public void SetWidth(float width) {
+		Width = width;
+		UpdateMesh();
+	}
+
+	private void UpdateMesh() {
+		Mesh = PuzzleUtils.ShapeToMesh(PieceData.Shape, Width);
 	}
 	
-	private SurfaceTool LoadData(PuzzlePiece puzzlePiece) {
+	private void LoadData(PuzzlePiece puzzlePiece) {
+		PieceData = puzzlePiece;
 		Color = puzzlePiece.Color;
 		LoadState(puzzlePiece.State);
+		UpdateMesh();
 
-		Mesh = PuzzleUtils.ShapeToMesh(puzzlePiece.Shape, Width);
 		MaterialOverride = new StandardMaterial3D {
 			AlbedoColor = Color,
 			AlbedoTexture = ResourceLoader.Load<Texture2D>("res://scenes/wood/wood_0002_color_1k.jpg"),
