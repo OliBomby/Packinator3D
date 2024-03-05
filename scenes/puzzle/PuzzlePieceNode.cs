@@ -1,7 +1,7 @@
 using BlockPuzzleViewerSolverEditor.datastructure;
 using Godot;
 
-namespace BlockPuzzleViewerSolverEditor.scenes;
+namespace BlockPuzzleViewerSolverEditor.scenes.puzzle;
 
 public partial class PuzzlePieceNode : StaticBody3D
 {
@@ -41,14 +41,14 @@ public partial class PuzzlePieceNode : StaticBody3D
 
 		renderMesh.MaterialOverride = new StandardMaterial3D {
 			AlbedoColor = Color,
-			AlbedoTexture = ResourceLoader.Load<Texture2D>("res://scenes/wood/wood_0002_color_1k.jpg"),
+			AlbedoTexture = ResourceLoader.Load<Texture2D>("res://scenes/puzzle/wood/wood_0002_color_1k.jpg"),
 			NormalEnabled = true,
 			NormalScale = 0.65f,
-			NormalTexture = ResourceLoader.Load<Texture2D>("res://scenes/wood/wood_0002_normal_opengl_1k.png"),
-			RoughnessTexture = ResourceLoader.Load<Texture2D>("res://scenes/wood/wood_0002_roughness_1k.jpg"),
-			AOTexture = ResourceLoader.Load<Texture2D>("res://scenes/wood/wood_0002_ao_1k.jpg"),
+			NormalTexture = ResourceLoader.Load<Texture2D>("res://scenes/puzzle/wood/wood_0002_normal_opengl_1k.png"),
+			RoughnessTexture = ResourceLoader.Load<Texture2D>("res://scenes/puzzle/wood/wood_0002_roughness_1k.jpg"),
+			AOTexture = ResourceLoader.Load<Texture2D>("res://scenes/puzzle/wood/wood_0002_ao_1k.jpg"),
 			HeightmapEnabled = true,
-			HeightmapTexture = ResourceLoader.Load<Texture2D>("res://scenes/wood/wood_0002_height_1k.png"),
+			HeightmapTexture = ResourceLoader.Load<Texture2D>("res://scenes/puzzle/wood/wood_0002_height_1k.png"),
 			ClearcoatEnabled = true,
 			Clearcoat = 0.2f,
 			DistanceFadeMode = BaseMaterial3D.DistanceFadeModeEnum.PixelDither,

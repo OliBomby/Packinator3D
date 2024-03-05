@@ -1,7 +1,6 @@
-using BlockPuzzleViewerSolverEditor.scenes;
 using Godot;
 
-namespace BlockPuzzleViewerSolverEditor.cameras;
+namespace BlockPuzzleViewerSolverEditor.scenes.cameras;
 
 public partial class SpectatorCamera : Camera3D {
 	private Vector2 mouseDelta;
@@ -63,7 +62,7 @@ public partial class SpectatorCamera : Camera3D {
 
 	private const float RayLength = 1000;
 
-	private PuzzlePieceNode lastPiece;
+	private puzzle.PuzzlePieceNode lastPiece;
 
 	public override void _PhysicsProcess(double delta) {
 		var spaceState = GetWorld3D().DirectSpaceState;
@@ -74,7 +73,7 @@ public partial class SpectatorCamera : Camera3D {
 		var query = PhysicsRayQueryParameters3D.Create(origin, end);
 
 		var result = spaceState.IntersectRay(query);
-		if (!result.TryGetValue("collider", out var collider) || collider.Obj is not PuzzlePieceNode piece) return;
+		if (!result.TryGetValue("collider", out var collider) || collider.Obj is not puzzle.PuzzlePieceNode piece) return;
 		if (lastPiece != piece) {
 			if (lastPiece != null)
 				lastPiece.Visible = true;

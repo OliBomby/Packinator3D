@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://8jc65lmc0aph"
-path.s3tc="res://.godot/imported/wood_0002_color_1k.jpg-89883e8d4ccd0deaa041e8d8610e16e2.s3tc.ctex"
+uid="uid://o0gqwva7mdqb"
+path.s3tc="res://.godot/imported/wood_0002_ao_1k.jpg-ad0037b1f467975bf1ea2fccb224d613.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://scenes/wood/wood_0002_color_1k.jpg"
-dest_files=["res://.godot/imported/wood_0002_color_1k.jpg-89883e8d4ccd0deaa041e8d8610e16e2.s3tc.ctex"]
+source_file="res://scenes/puzzle/wood/wood_0002_ao_1k.jpg"
+dest_files=["res://.godot/imported/wood_0002_ao_1k.jpg-ad0037b1f467975bf1ea2fccb224d613.s3tc.ctex"]
 
 [params]
 

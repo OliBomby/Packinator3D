@@ -2,13 +2,13 @@ using System.Collections.Generic;
 using BlockPuzzleViewerSolverEditor.datastructure;
 using Godot;
 
-namespace BlockPuzzleViewerSolverEditor.scenes;
+namespace BlockPuzzleViewerSolverEditor.scenes.puzzle;
 
 public partial class PuzzleNode : Node3D {
 	[Export]
 	public string PuzzlePath { get; set; }
 
-	private float width = 0.8f;
+	private float width = 0.9f;
 
 	[Export]
 	public float Width {

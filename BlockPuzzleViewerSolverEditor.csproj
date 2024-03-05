@@ -5,4 +5,10 @@
     <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'ios' ">net8.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="cameras\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="cameras\**" />
+  </ItemGroup>
 </Project>

@@ -6,12 +6,12 @@ public partial class PauseMenu : Node2D
 {
 	private bool pauseReleased;
 
-	private PuzzleNode puzzleNode;
+	private puzzle.PuzzleNode puzzleNode;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		puzzleNode = GetNode<PuzzleNode>("../PuzzleNode");
+		puzzleNode = GetNode<puzzle.PuzzleNode>("../PuzzleNode");
 	}
 
 	public void ShowPauseMenu() {
@@ -47,7 +47,7 @@ public partial class PauseMenu : Node2D
 	{
 		OnCloseButtonPressed();
 	}
-	
+
 	private void _on_piece_width_value_changed(double value)
 	{
 		puzzleNode.SetWidth((float) value);
