@@ -49,10 +49,10 @@ public partial class PuzzleNode : Node3D {
 		}
 	}
 
-	public void SetWidth(float width) {
-		this.width = width;
+	public void SetWidth(float value) {
+		width = value;
 		foreach (var piece in puzzlePieceNodes) {
-			piece.SetWidth(width);
+			piece.SetWidth(value);
 		}
 	} 
 	

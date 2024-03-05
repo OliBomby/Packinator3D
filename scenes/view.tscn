@@ -140,6 +140,7 @@ mesh = SubResource("PlaneMesh_e0dol")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 script = ExtResource("8_tq7y4")
 PuzzlePath = "res://puzzles/cubishmerhan-4x4x4.txt"
+Width = 0.1
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.961262, 0.21022, -0.178279, 0, 0.64679, 0.762668, 0.275637, -0.733124, 0.621734, -0.632015, 4.56161, 2.25)
