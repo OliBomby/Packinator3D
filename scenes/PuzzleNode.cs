@@ -18,6 +18,7 @@ public partial class PuzzleNode : Node3D {
 
 	private Puzzle currentPuzzle;
 	private readonly List<PuzzlePieceNode> puzzlePieceNodes = new();
+	private MeshInstance3D targetShape;
 
 	private void LoadMeshes() {
 		if (string.IsNullOrEmpty(PuzzlePath)) return;
@@ -30,7 +31,7 @@ public partial class PuzzleNode : Node3D {
 		puzzlePieceNodes.Clear();
 
 		// Add the target shape
-		AddChild(new MeshInstance3D {
+		AddChild(targetShape = new MeshInstance3D {
 			Mesh = PuzzleUtils.ShapeToMesh(puzzle.TargetShape),
 			MaterialOverride = new StandardMaterial3D {
 				AlbedoColor = Color.Color8(255, 100, 0, 100),
@@ -58,7 +59,11 @@ public partial class PuzzleNode : Node3D {
 	
 	public void SetHeightClip(float clip) {
 
-	} 
+	}
+
+	public void SetTargetShapeVisible(bool visible) {
+		targetShape.Visible = visible;
+	}
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready() {

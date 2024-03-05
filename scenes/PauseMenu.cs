@@ -6,9 +6,12 @@ public partial class PauseMenu : Node2D
 {
 	private bool pauseReleased;
 
+	private PuzzleNode puzzleNode;
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		puzzleNode = GetNode<PuzzleNode>("../PuzzleNode");
 	}
 
 	public void ShowPauseMenu() {
@@ -44,11 +47,12 @@ public partial class PauseMenu : Node2D
 	{
 		OnCloseButtonPressed();
 	}
+	
 	private void _on_piece_width_value_changed(double value)
 	{
-		PuzzleNode PN = GetNode<PuzzleNode>("../PuzzleNode");
-		PN.SetWidth((float) value);
+		puzzleNode.SetWidth((float) value);
 	}
+
 	private void _on_height_clip_value_changed(double value)
 	{
 		Node3D Clip = GetNode<Node3D>("../HeightClip");
@@ -61,5 +65,10 @@ public partial class PauseMenu : Node2D
 
 
 		Clip.Position = new Vector3(0.0f, (float) value, 0.0f);
+	}
+
+	private void _on_check_box_toggled(bool toggledOn)
+	{
+		puzzleNode.SetTargetShapeVisible(toggledOn);
 	}
 }

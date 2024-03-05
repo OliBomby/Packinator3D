@@ -49,6 +49,7 @@ step = 0.05
 value = 0.9
 
 [node name="Label2" type="Label" parent="PieceWidth"]
+layout_mode = 0
 offset_top = -23.0
 offset_right = 112.0
 text = "Voxel Width"
@@ -62,11 +63,21 @@ max_value = 10.0
 step = 0.01
 
 [node name="Label2" type="Label" parent="Height Clip"]
+layout_mode = 0
 offset_top = -23.0
 offset_right = 112.0
 text = "Height Clip
 "
 
+[node name="CheckBox" type="CheckBox" parent="."]
+offset_left = 41.0
+offset_top = 251.0
+offset_right = 259.0
+offset_bottom = 282.0
+button_pressed = true
+text = "Show target shape"
+
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="value_changed" from="PieceWidth" to="." method="_on_piece_width_value_changed"]
 [connection signal="value_changed" from="Height Clip" to="." method="_on_height_clip_value_changed"]
+[connection signal="toggled" from="CheckBox" to="." method="_on_check_box_toggled"]
