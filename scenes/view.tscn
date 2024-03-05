@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://c82cqueavh1mq"]
+[gd_scene load_steps=29 format=3 uid="uid://c82cqueavh1mq"]
 
 [ext_resource type="Script" path="res://scenes/ViewScene.cs" id="1_iwres"]
 [ext_resource type="Environment" uid="uid://c7hvhnwnxbxc0" path="res://environments/view_environment.tres" id="2_0at1c"]
@@ -88,6 +88,13 @@ roughness = 0.2
 material = SubResource("StandardMaterial3D_bq6ap")
 size = Vector2(11, 11)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n3jp7"]
+transparency = 1
+cull_mode = 2
+albedo_color = Color(1, 0.227451, 0.0313726, 0.431373)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_1huvf"]
+
 [node name="ViewScene" type="Node3D"]
 script = ExtResource("1_iwres")
 
@@ -143,3 +150,9 @@ shadow_enabled = true
 offset_right = 40.0
 offset_bottom = 23.0
 script = ExtResource("15_doi0l")
+
+[node name="HeightClip" type="MeshInstance3D" parent="."]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_n3jp7")
+mesh = SubResource("PlaneMesh_1huvf")
