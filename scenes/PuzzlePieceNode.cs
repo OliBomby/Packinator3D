@@ -3,23 +3,26 @@ using Godot;
 
 namespace BlockPuzzleViewerSolverEditor.scenes;
 
-public partial class PuzzlePieceNode : MeshInstance3D
+public partial class PuzzlePieceNode : StaticBody3D
 {
 	[Export]
 	public Color Color { get; set; }
 
 	[Export]
-	private float Width { get; set; } = 0.90f;
+	private float Width { get; set; }
 
-	public PuzzlePiece PieceData { get; set; }
+	private readonly PuzzlePiece pieceData;
 
-	public PuzzlePieceNode() {
-		GIMode = GIModeEnum.Dynamic;
-	}
+	private readonly MeshInstance3D renderMesh;
 
-	public PuzzlePieceNode(PuzzlePiece puzzlePieceData, float width) : this() {
+	public PuzzlePieceNode(PuzzlePiece puzzlePieceData, float width = 0.9f) {
 		Width = width;
+		pieceData = puzzlePieceData;
+		AddChild(renderMesh = new MeshInstance3D {
+			GIMode = GeometryInstance3D.GIModeEnum.Dynamic
+		});
 		LoadData(puzzlePieceData);
+		CreateCollisionObject();
 	}
 
 	public void SetWidth(float width) {
@@ -28,16 +31,15 @@ public partial class PuzzlePieceNode : MeshInstance3D
 	}
 
 	private void UpdateMesh() {
-		Mesh = PuzzleUtils.ShapeToMesh(PieceData.Shape, Width);
+		renderMesh.Mesh = PuzzleUtils.ShapeToMesh(pieceData.Shape, Width);
 	}
 	
 	private void LoadData(PuzzlePiece puzzlePiece) {
-		PieceData = puzzlePiece;
 		Color = puzzlePiece.Color;
 		LoadState(puzzlePiece.State);
 		UpdateMesh();
 
-		MaterialOverride = new StandardMaterial3D {
+		renderMesh.MaterialOverride = new StandardMaterial3D {
 			AlbedoColor = Color,
 			AlbedoTexture = ResourceLoader.Load<Texture2D>("res://scenes/wood/wood_0002_color_1k.jpg"),
 			NormalEnabled = true,
@@ -53,6 +55,11 @@ public partial class PuzzlePieceNode : MeshInstance3D
 			DistanceFadeMaxDistance = 1,
 			DistanceFadeMinDistance = 0.3f,
 		};
+	}
+
+	private void CreateCollisionObject() {
+		uint shapeOwner = CreateShapeOwner(this);
+		ShapeOwnerAddShape(shapeOwner, renderMesh.Mesh.CreateTrimeshShape());
 	}
 
 	private void LoadState(PuzzlePieceState puzzlePieceState) {
