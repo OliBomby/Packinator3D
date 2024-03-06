@@ -15,7 +15,7 @@ public partial class BlockPlacementController : Node3D {
 	private Camera3D camera;
 	private PuzzleNode puzzleNode;
 	private PuzzlePieceNode heldPiece;
-	private PuzzlePieceState heldPieceOriginalState;
+	private Transform3D heldPieceOriginalState;
 	private Basis targetBasis;
 	private Array<Rid> exclude = new();
 
@@ -55,8 +55,8 @@ public partial class BlockPlacementController : Node3D {
 				var result = ShootRay(1);
 				if (!result.TryGetValue("collider", out var collider) || collider.Obj is not PuzzlePieceNode piece) return;
 				heldPiece = piece;
-				heldPieceOriginalState = new PuzzlePieceState(piece.Position, piece.Rotation);
-				targetBasis = piece.Transform.Basis;
+				heldPieceOriginalState = piece.Transform;
+				targetBasis = piece.Basis;
 				exclude.Add(heldPiece.GetRid());
 			}
 			else {
@@ -72,7 +72,7 @@ public partial class BlockPlacementController : Node3D {
 				if (!result.TryGetValue("collider", out var collider) || collider.Obj is not PuzzlePieceNode piece) return;
 
 				var originalState = piece.PieceData.State;
-				var currentState = piece.GetState();
+				var currentState = piece.Transform;
 
 				if (ViewSolution) {
 					// Reset the piece to the solution state if not in the solution state
@@ -80,14 +80,14 @@ public partial class BlockPlacementController : Node3D {
 					int index = puzzleNode.PuzzleData.Pieces.IndexOf(piece.PieceData);
 					var solutionState = puzzleNode.PuzzleData.Solutions[0].States[index];
 
-					piece.SetState(currentState.Equals(solutionState) ? originalState : solutionState);
+					piece.Transform = currentState.Equals(solutionState) ? originalState : solutionState;
 				} else {
-					piece.SetState(originalState);
+					piece.Transform = originalState;
 				}
 			}
 			else {
 				// Place the piece back to its original position when we picked it up
-				heldPiece.SetState(heldPieceOriginalState);
+				heldPiece.Transform = heldPieceOriginalState;
 				ClearHeldPiece();
 			}
 		}
@@ -112,7 +112,7 @@ public partial class BlockPlacementController : Node3D {
 		var i = 0;
 
 		while (!isValidPosition(pos)) {
-			pos -= normal;
+			pos -= normal * 0.5f;
 			if (i++ >= maxIters) return;
 		}
 
@@ -121,11 +121,11 @@ public partial class BlockPlacementController : Node3D {
 
 		bool isValidPosition(Vector3 p) {
 			var newPos = puzzleNode.ToLocal(p).Round();
-			var newTransform = new Transform3D(targetBasis, newPos);
+			var newState = new Transform3D(targetBasis, newPos);
 			foreach (var v in heldPiece.PieceData.Shape) {
-				var vp = (newTransform * v).Round();
+				var vp = PuzzleUtils.Transform(v, newState);
 				if (vp.Y < 0) return false;
-				vp -= offset * 0.5f;
+				vp -= offset;
 				if (PuzzleUtils.IsFull(voxels, vp)) return false;
 			}
 
@@ -135,7 +135,6 @@ public partial class BlockPlacementController : Node3D {
 
 	private void ClearHeldPiece() {
 		heldPiece = null;
-		heldPieceOriginalState = null;
 		exclude.Clear();
 	}
 

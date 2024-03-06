@@ -39,7 +39,7 @@ public static class PuzzleUtils {
     public static List<Vector3> PieceNodesToShape(IEnumerable<PuzzlePieceNode> pieces) {
 		var shape = new List<Vector3>();
 		foreach (var piece in pieces) {
-			shape.AddRange(piece.PieceData.Shape.Select(v => piece.Position + Rotate(v, piece.Rotation)));
+			shape.AddRange(piece.PieceData.Shape.Select(v => Transform(v, piece.Transform)));
 		}
 		return shape;
 	}
@@ -55,8 +55,8 @@ public static class PuzzleUtils {
         return (voxels, min);
     }
 
-    public static List<PuzzlePieceState> GetStartStates(List<PuzzlePiece> pieces) {
-        var states = new List<PuzzlePieceState>();
+    public static List<Transform3D> GetStartStates(List<PuzzlePiece> pieces) {
+        var states = new List<Transform3D>();
         float x = -4;
 
         foreach (var piece in pieces) {
@@ -65,31 +65,30 @@ public static class PuzzleUtils {
             (min, max) = RotateDimensions(min, max, rotation);
             var pos = new Vector3(x - min.X, -min.Y, -4 - min.Z);
             x += max.X - min.X + 2;
-            states.Add(new PuzzlePieceState(pos, rotation));
+            states.Add(new Transform3D(rotation, pos));
         }
 
         return states;
     }
 
-    public static (Vector3, Vector3) RotateDimensions(Vector3 min, Vector3 max, Vector3 rotation) {
-        (min, max) = (Rotate(min, rotation), Rotate(max, rotation));
+    public static Vector3 Transform(Vector3 v, Transform3D t) => (t * v).Round();
+
+    public static Vector3 Transform(Vector3 v, Basis t) => (t * v).Round();
+
+    public static (Vector3, Vector3) RotateDimensions(Vector3 min, Vector3 max, Basis rotation) {
+        (min, max) = (Transform(min, rotation), Transform(max, rotation));
         if (min.X > max.X) (min.X, max.X) = (max.X, min.X);
         if (min.Y > max.Y) (min.Y, max.Y) = (max.Y, min.Y);
         if (min.Z > max.Z) (min.Z, max.Z) = (max.Z, min.Z);
         return (min, max);
     }
 
-    public static Vector3 Rotate(Vector3 vec, Vector3 rotation) {
-        if (rotation == Vector3.Zero) return vec;
-        return vec.Rotated(rotation.Normalized(), rotation.Length()).Round();
-    }
-
-    public static Vector3 GetRotationToMinimizeAxis(Vector3 dims, Vector3.Axis axis) {
+    public static Basis GetRotationToMinimizeAxis(Vector3 dims, Vector3.Axis axis) {
         var smallestAxis = dims.X <= dims.Z && dims.X <= dims.Y ? Vector3.Axis.X : dims.Y <= dims.Z ? Vector3.Axis.Y : Vector3.Axis.Z;
-        if (smallestAxis == axis) return Vector3.Zero;
-        if (smallestAxis != Vector3.Axis.X && axis != Vector3.Axis.X) return new Vector3(Mathf.Pi / 2, 0, 0);
-        if (smallestAxis != Vector3.Axis.Y && axis != Vector3.Axis.Y) return new Vector3(0, Mathf.Pi / 2, 0);
-        return new Vector3(0, 0, Mathf.Pi / 2);
+        if (smallestAxis == axis) return Basis.Identity;
+        if (smallestAxis != Vector3.Axis.X && axis != Vector3.Axis.X) return Basis.FromEuler(new Vector3(Mathf.Pi / 2, 0, 0));
+        if (smallestAxis != Vector3.Axis.Y && axis != Vector3.Axis.Y) return Basis.FromEuler(new Vector3(0, Mathf.Pi / 2, 0));
+        return Basis.FromEuler(new Vector3(0, 0, Mathf.Pi / 2));
     }
 
     public static (Vector3, Vector3) GetDimensions(List<Vector3> shape) {

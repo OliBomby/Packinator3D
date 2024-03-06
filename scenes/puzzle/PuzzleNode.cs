@@ -69,8 +69,7 @@ public partial class PuzzleNode : Node3D {
 	public override void _Ready() {
 		LoadMeshes();
 		for (var i = 0; i < PuzzlePieceNodes.Count; i++) {
-			PuzzlePieceNodes[i].Position = PuzzleData.Solutions[0].States[i].Offset;
-			PuzzlePieceNodes[i].Rotation = PuzzleData.Solutions[0].States[i].Rotation;
+			PuzzlePieceNodes[i].Transform = PuzzleData.Solutions[0].States[i];
 		}
 	}
 

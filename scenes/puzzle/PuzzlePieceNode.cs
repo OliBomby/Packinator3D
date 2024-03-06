@@ -36,7 +36,7 @@ public partial class PuzzlePieceNode : StaticBody3D
 	
 	private void LoadData(PuzzlePiece puzzlePiece) {
 		Color = puzzlePiece.Color;
-		SetState(puzzlePiece.State);
+		Transform = puzzlePiece.State;
 		UpdateMesh();
 
 		renderMesh.MaterialOverride = new StandardMaterial3D {
@@ -60,15 +60,6 @@ public partial class PuzzlePieceNode : StaticBody3D
 	private void CreateCollisionObject() {
 		uint shapeOwner = CreateShapeOwner(this);
 		ShapeOwnerAddShape(shapeOwner, renderMesh.Mesh.CreateTrimeshShape());
-	}
-
-	public void SetState(PuzzlePieceState puzzlePieceState) {
-		Position = puzzlePieceState.Offset;
-		Rotation = puzzlePieceState.Rotation;
-	}
-
-	public PuzzlePieceState GetState() {
-		return new PuzzlePieceState(Position, Rotation);
 	}
 
 	// Called when the node enters the scene tree for the first time.

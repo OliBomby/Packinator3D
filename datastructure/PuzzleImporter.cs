@@ -9,7 +9,7 @@ public static class PuzzleImporter {
 	public static Puzzle FromSolution(string path) {
 		using var file = FileAccess.Open(path, FileAccess.ModeFlags.Read);
 		var pieces = new List<PuzzlePiece>();
-		var solution = new Solution { States = new List<PuzzlePieceState>(), Time = DateTime.Now };
+		var solution = new Solution { States = new List<Transform3D>(), Time = DateTime.Now };
 		var targetShape = new List<Vector3>();
 		var index = 0;
 
@@ -18,8 +18,8 @@ public static class PuzzleImporter {
 			if (string.IsNullOrWhiteSpace(line) || line[0] == '#') continue;
 			var piece = PieceFromString(line, PuzzleUtils.DefaultColors[index++ % PuzzleUtils.DefaultColors.Length]);
 			pieces.Add(piece);
-			solution.States.Add(piece.State.Copy());
-			targetShape.AddRange(piece.Shape.Select(v => piece.State.Offset + PuzzleUtils.Rotate(v, piece.State.Rotation)));
+			solution.States.Add(piece.State);
+			targetShape.AddRange(piece.Shape.Select(v => PuzzleUtils.Transform(v, piece.State)));
 		}
 
 		// Move the pieces to the start position
@@ -46,7 +46,7 @@ public static class PuzzleImporter {
 		return new PuzzlePiece {
 			Shape = shape,
 			Color = color,
-			State = new PuzzlePieceState(center, Vector3.Zero),
+			State = new Transform3D(Basis.Identity, center),
 		};
 	}
 
