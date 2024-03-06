@@ -7,7 +7,7 @@
 [ext_resource type="Shader" path="res://shaders/hexgrid.gdshader" id="4_m4n71"]
 [ext_resource type="Shader" path="res://shaders/outline.gdshader" id="6_0enan"]
 [ext_resource type="Shader" path="res://shaders/square_grid.gdshader" id="6_4xd4x"]
-[ext_resource type="Texture2D" uid="uid://c5lr3palmos3h" path="res://scenes/cameras/crosshair.png" id="7_aplrx"]
+[ext_resource type="Texture2D" uid="uid://b7eeojg8w7b23" path="res://scenes/cameras/crosshair.png" id="7_aplrx"]
 [ext_resource type="Texture2D" uid="uid://iwb5r64unno8" path="res://scenes/puzzle/wood/wood_0002_normal_opengl_1k.png" id="7_b5u34"]
 [ext_resource type="Texture2D" uid="uid://o0gqwva7mdqb" path="res://scenes/puzzle/wood/wood_0002_ao_1k.jpg" id="8_8g1ir"]
 [ext_resource type="Texture2D" uid="uid://8jc65lmc0aph" path="res://scenes/puzzle/wood/wood_0002_color_1k.jpg" id="8_lxst1"]
@@ -141,7 +141,7 @@ gi_mode = 0
 mesh = SubResource("QuadMesh_4anga")
 skeleton = NodePath("../..")
 
-[node name="TextureRect" type="TextureRect" parent="SpectatorCamera"]
+[node name="Crosshair" type="TextureRect" parent="SpectatorCamera"]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
