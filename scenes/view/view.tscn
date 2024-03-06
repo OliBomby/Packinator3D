@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://c82cqueavh1mq"]
+[gd_scene load_steps=37 format=3 uid="uid://c82cqueavh1mq"]
 
 [ext_resource type="Script" path="res://scenes/view/ViewScene.cs" id="1_iwres"]
 [ext_resource type="Environment" uid="uid://c7hvhnwnxbxc0" path="res://scenes/environments/view_environment.tres" id="2_0at1c"]
@@ -7,6 +7,7 @@
 [ext_resource type="Shader" path="res://shaders/hexgrid.gdshader" id="4_m4n71"]
 [ext_resource type="Shader" path="res://shaders/outline.gdshader" id="6_0enan"]
 [ext_resource type="Shader" path="res://shaders/square_grid.gdshader" id="6_4xd4x"]
+[ext_resource type="Texture2D" uid="uid://c5lr3palmos3h" path="res://scenes/cameras/crosshair.png" id="7_aplrx"]
 [ext_resource type="Texture2D" uid="uid://iwb5r64unno8" path="res://scenes/puzzle/wood/wood_0002_normal_opengl_1k.png" id="7_b5u34"]
 [ext_resource type="Texture2D" uid="uid://o0gqwva7mdqb" path="res://scenes/puzzle/wood/wood_0002_ao_1k.jpg" id="8_8g1ir"]
 [ext_resource type="Texture2D" uid="uid://8jc65lmc0aph" path="res://scenes/puzzle/wood/wood_0002_color_1k.jpg" id="8_lxst1"]
@@ -140,6 +141,20 @@ gi_mode = 0
 mesh = SubResource("QuadMesh_4anga")
 skeleton = NodePath("../..")
 
+[node name="TextureRect" type="TextureRect" parent="SpectatorCamera"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_aplrx")
+
 [node name="Cube" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000500202, 0.834049, -2.80975)
 visible = false
@@ -180,17 +195,20 @@ script = ExtResource("15_doi0l")
 
 [node name="XClip" type="MeshInstance3D" parent="."]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
+visible = false
 material_override = SubResource("StandardMaterial3D_vtvlk")
 mesh = SubResource("PlaneMesh_a4ckk")
 skeleton = NodePath("../YClip")
 
 [node name="YClip" type="MeshInstance3D" parent="."]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
+visible = false
 material_override = SubResource("StandardMaterial3D_n3jp7")
 mesh = SubResource("PlaneMesh_1huvf")
 
 [node name="ZClip" type="MeshInstance3D" parent="."]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
+visible = false
 material_override = SubResource("StandardMaterial3D_2j3tv")
 mesh = SubResource("PlaneMesh_4agl5")
 skeleton = NodePath("../YClip")
