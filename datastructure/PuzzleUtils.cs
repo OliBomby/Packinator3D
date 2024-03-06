@@ -57,13 +57,13 @@ public static class PuzzleUtils {
 
     public static List<Transform3D> GetStartStates(List<PuzzlePiece> pieces) {
         var states = new List<Transform3D>();
-        float x = -4;
+        float x = -9;
 
         foreach (var piece in pieces) {
             var (min, max) = GetDimensions(piece.Shape);
             var rotation = GetRotationToMinimizeAxis(max - min, Vector3.Axis.X);
             (min, max) = RotateDimensions(min, max, rotation);
-            var pos = new Vector3(x - min.X, -min.Y, -4 - min.Z);
+            var pos = new Vector3(x - min.X, -min.Y, -9 - min.Z);
             x += max.X - min.X + 2;
             states.Add(new Transform3D(rotation, pos));
         }
