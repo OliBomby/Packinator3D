@@ -6,7 +6,7 @@ public partial class SpectatorCamera : Camera3D {
 	private Vector2 mouseDelta;
 	private float totalPitch;
 
-	[Export] private float Sensitivity { get; set; } = 0.01f;
+	[Export] private float Sensitivity { get; set; } = 0.005f;
 	[Export] private float Speed { get; set; } = 10f;
 
 	public override void _Ready() {
