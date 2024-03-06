@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BlockPuzzleViewerSolverEditor.scenes.puzzle;
 using Godot;
 
 namespace BlockPuzzleViewerSolverEditor.datastructure;
@@ -34,6 +35,14 @@ public static class PuzzleUtils {
         if (z < 0 || z >= voxels.GetLength(2)) return true;
         return !voxels[x, y, z];
     }
+
+    public static List<Vector3> PieceNodesToShape(IEnumerable<PuzzlePieceNode> pieces) {
+		var shape = new List<Vector3>();
+		foreach (var piece in pieces) {
+			shape.AddRange(piece.PieceData.Shape.Select(v => piece.Position + Rotate(v, piece.Rotation)));
+		}
+		return shape;
+	}
 
     public static (bool[,,], Vector3) ShapeToVoxels(List<Vector3> shape) {
         var (min, max) = GetDimensions(shape);

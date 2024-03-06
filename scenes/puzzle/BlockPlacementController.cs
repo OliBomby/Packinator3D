@@ -1,3 +1,4 @@
+using System.Linq;
 using BlockPuzzleViewerSolverEditor.datastructure;
 using Godot;
 using Godot.Collections;
@@ -15,7 +16,7 @@ public partial class BlockPlacementController : Node3D {
 	private PuzzleNode puzzleNode;
 	private PuzzlePieceNode heldPiece;
 	private PuzzlePieceState heldPieceOriginalState;
-	private Vector3 targetRotation;
+	private Basis targetBasis;
 	private Array<Rid> exclude = new();
 
 	[Export]
@@ -29,25 +30,23 @@ public partial class BlockPlacementController : Node3D {
 	public override void _UnhandledInput(InputEvent @event) {
 		if (heldPiece == null) return;
 
-		if (@event.IsActionPressed("rotate_x+")) DoRotation(new Vector3(Mathf.Pi / 2, 0, 0));
-		if (@event.IsActionPressed("rotate_x-")) DoRotation(new Vector3(-Mathf.Pi / 2, 0, 0));
-		if (@event.IsActionPressed("rotate_y+")) DoRotation(new Vector3(0, Mathf.Pi / 2, 0));
-		if (@event.IsActionPressed("rotate_y-")) DoRotation(new Vector3(0, -Mathf.Pi / 2, 0));
-		if (@event.IsActionPressed("rotate_z+")) DoRotation(new Vector3(0, 0, Mathf.Pi / 2));
-		if (@event.IsActionPressed("rotate_z-")) DoRotation(new Vector3(0, 0, -Mathf.Pi / 2));
+		if (@event.IsActionPressed("rotate_x+")) DoRotation(Vector3.Right, Mathf.Pi / 2);
+		if (@event.IsActionPressed("rotate_x-")) DoRotation(Vector3.Right, -Mathf.Pi / 2);
+		if (@event.IsActionPressed("rotate_y+")) DoRotation(Vector3.Up, Mathf.Pi / 2);
+		if (@event.IsActionPressed("rotate_y-")) DoRotation(Vector3.Up, -Mathf.Pi / 2);
+		if (@event.IsActionPressed("rotate_z+")) DoRotation(Vector3.Forward, Mathf.Pi / 2);
+		if (@event.IsActionPressed("rotate_z-")) DoRotation(Vector3.Forward, -Mathf.Pi / 2);
 	}
 
-	private void DoRotation(Vector3 rotation) {
-		targetRotation += rotation;
+	private void DoRotation(Vector3 axis, float angle) {
+		targetBasis = targetBasis.Rotated(axis, angle);
 		var tween = CreateTween().SetTrans(Tween.TransitionType.Quint).SetEase(Tween.EaseType.Out);
-		tween.TweenProperty(heldPiece, "rotation", targetRotation, 0.3);
+		tween.TweenProperty(heldPiece, "transform:basis", targetBasis, 0.3);
 	}
 
 	public override void _PhysicsProcess(double delta) {
 		if (heldPiece != null) {
-			var result = ShootRay(3);
-			if (result.TryGetValue("position", out var position))
-				heldPiece.Position = puzzleNode.ToLocal((Vector3)position).Round();
+			SetHeldPieceToValidMousePosition();
 		}
 
 		if (Input.IsActionJustPressed("move_piece")) {
@@ -57,7 +56,7 @@ public partial class BlockPlacementController : Node3D {
 				if (!result.TryGetValue("collider", out var collider) || collider.Obj is not PuzzlePieceNode piece) return;
 				heldPiece = piece;
 				heldPieceOriginalState = new PuzzlePieceState(piece.Position, piece.Rotation);
-				targetRotation = piece.Rotation;
+				targetBasis = piece.Transform.Basis;
 				exclude.Add(heldPiece.GetRid());
 			}
 			else {
@@ -91,6 +90,46 @@ public partial class BlockPlacementController : Node3D {
 				heldPiece.SetState(heldPieceOriginalState);
 				ClearHeldPiece();
 			}
+		}
+	}
+
+	private void SetHeldPieceToValidMousePosition() {
+		var spaceState = GetWorld3D().DirectSpaceState;
+		var mousePos = GetViewport().GetMousePosition();
+
+		var origin = camera.ProjectRayOrigin(mousePos);
+		var normal = camera.ProjectRayNormal(mousePos);
+		var end = origin + normal * RayLength;
+		var query = PhysicsRayQueryParameters3D.Create(origin, end, 3, exclude);
+		var result = spaceState.IntersectRay(query);
+
+		if (!result.TryGetValue("position", out var position)) return;
+
+		// Find a valid position for the piece where it doesnt intersect with the ground or any other pieces
+		(bool[,,] voxels, var offset) = PuzzleUtils.ShapeToVoxels(PuzzleUtils.PieceNodesToShape(puzzleNode.PuzzlePieceNodes.Except(new[] { heldPiece})));
+		var pos = (Vector3)position;
+		int maxIters = Mathf.FloorToInt(origin.DistanceTo(pos)) * 2;
+		var i = 0;
+
+		while (!isValidPosition(pos)) {
+			pos -= normal;
+			if (i++ >= maxIters) return;
+		}
+
+		heldPiece.Position = puzzleNode.ToLocal(pos).Round();
+		return;
+
+		bool isValidPosition(Vector3 p) {
+			var newPos = puzzleNode.ToLocal(p).Round();
+			var newTransform = new Transform3D(targetBasis, newPos);
+			foreach (var v in heldPiece.PieceData.Shape) {
+				var vp = (newTransform * v).Round();
+				if (vp.Y < 0) return false;
+				vp -= offset * 0.5f;
+				if (PuzzleUtils.IsFull(voxels, vp)) return false;
+			}
+
+			return true;
 		}
 	}
 
