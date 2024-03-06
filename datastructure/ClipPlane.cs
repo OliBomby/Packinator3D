@@ -1,11 +1,13 @@
-using Godot;
 using System;
+using Godot;
 
-class ClipPlane {
+namespace BlockPuzzleViewerSolverEditor.datastructure;
+
+public class ClipPlane {
 	public bool Inverted = false;
 	public float AxisOffset = 0.0f;
 
-	private Func<Vector3, float> getAxis;
+	private readonly Func<Vector3, float> getAxis;
 
 	public ClipPlane(Func<Vector3, float> getAxis) {
 		this.getAxis = getAxis;		

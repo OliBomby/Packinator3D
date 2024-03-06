@@ -87,6 +87,7 @@ offset_bottom = 87.0
 min_value = -10.0
 max_value = 10.0
 step = 0.01
+value = -10.0
 
 [node name="Label2" type="Label" parent="ClipLabel/X Clip"]
 layout_mode = 0
@@ -117,8 +118,10 @@ offset_left = 3.0
 offset_top = 121.0
 offset_right = 223.0
 offset_bottom = 137.0
+min_value = -1.0
 max_value = 10.0
 step = 0.01
+value = -1.0
 
 [node name="Label2" type="Label" parent="ClipLabel/Y Clip"]
 layout_mode = 0
@@ -152,6 +155,7 @@ offset_bottom = 183.0
 min_value = -10.0
 max_value = 10.0
 step = 0.01
+value = -10.0
 
 [node name="Label2" type="Label" parent="ClipLabel/Z Clip"]
 layout_mode = 0

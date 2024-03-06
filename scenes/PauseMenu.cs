@@ -1,3 +1,4 @@
+using BlockPuzzleViewerSolverEditor.datastructure;
 using Godot;
 
 namespace BlockPuzzleViewerSolverEditor.scenes;
