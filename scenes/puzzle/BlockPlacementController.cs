@@ -47,7 +47,7 @@ public partial class BlockPlacementController : Node3D {
 		if (heldPiece != null) {
 			var result = ShootRay(3);
 			if (result.TryGetValue("position", out var position))
-				heldPiece.Position = ((Vector3)position).Round();
+				heldPiece.Position = puzzleNode.ToLocal((Vector3)position).Round();
 		}
 
 		if (Input.IsActionJustPressed("move_piece")) {
