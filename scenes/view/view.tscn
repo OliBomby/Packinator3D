@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://c82cqueavh1mq"]
+[gd_scene load_steps=28 format=3 uid="uid://c82cqueavh1mq"]
 
 [ext_resource type="Script" path="res://scenes/view/ViewScene.cs" id="1_iwres"]
 [ext_resource type="Environment" uid="uid://c7hvhnwnxbxc0" path="res://scenes/environments/view_environment.tres" id="2_0at1c"]
@@ -8,12 +8,7 @@
 [ext_resource type="Shader" path="res://shaders/outline.gdshader" id="6_0enan"]
 [ext_resource type="Shader" path="res://shaders/square_grid.gdshader" id="6_4xd4x"]
 [ext_resource type="Texture2D" uid="uid://b7eeojg8w7b23" path="res://scenes/cameras/crosshair.png" id="7_aplrx"]
-[ext_resource type="Texture2D" uid="uid://iwb5r64unno8" path="res://scenes/puzzle/wood/wood_0002_normal_opengl_1k.png" id="7_b5u34"]
-[ext_resource type="Texture2D" uid="uid://o0gqwva7mdqb" path="res://scenes/puzzle/wood/wood_0002_ao_1k.jpg" id="8_8g1ir"]
-[ext_resource type="Texture2D" uid="uid://8jc65lmc0aph" path="res://scenes/puzzle/wood/wood_0002_color_1k.jpg" id="8_lxst1"]
 [ext_resource type="Script" path="res://scenes/puzzle/PuzzleNode.cs" id="8_tq7y4"]
-[ext_resource type="Texture2D" uid="uid://bd4hotbxw2ayl" path="res://scenes/puzzle/wood/wood_0002_height_1k.png" id="9_2e74f"]
-[ext_resource type="Texture2D" uid="uid://bo1d17tqvby3p" path="res://scenes/puzzle/wood/wood_0002_roughness_1k.jpg" id="11_mdcmk"]
 [ext_resource type="PackedScene" uid="uid://cmn7yl0c860nf" path="res://scenes/pause_menu.tscn" id="14_i0rss"]
 [ext_resource type="Script" path="res://scenes/FpsCounter.cs" id="15_doi0l"]
 [ext_resource type="Script" path="res://scenes/puzzle/BlockPlacementController.cs" id="16_h81hl"]
@@ -51,27 +46,6 @@ lightmap_size_hint = Vector2i(12, 12)
 material = SubResource("ShaderMaterial_aytjf")
 flip_faces = true
 size = Vector2(2, 2)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ywuqh"]
-albedo_texture = ExtResource("8_lxst1")
-roughness_texture = ExtResource("11_mdcmk")
-normal_enabled = true
-normal_scale = 0.65
-normal_texture = ExtResource("7_b5u34")
-clearcoat_enabled = true
-clearcoat = 0.2
-anisotropy = 0.68
-ao_enabled = true
-ao_texture = ExtResource("8_8g1ir")
-heightmap_texture = ExtResource("9_2e74f")
-
-[sub_resource type="BoxMesh" id="BoxMesh_bi5at"]
-material = SubResource("StandardMaterial3D_ywuqh")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dkf1r"]
-
-[sub_resource type="TorusMesh" id="TorusMesh_vb7n2"]
-material = SubResource("StandardMaterial3D_dkf1r")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_64qjs"]
 render_priority = 1
@@ -133,6 +107,7 @@ script = ExtResource("3_ba1y1")
 
 [node name="OutlinePost" type="MeshInstance3D" parent="SpectatorCamera"]
 extra_cull_margin = 16384.0
+gi_mode = 0
 mesh = SubResource("QuadMesh_5rwvi")
 
 [node name="PostProcessingMesh" type="MeshInstance3D" parent="SpectatorCamera"]
@@ -155,18 +130,6 @@ offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("7_aplrx")
-
-[node name="Cube" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000500202, 0.834049, -2.80975)
-visible = false
-gi_mode = 2
-mesh = SubResource("BoxMesh_bi5at")
-
-[node name="Torus" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.78372, 1.25474, 0.740104)
-visible = false
-mesh = SubResource("TorusMesh_vb7n2")
-skeleton = NodePath("../Cube")
 
 [node name="Ground" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_e0dol")
