@@ -21,10 +21,13 @@ public partial class PauseMenu : ColorRect
 		puzzleNode = GetNode<puzzle.PuzzleNode>("../PuzzleNode");
 		xClip = GetNode<Node3D>("../XClip");
 		xClipPlane = new ClipPlane(vec => vec.X);
+		UpdateXClip(GetNode<HSlider>("ClipLabel/X Clip").Value);
 		yClip = GetNode<Node3D>("../YClip");
 		yClipPlane = new ClipPlane(vec => vec.Y);
+		UpdateYClip(GetNode<HSlider>("ClipLabel/Y Clip").Value);
 		zClip = GetNode<Node3D>("../ZClip");
 		zClipPlane = new ClipPlane(vec => vec.Z);
+		UpdateZClip(GetNode<HSlider>("ClipLabel/Z Clip").Value);
 	}
 
 	public void ShowPauseMenu() {
@@ -90,9 +93,13 @@ public partial class PauseMenu : ColorRect
 	}
 	private void _on_x_clip_value_changed(double value)
 	{
+		UpdateXClip(value);
+		HideClippedPieces();
+	}
+
+	private void UpdateXClip(double value) {
 		xClip.Position = new Vector3((float) value, 0.0f, 0.0f);
 		xClipPlane.AxisOffset = (float) value;
-		HideClippedPieces();
 	}
 
 	private void _on_invert_x_toggled(bool toggledOn)
@@ -120,9 +127,13 @@ public partial class PauseMenu : ColorRect
 			yClip.Show();
 		}
 		
+		UpdateYClip(value);
+		HideClippedPieces();
+	}
+
+	private void UpdateYClip(double value) {
 		yClip.Position = new Vector3(0.0f, (float) value, 0.0f);
 		yClipPlane.AxisOffset = (float) value;
-		HideClippedPieces();
 	}
 	
 	//private void _on_y_clip_drag_started()
@@ -144,11 +155,14 @@ public partial class PauseMenu : ColorRect
 	
 	private void _on_z_clip_value_changed(double value)
 	{
-		zClip.Position = new Vector3(0.0f, 0.0f, (float) value);
-		zClipPlane.AxisOffset = (float) value;
+		UpdateZClip(value);
 		HideClippedPieces();
 	}
 
+	private void UpdateZClip(double value) {
+		zClip.Position = new Vector3(0.0f, 0.0f, (float) value);
+		zClipPlane.AxisOffset = (float) value;
+	}
 
 	private void _on_invert_z_toggled(bool toggledOn)
 	{
