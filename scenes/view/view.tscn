@@ -76,8 +76,8 @@ material = SubResource("StandardMaterial3D_dkf1r")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_64qjs"]
 render_priority = 1
 shader = ExtResource("6_4xd4x")
-shader_parameter/n_rows = 11
-shader_parameter/n_columns = 11
+shader_parameter/n_rows = 21
+shader_parameter/n_columns = 21
 shader_parameter/thickness = 0.1
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bq6ap"]
@@ -88,7 +88,7 @@ roughness = 0.2
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_e0dol"]
 material = SubResource("StandardMaterial3D_bq6ap")
-size = Vector2(11, 11)
+size = Vector2(21, 21)
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_jxyt3"]
 
@@ -123,7 +123,8 @@ environment = ExtResource("2_0at1c")
 camera_attributes = SubResource("CameraAttributesPractical_bthwb")
 
 [node name="VoxelGI" type="VoxelGI" parent="."]
-size = Vector3(12, 10, 12)
+subdiv = 0
+size = Vector3(64, 64, 64)
 data = ExtResource("3_xv0y1")
 
 [node name="SpectatorCamera" type="Camera3D" parent="."]
