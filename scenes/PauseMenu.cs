@@ -1,5 +1,5 @@
 using Godot;
-using BlockPuzzleViewerSolverEditor.datastructure;
+
 namespace BlockPuzzleViewerSolverEditor.scenes;
 
 public partial class PauseMenu : Node2D
@@ -94,9 +94,9 @@ public partial class PauseMenu : Node2D
 		HideClippedPieces();
 	}
 
-	private void _on_invert_x_toggled(bool toggled_on)
+	private void _on_invert_x_toggled(bool toggledOn)
 	{
-		xClipPlane.Inverted = toggled_on;
+		xClipPlane.Inverted = toggledOn;
 		HideClippedPieces();
 	}
 	
@@ -135,9 +135,9 @@ public partial class PauseMenu : Node2D
 	//}
 	
 	
-	private void _on_invert_y_toggled(bool toggled_on)
+	private void _on_invert_y_toggled(bool toggledOn)
 	{
-		yClipPlane.Inverted = toggled_on;
+		yClipPlane.Inverted = toggledOn;
 		HideClippedPieces();
 	}
 	
@@ -149,9 +149,9 @@ public partial class PauseMenu : Node2D
 	}
 
 
-	private void _on_invert_z_toggled(bool toggled_on)
+	private void _on_invert_z_toggled(bool toggledOn)
 	{
-		zClipPlane.Inverted = toggled_on;
+		zClipPlane.Inverted = toggledOn;
 		HideClippedPieces();
 	}
 	
