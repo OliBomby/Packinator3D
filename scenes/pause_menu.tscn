@@ -2,37 +2,45 @@
 
 [ext_resource type="Script" path="res://scenes/PauseMenu.cs" id="1_ia2ak"]
 
-[node name="PauseMenu" type="Node2D"]
+[node name="PauseMenu" type="ColorRect"]
 process_mode = 2
-script = ExtResource("1_ia2ak")
-
-[node name="ColorRect" type="ColorRect" parent="."]
-custom_minimum_size = Vector2(1920, 1080)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 1920.0
-offset_bottom = 1080.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.466667)
+script = ExtResource("1_ia2ak")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color(0, 0, 0, 0.466667)
 
 [node name="CloseButton" type="Button" parent="."]
+layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = 1134.0
-offset_right = 1152.0
+offset_left = -18.0
 offset_bottom = 31.0
 grow_horizontal = 0
 text = "X"
 
 [node name="PauseLabel" type="Label" parent="."]
+layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = 404.0
-offset_right = 756.0
+offset_left = -176.0
+offset_right = 176.0
 offset_bottom = 137.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 100
@@ -171,15 +179,9 @@ text = "Invert"
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="value_changed" from="PieceWidth" to="." method="_on_piece_width_value_changed"]
 [connection signal="toggled" from="CheckBox" to="." method="_on_check_box_toggled"]
-[connection signal="drag_ended" from="ClipLabel/X Clip" to="." method="_on_x_clip_drag_ended"]
-[connection signal="drag_started" from="ClipLabel/X Clip" to="." method="_on_x_clip_drag_started"]
 [connection signal="value_changed" from="ClipLabel/X Clip" to="." method="_on_x_clip_value_changed"]
 [connection signal="toggled" from="ClipLabel/X Clip/InvertX" to="." method="_on_invert_x_toggled"]
-[connection signal="drag_ended" from="ClipLabel/Y Clip" to="." method="_on_y_clip_drag_ended"]
-[connection signal="drag_started" from="ClipLabel/Y Clip" to="." method="_on_y_clip_drag_started"]
 [connection signal="value_changed" from="ClipLabel/Y Clip" to="." method="_on_y_clip_value_changed"]
 [connection signal="toggled" from="ClipLabel/Y Clip/InvertY" to="." method="_on_invert_y_toggled"]
-[connection signal="drag_ended" from="ClipLabel/Z Clip" to="." method="_on_z_clip_drag_ended"]
-[connection signal="drag_started" from="ClipLabel/Z Clip" to="." method="_on_z_clip_drag_started"]
 [connection signal="value_changed" from="ClipLabel/Z Clip" to="." method="_on_z_clip_value_changed"]
 [connection signal="toggled" from="ClipLabel/Z Clip/InvertZ" to="." method="_on_invert_z_toggled"]

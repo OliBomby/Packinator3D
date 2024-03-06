@@ -2,7 +2,7 @@ using Godot;
 
 namespace BlockPuzzleViewerSolverEditor.scenes;
 
-public partial class PauseMenu : Node2D
+public partial class PauseMenu : ColorRect
 {
 	private bool pauseReleased;
 
