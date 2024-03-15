@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://6k3y8kpexili"]
+[gd_scene load_steps=5 format=3 uid="uid://6k3y8kpexili"]
 
 [ext_resource type="Script" path="res://scenes/menus/MainMenu.cs" id="1_xtvok"]
+[ext_resource type="Texture2D" uid="uid://3opkde6xpdgw" path="res://scenes/menus/3D-15-3-2024.png" id="2_wyr85"]
 
 [sub_resource type="Theme" id="Theme_eg2b1"]
 
@@ -43,29 +44,41 @@ grow_vertical = 2
 [node name="MarginContainer" type="MarginContainer" parent="GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 6
-size_flags_vertical = 4
-theme_override_constants/margin_left = 0
+size_flags_vertical = 3
 theme_override_constants/margin_top = 42
-theme_override_constants/margin_right = 0
-theme_override_constants/margin_bottom = 58
 
-[node name="RichTextLabel" type="Label" parent="GridContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="GridContainer/MarginContainer"]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 25
+
+[node name="RichTextLabel" type="Label" parent="GridContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 1
 theme = SubResource("Theme_eg2b1")
 text = "BLOCK PUZZLE VIEWER SOLVER EDITOR"
 label_settings = SubResource("LabelSettings_udcli")
 
+[node name="TextureRect" type="TextureRect" parent="GridContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("2_wyr85")
+expand_mode = 1
+stretch_mode = 5
+
 [node name="MarginContainer2" type="MarginContainer" parent="GridContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+size_flags_stretch_ratio = 1.4
 theme_override_constants/margin_left = 300
-theme_override_constants/margin_top = 16
+theme_override_constants/margin_top = 61
 theme_override_constants/margin_right = 300
-theme_override_constants/margin_bottom = 15
+theme_override_constants/margin_bottom = 60
 
 [node name="VBoxContainer" type="VBoxContainer" parent="GridContainer/MarginContainer2"]
 layout_mode = 2
+theme_override_constants/separation = 10
 alignment = 1
 
 [node name="Button" type="Button" parent="GridContainer/MarginContainer2/VBoxContainer"]
