@@ -15,7 +15,7 @@ public partial class MainMenu : Control
 	}
 
 	private void _on_play_pressed() {
-		GetTree().ChangeSceneToFile("res://scenes/view/view.tscn");
+		GetTree().ChangeSceneToFile("res://scenes/menus/select/select.tscn");
 	}
 
 	private void _on_options_pressed() {
@@ -24,5 +24,11 @@ public partial class MainMenu : Control
 
 	private void _on_quit_pressed() {
 		GetTree().Quit();
+	}
+
+	public override void _Input(InputEvent @event) {
+		if (@event.IsActionPressed("ui_cancel")) {
+			GetTree().Quit();
+		}
 	}
 }

@@ -1,0 +1,52 @@
+[gd_scene load_steps=2 format=3 uid="uid://bq2oefoojtys0"]
+
+[ext_resource type="Script" path="res://scenes/menus/select/Select.cs" id="1_7x6eg"]
+
+[node name="Select" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7x6eg")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color(0.564706, 0.611765, 1, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 45
+theme_override_constants/margin_top = 45
+theme_override_constants/margin_right = 45
+theme_override_constants/margin_bottom = 45
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="TabBar" type="TabBar" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+tab_count = 2
+tab_alignment = 1
+tab_0/title = "Normal Levels"
+tab_1/title = "Custom Levels"
+
+[node name="ItemList" type="ItemList" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[connection signal="item_activated" from="MarginContainer/VBoxContainer/ItemList" to="." method="_on_item_list_item_activated"]

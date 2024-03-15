@@ -28,7 +28,17 @@ public partial class PuzzleNode : Node3D {
 
 	private void LoadData(Puzzle puzzle) {
 		PuzzleData = puzzle;
+
+		foreach (var puzzlePieceNode in PuzzlePieceNodes) {
+			RemoveChild(puzzlePieceNode);
+			puzzlePieceNode.QueueFree();
+		}
 		PuzzlePieceNodes.Clear();
+
+		if (targetShape != null) {
+			RemoveChild(targetShape);
+			targetShape.QueueFree();
+		}
 
 		// Add the target shape
 		AddChild(targetShape = new MeshInstance3D {
