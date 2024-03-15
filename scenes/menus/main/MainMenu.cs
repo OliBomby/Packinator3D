@@ -1,6 +1,6 @@
 using Godot;
 
-namespace BlockPuzzleViewerSolverEditor.scenes.menus;
+namespace BlockPuzzleViewerSolverEditor.scenes.menus.main;
 
 public partial class MainMenu : Control
 {
