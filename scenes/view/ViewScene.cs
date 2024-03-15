@@ -23,7 +23,7 @@ public partial class ViewScene : Node3D
 
 	public override void _Input(InputEvent @event) {
 		if (@event.IsActionPressed("ui_cancel")) {
-			GetTree().Quit();
+			GetTree().ChangeSceneToFile("res://scenes/menus/main_menu.tscn");
 		}
 	}
 }

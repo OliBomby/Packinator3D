@@ -1,0 +1,90 @@
+[gd_scene load_steps=4 format=3 uid="uid://6k3y8kpexili"]
+
+[ext_resource type="Script" path="res://scenes/menus/MainMenu.cs" id="1_xtvok"]
+
+[sub_resource type="Theme" id="Theme_eg2b1"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_udcli"]
+font_size = 48
+outline_size = 5
+outline_color = Color(0.243137, 0.243137, 0.243137, 1)
+shadow_size = 10
+shadow_color = Color(0, 0.537255, 0.576471, 0.619608)
+shadow_offset = Vector2(5, 5)
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_xtvok")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color(0.564706, 0.611765, 1, 1)
+
+[node name="GridContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 42
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 58
+
+[node name="RichTextLabel" type="Label" parent="GridContainer/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+theme = SubResource("Theme_eg2b1")
+text = "BLOCK PUZZLE VIEWER SOLVER EDITOR"
+label_settings = SubResource("LabelSettings_udcli")
+
+[node name="MarginContainer2" type="MarginContainer" parent="GridContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 300
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 300
+theme_override_constants/margin_bottom = 15
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GridContainer/MarginContainer2"]
+layout_mode = 2
+alignment = 1
+
+[node name="Button" type="Button" parent="GridContainer/MarginContainer2/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "PLAY"
+
+[node name="Button2" type="Button" parent="GridContainer/MarginContainer2/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "OPTIONS
+"
+
+[node name="Button3" type="Button" parent="GridContainer/MarginContainer2/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "QUIT
+"
+
+[connection signal="pressed" from="GridContainer/MarginContainer2/VBoxContainer/Button" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="GridContainer/MarginContainer2/VBoxContainer/Button2" to="." method="_on_options_pressed"]
+[connection signal="pressed" from="GridContainer/MarginContainer2/VBoxContainer/Button3" to="." method="_on_quit_pressed"]
