@@ -6,7 +6,7 @@ namespace Packinator3D.scenes.puzzle;
 
 public partial class PuzzleNode : Node3D {
 	[Export]
-	public string PuzzlePath { get; set; }
+	public string DebugPuzzlePath { get; set; }
 
 	private float width = 0.9f;
 
@@ -20,13 +20,7 @@ public partial class PuzzleNode : Node3D {
 	public readonly List<PuzzlePieceNode> PuzzlePieceNodes = new();
 	private MeshInstance3D targetShape;
 
-	private void LoadMeshes() {
-		if (string.IsNullOrEmpty(PuzzlePath)) return;
-		var puzzle = PuzzleImporter.FromSolution(PuzzlePath);
-		LoadData(puzzle);
-	}
-
-	private void LoadData(Puzzle puzzle) {
+	public void LoadData(Puzzle puzzle) {
 		PuzzleData = puzzle;
 
 		foreach (var puzzlePieceNode in PuzzlePieceNodes) {
@@ -58,6 +52,11 @@ public partial class PuzzleNode : Node3D {
 			AddChild(puzzlePieceNode);
 			PuzzlePieceNodes.Add(puzzlePieceNode);
 		}
+
+		// Set the initial state of the puzzle pieces to the solution state
+		for (var i = 0; i < PuzzlePieceNodes.Count; i++) {
+			PuzzlePieceNodes[i].Transform = PuzzleData.Solutions[0].States[i];
+		}
 	}
 
 	public void SetWidth(float value) {
@@ -65,10 +64,6 @@ public partial class PuzzleNode : Node3D {
 		foreach (var piece in PuzzlePieceNodes) {
 			piece.SetWidth(value);
 		}
-	} 
-	
-	public void SetHeightClip(float clip) {
-		GD.Print("A");
 	}
 
 	public void SetTargetShapeVisible(bool visible) {
@@ -77,9 +72,8 @@ public partial class PuzzleNode : Node3D {
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready() {
-		LoadMeshes();
-		for (var i = 0; i < PuzzlePieceNodes.Count; i++) {
-			PuzzlePieceNodes[i].Transform = PuzzleData.Solutions[0].States[i];
+		if (DebugPuzzlePath is not null && PuzzleData is null) {
+			LoadData(PuzzleImporter.FromSolution(DebugPuzzlePath));
 		}
 	}
 

@@ -1,4 +1,5 @@
 using Godot;
+using Packinator3D.datastructure;
 using Packinator3D.scenes.puzzle;
 
 namespace Packinator3D.scenes.menus.@select;
@@ -12,18 +13,14 @@ public partial class Select : Control
 	{
 		puzzleList = GetNode<ItemList>("MarginContainer/VBoxContainer/ItemList");
 
-		// Load all puzzles from the puzzles directory
-		var puzzleDirectory = DirAccess.Open("res://puzzles");
-		string[] puzzles = puzzleDirectory.GetFiles();
-		foreach (string puzzlePath in puzzles) {
-			puzzleList.AddItem(puzzlePath);
+		foreach (var puzzle in SaveManager.SaveData.Puzzles) {
+			puzzleList.AddItem(puzzle.Name);
 		}
 	}
 
 	private void _on_item_list_item_activated(int index) {
-		string puzzlePath = puzzleList.GetItemText(index);
 		var viewScene = ResourceLoader.Load<PackedScene>("res://scenes/view/view.tscn").Instantiate();
-		viewScene.GetNode<PuzzleNode>("PuzzleNode").PuzzlePath = "res://puzzles/" + puzzlePath;
+		viewScene.GetNode<PuzzleNode>("PuzzleNode").LoadData(SaveManager.SaveData.Puzzles[index]);
 		var tree = GetTree();
 		tree.Root.AddChild(viewScene);
 		tree.CurrentScene = viewScene;
@@ -40,5 +37,9 @@ public partial class Select : Control
 		if (@event.IsActionPressed("ui_cancel")) {
 			GetTree().ChangeSceneToFile("res://scenes/menus/main/main_menu.tscn");
 		}
+	}
+
+	public override void _ExitTree() {
+		SaveManager.Save();
 	}
 }

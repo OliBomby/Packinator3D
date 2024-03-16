@@ -1,4 +1,5 @@
 using Godot;
+using Packinator3D.datastructure;
 
 namespace Packinator3D.scenes.menus.main;
 
@@ -7,6 +8,7 @@ public partial class MainMenu : Control
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		SaveManager.Init();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
