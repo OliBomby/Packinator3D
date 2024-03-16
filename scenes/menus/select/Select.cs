@@ -13,14 +13,14 @@ public partial class Select : Control
 	{
 		puzzleList = GetNode<ItemList>("MarginContainer/VBoxContainer/ItemList");
 
-		foreach (var puzzle in SaveManager.SaveData.Puzzles) {
+		foreach (var puzzle in SaveManager.Puzzles) {
 			puzzleList.AddItem(puzzle.Name);
 		}
 	}
 
 	private void _on_item_list_item_activated(int index) {
 		var viewScene = ResourceLoader.Load<PackedScene>("res://scenes/view/view.tscn").Instantiate();
-		viewScene.GetNode<PuzzleNode>("PuzzleNode").LoadData(SaveManager.SaveData.Puzzles[index]);
+		viewScene.GetNode<PuzzleNode>("PuzzleNode").LoadData(SaveManager.Puzzles[index]);
 		var tree = GetTree();
 		tree.Root.AddChild(viewScene);
 		tree.CurrentScene = viewScene;
