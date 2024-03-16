@@ -4,6 +4,10 @@
     <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net7.0</TargetFramework>
     <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'ios' ">net8.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
+    <AssemblyName>Packinator3D</AssemblyName>
+    <RootNamespace>Packinator3D</RootNamespace>
+    <Company>Packinator3D</Company>
+    <Product>Packinator3D</Product>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="cameras\**" />

@@ -1,6 +1,6 @@
 using Godot;
 
-namespace BlockPuzzleViewerSolverEditor.scenes.cameras;
+namespace Packinator3D.scenes.cameras;
 
 public partial class SpectatorCamera : Camera3D {
 	private Vector2 mouseDelta;

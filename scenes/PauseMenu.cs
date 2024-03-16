@@ -1,13 +1,14 @@
-using BlockPuzzleViewerSolverEditor.datastructure;
 using Godot;
+using Packinator3D.datastructure;
+using Packinator3D.scenes.puzzle;
 
-namespace BlockPuzzleViewerSolverEditor.scenes;
+namespace Packinator3D.scenes;
 
 public partial class PauseMenu : ColorRect
 {
 	private bool pauseReleased;
 
-	private puzzle.PuzzleNode puzzleNode;
+	private PuzzleNode puzzleNode;
 	private ClipPlane xClipPlane;
 	private ClipPlane yClipPlane;
 	private ClipPlane zClipPlane;
@@ -18,7 +19,7 @@ public partial class PauseMenu : ColorRect
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		puzzleNode = GetNode<puzzle.PuzzleNode>("../PuzzleNode");
+		puzzleNode = GetNode<PuzzleNode>("../PuzzleNode");
 		xClip = GetNode<Node3D>("../XClip");
 		xClipPlane = new ClipPlane(vec => vec.X);
 		UpdateXClip(GetNode<HSlider>("ClipLabel/X Clip").Value);

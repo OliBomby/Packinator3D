@@ -10,14 +10,14 @@ config_version=5
 
 [application]
 
-config/name="BlockPuzzleViewerSolverEditor"
+config/name="PACKINATOR 3D"
 run/main_scene="res://scenes/menus/main/main_menu.tscn"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 config/icon="res://icons/icon.svg"
 
 [dotnet]
 
-project/assembly_name="BlockPuzzleViewerSolverEditor"
+project/assembly_name="Packinator3D"
 
 [input]
 

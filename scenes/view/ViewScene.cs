@@ -1,6 +1,6 @@
 using Godot;
 
-namespace BlockPuzzleViewerSolverEditor.scenes.view;
+namespace Packinator3D.scenes.view;
 
 public partial class ViewScene : Node3D
 {

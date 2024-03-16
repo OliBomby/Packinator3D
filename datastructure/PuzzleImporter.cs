@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Godot;
 
-namespace BlockPuzzleViewerSolverEditor.datastructure;
+namespace Packinator3D.datastructure;
 
 public static class PuzzleImporter {
 	public static Puzzle FromSolution(string path) {

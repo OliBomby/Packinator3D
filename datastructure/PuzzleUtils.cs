@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BlockPuzzleViewerSolverEditor.scenes.puzzle;
 using Godot;
+using Packinator3D.scenes.puzzle;
 
-namespace BlockPuzzleViewerSolverEditor.datastructure;
+namespace Packinator3D.datastructure;
 
 public static class PuzzleUtils {
     public static readonly Color[] DefaultColors = {

@@ -1,6 +1,6 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+﻿﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlockPuzzleViewerSolverEditor", "BlockPuzzleViewerSolverEditor.csproj", "{911A2AA6-FF2D-444E-97C4-3283E6E2DAC4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Packinator3D", "Packinator3D.csproj", "{911A2AA6-FF2D-444E-97C4-3283E6E2DAC4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

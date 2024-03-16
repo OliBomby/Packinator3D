@@ -1,5 +1,6 @@
 using Godot;
-using System;
+
+namespace Packinator3D.scenes.view;
 
 public partial class HeightClip : MeshInstance3D
 {

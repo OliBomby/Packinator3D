@@ -1,7 +1,7 @@
 using System;
 using Godot;
 
-namespace BlockPuzzleViewerSolverEditor.datastructure;
+namespace Packinator3D.datastructure;
 
 public class ClipPlane {
 	public bool Inverted = false;

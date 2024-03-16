@@ -1,7 +1,7 @@
-using BlockPuzzleViewerSolverEditor.datastructure;
 using Godot;
+using Packinator3D.datastructure;
 
-namespace BlockPuzzleViewerSolverEditor.scenes.puzzle;
+namespace Packinator3D.scenes.puzzle;
 
 public partial class PuzzlePieceNode : StaticBody3D
 {

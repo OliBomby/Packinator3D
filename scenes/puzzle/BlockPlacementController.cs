@@ -1,9 +1,9 @@
 using System.Linq;
-using BlockPuzzleViewerSolverEditor.datastructure;
 using Godot;
 using Godot.Collections;
+using Packinator3D.datastructure;
 
-namespace BlockPuzzleViewerSolverEditor.scenes.puzzle;
+namespace Packinator3D.scenes.puzzle;
 
 /// <summary>
 /// This class is responsible for controlling the placement of blocks in the puzzle.

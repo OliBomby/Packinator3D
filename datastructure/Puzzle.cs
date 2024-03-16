@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Godot;
 
-namespace BlockPuzzleViewerSolverEditor.datastructure;
+namespace Packinator3D.datastructure;
 
 public record Puzzle {
     public string Name { get; set; }

@@ -1,6 +1,6 @@
 using Godot;
 
-namespace BlockPuzzleViewerSolverEditor.scenes;
+namespace Packinator3D.scenes;
 
 public partial class FpsCounter : Label
 {

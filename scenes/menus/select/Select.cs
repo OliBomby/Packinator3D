@@ -1,7 +1,7 @@
-using BlockPuzzleViewerSolverEditor.scenes.puzzle;
 using Godot;
+using Packinator3D.scenes.puzzle;
 
-namespace BlockPuzzleViewerSolverEditor.scenes.menus.@select;
+namespace Packinator3D.scenes.menus.@select;
 
 public partial class Select : Control
 {
