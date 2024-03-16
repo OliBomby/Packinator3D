@@ -33,70 +33,90 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 color = Color(0.564706, 0.611765, 1, 1)
 
-[node name="GridContainer" type="VBoxContainer" parent="."]
+[node name="MarginContainer2" type="Control" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.4
 
-[node name="MarginContainer" type="MarginContainer" parent="GridContainer"]
+[node name="GridContainer" type="VBoxContainer" parent="MarginContainer2"]
+layout_mode = 2
+anchor_left = 0.5
+anchor_top = 0.501
+anchor_right = 0.5
+anchor_bottom = 0.501
+offset_left = -276.0
+offset_top = -263.648
+offset_right = 276.0
+offset_bottom = 263.352
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer2/GridContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/margin_top = 42
+size_flags_stretch_ratio = 1.4
+theme_override_constants/margin_bottom = 25
 
-[node name="VBoxContainer" type="VBoxContainer" parent="GridContainer/MarginContainer"]
-clip_contents = true
+[node name="VBoxContainer" type="Control" parent="MarginContainer2/GridContainer/MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 5
 
-[node name="RichTextLabel" type="Label" parent="GridContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
+[node name="RichTextLabel" type="Label" parent="MarginContainer2/GridContainer/MarginContainer/VBoxContainer"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -276.5
+offset_right = 276.5
+offset_bottom = 121.0
+grow_horizontal = 2
 size_flags_horizontal = 4
 size_flags_vertical = 1
 theme = SubResource("Theme_eg2b1")
 text = "PACKINATOR"
 label_settings = SubResource("LabelSettings_udcli")
 
-[node name="TextureRect" type="TextureRect" parent="GridContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
+[node name="TextureRect" type="TextureRect" parent="MarginContainer2/GridContainer/MarginContainer/VBoxContainer"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -276.5
+offset_top = 123.115
+offset_right = 276.5
+offset_bottom = 253.115
+grow_horizontal = 2
 size_flags_vertical = 3
 texture = ExtResource("2_wyr85")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="MarginContainer2" type="MarginContainer" parent="GridContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer2/GridContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-size_flags_stretch_ratio = 1.4
-theme_override_constants/margin_left = 300
-theme_override_constants/margin_top = 61
-theme_override_constants/margin_right = 300
-theme_override_constants/margin_bottom = 60
-
-[node name="VBoxContainer" type="VBoxContainer" parent="GridContainer/MarginContainer2"]
-layout_mode = 2
+size_flags_stretch_ratio = 1.2
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="Button" type="Button" parent="GridContainer/MarginContainer2/VBoxContainer"]
+[node name="Button" type="Button" parent="MarginContainer2/GridContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 text = "PLAY"
 
-[node name="Button2" type="Button" parent="GridContainer/MarginContainer2/VBoxContainer"]
+[node name="Button2" type="Button" parent="MarginContainer2/GridContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 text = "OPTIONS
 "
 
-[node name="Button3" type="Button" parent="GridContainer/MarginContainer2/VBoxContainer"]
+[node name="Button3" type="Button" parent="MarginContainer2/GridContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 text = "QUIT
 "
 
-[connection signal="pressed" from="GridContainer/MarginContainer2/VBoxContainer/Button" to="." method="_on_play_pressed"]
-[connection signal="pressed" from="GridContainer/MarginContainer2/VBoxContainer/Button2" to="." method="_on_options_pressed"]
-[connection signal="pressed" from="GridContainer/MarginContainer2/VBoxContainer/Button3" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="MarginContainer2/GridContainer/VBoxContainer/Button" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="MarginContainer2/GridContainer/VBoxContainer/Button2" to="." method="_on_options_pressed"]
+[connection signal="pressed" from="MarginContainer2/GridContainer/VBoxContainer/Button3" to="." method="_on_quit_pressed"]
