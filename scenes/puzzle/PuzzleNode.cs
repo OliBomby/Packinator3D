@@ -53,7 +53,7 @@ public partial class PuzzleNode : Node3D {
 			PuzzlePieceNodes.Add(puzzlePieceNode);
 		}
 
-		if (solved) {
+		if (solved && puzzle.Solutions.Count > 0) {
 			// Set the initial state of the puzzle pieces to the solution state
 			for (var i = 0; i < PuzzlePieceNodes.Count; i++) {
 				PuzzlePieceNodes[i].Transform = PuzzleData.Solutions[0].States[i];
