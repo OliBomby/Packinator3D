@@ -43,21 +43,69 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="Custom Levels" type="ItemList" parent="MarginContainer/TabContainer"]
+visible = false
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Button" type="Button" parent="."]
+[node name="MarginContainer2" type="MarginContainer" parent="."]
 layout_mode = 1
-anchors_preset = 2
+anchors_preset = 12
 anchor_top = 1.0
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 14.0
-offset_top = -87.0
-offset_right = 214.0
-offset_bottom = -14.0
+offset_top = -99.0
+grow_horizontal = 2
 grow_vertical = 0
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer2"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="BackButton" type="Button" parent="MarginContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 text = "BACK"
+
+[node name="PlayButton" type="Button" parent="MarginContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "PLAY"
+
+[node name="ViewButton" type="Button" parent="MarginContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "VIEW"
+
+[node name="EditButton" type="Button" parent="MarginContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "EDIT"
+
+[node name="NewButton" type="Button" parent="MarginContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "NEW"
+
+[node name="ImportButton" type="Button" parent="MarginContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "IMPORT"
+
+[node name="ExportButton" type="Button" parent="MarginContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "EXPORT"
 
 [connection signal="item_activated" from="MarginContainer/TabContainer/Normal Levels" to="." method="OnNormalPuzzleListItemActivated"]
 [connection signal="item_activated" from="MarginContainer/TabContainer/Custom Levels" to="." method="OnCustomPuzzleListItemActivated"]
-[connection signal="pressed" from="Button" to="." method="GoBack"]
+[connection signal="pressed" from="MarginContainer2/HBoxContainer/BackButton" to="." method="GoBack"]
+[connection signal="pressed" from="MarginContainer2/HBoxContainer/PlayButton" to="." method="GoBack"]
+[connection signal="pressed" from="MarginContainer2/HBoxContainer/ViewButton" to="." method="GoBack"]
+[connection signal="pressed" from="MarginContainer2/HBoxContainer/EditButton" to="." method="GoBack"]
+[connection signal="pressed" from="MarginContainer2/HBoxContainer/NewButton" to="." method="GoBack"]
+[connection signal="pressed" from="MarginContainer2/HBoxContainer/ImportButton" to="." method="GoBack"]
+[connection signal="pressed" from="MarginContainer2/HBoxContainer/ExportButton" to="." method="GoBack"]
