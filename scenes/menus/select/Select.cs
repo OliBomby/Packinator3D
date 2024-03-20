@@ -35,8 +35,12 @@ public partial class Select : Control
 
 	public override void _Input(InputEvent @event) {
 		if (@event.IsActionPressed("ui_cancel")) {
-			GetTree().ChangeSceneToFile("res://scenes/menus/main/main_menu.tscn");
+			GoBack();
 		}
+	}
+
+	private void GoBack() {
+		GetTree().ChangeSceneToFile("res://scenes/menus/main/main_menu.tscn");
 	}
 
 	public override void _ExitTree() {
