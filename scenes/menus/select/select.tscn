@@ -34,18 +34,15 @@ theme_override_constants/margin_top = 45
 theme_override_constants/margin_right = 45
 theme_override_constants/margin_bottom = 105
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="TabContainer" type="TabContainer" parent="MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 0
-
-[node name="TabBar" type="TabBar" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
-tab_count = 2
 tab_alignment = 1
-tab_0/title = "Normal Levels"
-tab_1/title = "Custom Levels"
 
-[node name="ItemList" type="ItemList" parent="MarginContainer/VBoxContainer"]
+[node name="Normal Levels" type="ItemList" parent="MarginContainer/TabContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Custom Levels" type="ItemList" parent="MarginContainer/TabContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -61,5 +58,6 @@ offset_bottom = -14.0
 grow_vertical = 0
 text = "BACK"
 
-[connection signal="item_activated" from="MarginContainer/VBoxContainer/ItemList" to="." method="_on_item_list_item_activated"]
+[connection signal="item_activated" from="MarginContainer/TabContainer/Normal Levels" to="." method="OnNormalPuzzleListItemActivated"]
+[connection signal="item_activated" from="MarginContainer/TabContainer/Custom Levels" to="." method="OnCustomPuzzleListItemActivated"]
 [connection signal="pressed" from="Button" to="." method="GoBack"]

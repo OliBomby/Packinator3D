@@ -6,21 +6,35 @@ namespace Packinator3D.scenes.menus.@select;
 
 public partial class Select : Control
 {
-	private ItemList puzzleList;
+	private ItemList normalPuzzleList;
+	private ItemList customPuzzleList;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		puzzleList = GetNode<ItemList>("MarginContainer/VBoxContainer/ItemList");
+		normalPuzzleList = GetNode<ItemList>("MarginContainer/TabContainer/Normal Levels");
+		customPuzzleList = GetNode<ItemList>("MarginContainer/TabContainer/Custom Levels");
 
 		foreach (var puzzle in SaveManager.Puzzles) {
-			puzzleList.AddItem(puzzle.Name);
+			normalPuzzleList.AddItem(puzzle.Name);
+		}
+
+		foreach (var puzzle in SaveManager.SaveData.CustomPuzzles) {
+			customPuzzleList.AddItem(puzzle.Name);
 		}
 	}
 
-	private void _on_item_list_item_activated(int index) {
+	private void OnNormalPuzzleListItemActivated(int index) {
+		LoadPuzzle(SaveManager.Puzzles[index]);
+	}
+
+	private void OnCustomPuzzleListItemActivated(int index) {
+		LoadPuzzle(SaveManager.SaveData.CustomPuzzles[index]);
+	}
+
+	private void LoadPuzzle(Puzzle puzzle) {
 		var viewScene = ResourceLoader.Load<PackedScene>("res://scenes/view/view.tscn").Instantiate();
-		viewScene.GetNode<PuzzleNode>("PuzzleNode").LoadData(SaveManager.Puzzles[index]);
+		viewScene.GetNode<PuzzleNode>("PuzzleNode").LoadData(puzzle);
 		var tree = GetTree();
 		tree.Root.AddChild(viewScene);
 		tree.CurrentScene = viewScene;
