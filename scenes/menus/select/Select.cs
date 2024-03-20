@@ -6,12 +6,14 @@ namespace Packinator3D.scenes.menus.@select;
 
 public partial class Select : Control
 {
+	private TabContainer tabContainer;
 	private ItemList normalPuzzleList;
 	private ItemList customPuzzleList;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		tabContainer = GetNode<TabContainer>("MarginContainer/TabContainer");
 		normalPuzzleList = GetNode<ItemList>("MarginContainer/TabContainer/Normal Levels");
 		customPuzzleList = GetNode<ItemList>("MarginContainer/TabContainer/Custom Levels");
 
@@ -24,6 +26,10 @@ public partial class Select : Control
 		}
 	}
 
+	public override void _ExitTree() {
+		SaveManager.Save();
+	}
+
 	private void OnNormalPuzzleListItemActivated(int index) {
 		LoadPuzzle(SaveManager.Puzzles[index]);
 	}
@@ -33,6 +39,7 @@ public partial class Select : Control
 	}
 
 	private void LoadPuzzle(Puzzle puzzle) {
+		if (puzzle == null) return;
 		var viewScene = ResourceLoader.Load<PackedScene>("res://scenes/view/view.tscn").Instantiate();
 		viewScene.GetNode<PuzzleNode>("PuzzleNode").LoadData(puzzle);
 		var tree = GetTree();
@@ -57,7 +64,16 @@ public partial class Select : Control
 		GetTree().ChangeSceneToFile("res://scenes/menus/main/main_menu.tscn");
 	}
 
-	public override void _ExitTree() {
-		SaveManager.Save();
+	private Puzzle GetSelectedPuzzle() {
+		int[] selected = tabContainer.CurrentTab == 0 ? normalPuzzleList.GetSelectedItems() : customPuzzleList.GetSelectedItems();
+		return selected.Length > 0 ? SaveManager.Puzzles[selected[0]] : null;
+	}
+
+	private void Play() {
+		LoadPuzzle(GetSelectedPuzzle());
+	}
+
+	private void View() {
+		LoadPuzzle(GetSelectedPuzzle());
 	}
 }
