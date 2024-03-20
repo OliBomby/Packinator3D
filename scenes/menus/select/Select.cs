@@ -76,4 +76,14 @@ public partial class Select : Control
 	private void View() {
 		LoadPuzzle(GetSelectedPuzzle(), true);
 	}
+
+	private void Edit() { }
+
+	private void New() { }
+
+	private void Delete() { }
+
+	private void Import() { }
+
+	private void Export() { }
 }

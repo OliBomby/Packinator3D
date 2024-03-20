@@ -90,6 +90,11 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "NEW"
 
+[node name="DeleteButton" type="Button" parent="MarginContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "DELETE"
+
 [node name="ImportButton" type="Button" parent="MarginContainer2/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -105,7 +110,8 @@ text = "EXPORT"
 [connection signal="pressed" from="MarginContainer2/HBoxContainer/BackButton" to="." method="GoBack"]
 [connection signal="pressed" from="MarginContainer2/HBoxContainer/PlayButton" to="." method="Play"]
 [connection signal="pressed" from="MarginContainer2/HBoxContainer/ViewButton" to="." method="View"]
-[connection signal="pressed" from="MarginContainer2/HBoxContainer/EditButton" to="." method="GoBack"]
-[connection signal="pressed" from="MarginContainer2/HBoxContainer/NewButton" to="." method="GoBack"]
-[connection signal="pressed" from="MarginContainer2/HBoxContainer/ImportButton" to="." method="GoBack"]
-[connection signal="pressed" from="MarginContainer2/HBoxContainer/ExportButton" to="." method="GoBack"]
+[connection signal="pressed" from="MarginContainer2/HBoxContainer/EditButton" to="." method="Edit"]
+[connection signal="pressed" from="MarginContainer2/HBoxContainer/NewButton" to="." method="New"]
+[connection signal="pressed" from="MarginContainer2/HBoxContainer/DeleteButton" to="." method="Delete"]
+[connection signal="pressed" from="MarginContainer2/HBoxContainer/ImportButton" to="." method="Import"]
+[connection signal="pressed" from="MarginContainer2/HBoxContainer/ExportButton" to="." method="Export"]
