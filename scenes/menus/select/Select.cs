@@ -38,10 +38,10 @@ public partial class Select : Control
 		LoadPuzzle(SaveManager.SaveData.CustomPuzzles[index]);
 	}
 
-	private void LoadPuzzle(Puzzle puzzle) {
+	private void LoadPuzzle(Puzzle puzzle, bool solved=false) {
 		if (puzzle == null) return;
 		var viewScene = ResourceLoader.Load<PackedScene>("res://scenes/view/view.tscn").Instantiate();
-		viewScene.GetNode<PuzzleNode>("PuzzleNode").LoadData(puzzle);
+		viewScene.GetNode<PuzzleNode>("PuzzleNode").LoadData(puzzle, solved);
 		var tree = GetTree();
 		tree.Root.AddChild(viewScene);
 		tree.CurrentScene = viewScene;
@@ -74,6 +74,6 @@ public partial class Select : Control
 	}
 
 	private void View() {
-		LoadPuzzle(GetSelectedPuzzle());
+		LoadPuzzle(GetSelectedPuzzle(), true);
 	}
 }
