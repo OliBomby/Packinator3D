@@ -21,6 +21,11 @@ public partial class Select : Control
 			normalPuzzleList.AddItem(puzzle.Name);
 		}
 
+		ReloadCustomPuzzles();
+	}
+
+	private void ReloadCustomPuzzles() {
+		customPuzzleList.Clear();
 		foreach (var puzzle in SaveManager.SaveData.CustomPuzzles) {
 			customPuzzleList.AddItem(puzzle.Name);
 		}
@@ -66,7 +71,8 @@ public partial class Select : Control
 
 	private Puzzle GetSelectedPuzzle() {
 		int[] selected = tabContainer.CurrentTab == 0 ? normalPuzzleList.GetSelectedItems() : customPuzzleList.GetSelectedItems();
-		return selected.Length > 0 ? SaveManager.Puzzles[selected[0]] : null;
+		if (selected.Length == 0) return null;
+		return tabContainer.CurrentTab == 0 ? SaveManager.Puzzles[selected[0]] : SaveManager.SaveData.CustomPuzzles[selected[0]];
 	}
 
 	private void Play() {
@@ -81,9 +87,27 @@ public partial class Select : Control
 
 	private void New() { }
 
-	private void Delete() { }
+	private void Delete() {
+		if (tabContainer.CurrentTab != 1) return;
+		var puzzle = GetSelectedPuzzle();
+		if (puzzle is null) return;
+		SaveManager.RemovePuzzle(puzzle);
+		ReloadCustomPuzzles();
+	}
 
-	private void Import() { }
+	private void Import() {
+		var dialog = GetNode<FileDialog>("FileDialog");
+		dialog.Show();
+		if (!FileAccess.FileExists(dialog.CurrentFile)) return;
+		SaveManager.ImportPuzzle(dialog.CurrentFile);
+		ReloadCustomPuzzles();
+		tabContainer.CurrentTab = 1;
+	}
 
-	private void Export() { }
+	private void Export() {
+		var puzzle = GetSelectedPuzzle();
+		if (puzzle is null) return;
+		string path = SaveManager.ExportPuzzle(GetSelectedPuzzle());
+		OS.ShellShowInFileManager(ProjectSettings.GlobalizePath(path));
+	}
 }

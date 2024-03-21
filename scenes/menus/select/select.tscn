@@ -105,6 +105,15 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "EXPORT"
 
+[node name="FileDialog" type="FileDialog" parent="."]
+mode = 2
+title = "Open a File"
+size = Vector2i(690, 594)
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+use_native_dialog = true
+
 [connection signal="item_activated" from="MarginContainer/TabContainer/Normal Levels" to="." method="OnNormalPuzzleListItemActivated"]
 [connection signal="item_activated" from="MarginContainer/TabContainer/Custom Levels" to="." method="OnCustomPuzzleListItemActivated"]
 [connection signal="pressed" from="MarginContainer2/HBoxContainer/BackButton" to="." method="GoBack"]
