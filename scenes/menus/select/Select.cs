@@ -96,7 +96,7 @@ public partial class Select : Control
 	}
 
 	private void Import() {
-		var dialog = GetNode<FileDialog>("FileDialog");
+		var dialog = GetNode<FileDialog>("ImportFileDialog");
 		dialog.Show();
 		if (!FileAccess.FileExists(dialog.CurrentFile)) return;
 		SaveManager.ImportPuzzle(dialog.CurrentFile);
