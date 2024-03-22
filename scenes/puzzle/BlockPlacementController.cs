@@ -53,6 +53,11 @@ public partial class BlockPlacementController : Node3D {
 			if (heldPiece == null) {
 				// Try to pick up a piece
 				var result = ShootRay(1);
+
+				if (result.TryGetValue("collider", out var collider2) && collider2.Obj is TargetBuildingBlock block) {
+                    block.Transform = block.Transform.Translated(new Vector3(0, 1, 0));
+                }
+
 				if (!result.TryGetValue("collider", out var collider) || collider.Obj is not PuzzlePieceNode piece) return;
 				heldPiece = piece;
 				heldPieceOriginalState = piece.Transform;
