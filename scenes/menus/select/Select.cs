@@ -1,4 +1,6 @@
+using System.Threading.Tasks;
 using Godot;
+using Godot.Collections;
 using Packinator3D.datastructure;
 using Packinator3D.scenes.puzzle;
 
@@ -109,5 +111,57 @@ public partial class Select : Control
 		if (puzzle is null) return;
 		string path = SaveManager.ExportPuzzle(GetSelectedPuzzle());
 		OS.ShellShowInFileManager(ProjectSettings.GlobalizePath(path));
+	}
+
+	private readonly System.Collections.Generic.Dictionary<string, string> blockSolverPaths = new() {
+		{ "Windows", "res://lib/blocks-win.exe" },
+	};
+
+	private void Solve() {
+		if (!blockSolverPaths.TryGetValue(OS.GetName(), out string path)) {
+			GD.PrintErr("No block solver available for this platform.");
+		} else {
+			var puzzle = GetSelectedPuzzle();
+
+			Task.Run(() => {
+				// Make sure the solver exists as an executable file in the file system
+				string exePath = ProjectSettings.GlobalizePath("user://lib/" + path.Split('/')[^1]);
+				if (!FileAccess.FileExists(exePath) && FileAccess.FileExists(path)) {
+					GD.Print("Copying solver executable file.");
+					DirAccess.MakeDirAbsolute("user://lib");
+					using var file = FileAccess.Open(path, FileAccess.ModeFlags.Read);
+					using var newFile = FileAccess.Open(exePath, FileAccess.ModeFlags.Write);
+					newFile.StoreBuffer(file.GetBuffer((long)file.GetLength()));
+					file.Close();
+					newFile.Close();
+				}
+
+				string piecesPath = ProjectSettings.GlobalizePath("user://temp/pieces.txt");
+				string goalPath = ProjectSettings.GlobalizePath("user://temp/goal.txt");
+				string outputPath = ProjectSettings.GlobalizePath("user://temp/output.wrl");
+				string solutionPath = ProjectSettings.GlobalizePath("user://temp/output.txt");
+				DirAccess.MakeDirAbsolute("user://temp");
+				PuzzleExporter.ToPieces(puzzle, piecesPath);
+				PuzzleExporter.ToGoal(puzzle, goalPath);
+
+				var output = new Array();
+				OS.Execute(exePath, new[] {
+					"--solve",
+					$"--pieces={piecesPath}",
+					$"--goal={goalPath}",
+					$"--output={outputPath}"
+				}, output);
+				GD.Print(output);
+
+				if (output[0].AsString().Contains("Saving solution coordinates to file")) {
+					var solution = PuzzleImporter.PuzzleSolutionFromSolution(solutionPath, puzzle);
+                    puzzle.Solutions.Add(solution);
+                    GD.Print("Successfully added solution to puzzle.");
+				}
+				else {
+					GD.PrintErr("Failed to solve puzzle.");
+				}
+			});
+		}
 	}
 }

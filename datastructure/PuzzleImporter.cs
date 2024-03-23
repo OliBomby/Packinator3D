@@ -6,6 +6,27 @@ using Godot;
 namespace Packinator3D.datastructure;
 
 public static class PuzzleImporter {
+	/// <summary>
+	/// Creates a solution for the puzzle from a solution file.
+	/// </summary>
+	public static Solution PuzzleSolutionFromSolution(string path, Puzzle puzzle) {
+		using var file = FileAccess.Open(path, FileAccess.ModeFlags.Read);
+		var solution = new Solution { States = new List<Transform3D>(), Time = DateTime.Now };
+		var index = 0;
+
+		while (!file.EofReached()) {
+			string line = file.GetLine();
+			if (string.IsNullOrWhiteSpace(line) || line[0] == '#') continue;
+
+			var piece = puzzle.Pieces[index++];
+			var shape = ShapeFromString(line);
+			var state = PuzzleUtils.FindTransform(piece.Shape, shape);
+			solution.States.Add(state);
+		}
+
+		return solution;
+	}
+
 	public static Puzzle FromSolution(string path) {
 		using var file = FileAccess.Open(path, FileAccess.ModeFlags.Read);
 		var pieces = new List<PuzzlePiece>();

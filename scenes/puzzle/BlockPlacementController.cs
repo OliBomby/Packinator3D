@@ -74,11 +74,11 @@ public partial class BlockPlacementController : Node3D {
 				var originalState = piece.PieceData.State;
 				var currentState = piece.Transform;
 
-				if (ViewSolution) {
+				if (ViewSolution && puzzleNode.PuzzleData.Solutions.Count > 0) {
 					// Reset the piece to the solution state if not in the solution state
 					// Reset the piece to the start state if in the solution state
 					int index = puzzleNode.PuzzleData.Pieces.IndexOf(piece.PieceData);
-					var solutionState = puzzleNode.PuzzleData.Solutions[0].States[index];
+					var solutionState = puzzleNode.PuzzleData.Solutions[^1].States[index];
 
 					piece.Transform = currentState.Equals(solutionState) ? originalState : solutionState;
 				} else {

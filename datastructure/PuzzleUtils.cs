@@ -110,6 +110,13 @@ public static class PuzzleUtils {
         return new Vector3(x, y, z);
     }
 
+    public static Vector3 GetCenterExact(ICollection<Vector3> shape) {
+		float x = shape.Select(o => o.X).Average();
+		float y = shape.Select(o => o.Y).Average();
+		float z = shape.Select(o => o.Z).Average();
+		return new Vector3(x, y, z);
+	}
+
     public static Mesh ShapeToMesh(List<Vector3> shape, float width=1) {
         // Create the mesh out of the shape voxels
         (bool[,,] voxels, var offset) = ShapeToVoxels(shape);
@@ -200,5 +207,57 @@ public static class PuzzleUtils {
 		if (r && u && ru && !(fr && fu && fru)) addQuad(right * width + up * width, right + up * width, right + up, right * width + up);
 		if (l && d && ld && !(fl && fd && fld)) addQuad(left + down, left * width + down, left * width + down * width, left + down * width);
 		if (r && d && rd && !(fr && fd && frd)) addQuad(right * width + down, right + down, right + down * width, right * width + down * width);
+	}
+
+	private static readonly Basis[] allRotations = {
+		new(0, 0, 1, 0, -1, 0, 1, 0, 0),
+		new(1, 0, 0, 0, 0, 1, 0, -1, 0),
+		new(-1, 0, 0, 0, -1, 0, 0, 0, 1),
+		new(0, 0, -1, 1, 0, 0, 0, -1, 0),
+		new(0, 0, -1, -1, 0, 0, 0, 1, 0),
+		new(0, 1, 0, 0, 0, -1, -1, 0, 0),
+		new(1, 0, 0, 0, 0, -1, 0, 1, 0),
+		new(0, -1, 0, -1, 0, 0, 0, 0, -1),
+		new(-1, 0, 0, 0, 1, 0, 0, 0, -1),
+		new(0, 1, 0, 0, 0, 1, 1, 0, 0),
+		new(1, 0, 0, 0, 1, 0, 0, 0, 1),
+		new(0, -1, 0, 0, 0, 1, -1, 0, 0),
+		new(0, -1, 0, 1, 0, 0, 0, 0, 1),
+		new(0, 0, 1, 0, 1, 0, -1, 0, 0),
+		new(0, 1, 0, -1, 0, 0, 0, 0, 1),
+		new(0, 0, -1, 0, -1, 0, -1, 0, 0),
+		new(0, 1, 0, 1, 0, 0, 0, 0, -1),
+		new(1, 0, 0, 0, -1, 0, 0, 0, -1),
+		new(-1, 0, 0, 0, 0, 1, 0, 1, 0),
+		new(0, 0, -1, 0, 1, 0, 1, 0, 0),
+		new(0, -1, 0, 0, 0, -1, 1, 0, 0),
+		new(0, 0, 1, 1, 0, 0, 0, 1, 0),
+		new(0, 0, 1, -1, 0, 0, 0, -1, 0),
+		new(-1, 0, 0, 0, 0, -1, 0, -1, 0),
+	};
+
+	/// <summary>
+	/// Finds the transform that transforms the start shape to the target shape.
+	/// </summary>
+	public static Transform3D FindTransform(List<Vector3> startShape, List<Vector3> targetShape) {
+		if (startShape.Count != targetShape.Count)
+			throw new ArgumentException("The shapes must have the same number of points");
+
+		// Check all 24 rotations of the start shape and see if they match the target shape
+		(bool[,,] voxels, var vOffset) = ShapeToVoxels(targetShape);
+		var targetCenter = GetCenterExact(targetShape);
+		int n = startShape.Count;
+		var transformed = new Vector3[n];
+		foreach (var basis in allRotations) {
+			for (var i = 0; i < n; i++) {
+				transformed[i] = basis * startShape[i];
+			}
+			var offset = targetCenter - GetCenterExact(transformed);
+			bool valid = transformed.All(p => IsFull(voxels, p + offset - vOffset));
+			if (valid)
+				return new Transform3D(basis, offset);
+		}
+
+		throw new Exception("No valid transform found");
 	}
 }
