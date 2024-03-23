@@ -20,7 +20,7 @@ public partial class BlockPlacementController : Node3D {
 	private Array<Rid> exclude = new();
 
 	[Export]
-	private bool ViewSolution { get; set; }
+	public bool ViewSolution { get; set; }
 
 	public override void _Ready() {
 		camera = GetNode<Camera3D>("../SpectatorCamera");

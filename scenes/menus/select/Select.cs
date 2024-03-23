@@ -49,6 +49,7 @@ public partial class Select : Control
 		if (puzzle == null) return;
 		var viewScene = ResourceLoader.Load<PackedScene>("res://scenes/view/view.tscn").Instantiate();
 		viewScene.GetNode<PuzzleNode>("PuzzleNode").LoadData(puzzle, solved);
+		viewScene.GetNode<BlockPlacementController>("BlockPlacementController").ViewSolution = solved;
 		var tree = GetTree();
 		tree.Root.AddChild(viewScene);
 		tree.CurrentScene = viewScene;
