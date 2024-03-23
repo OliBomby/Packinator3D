@@ -103,6 +103,7 @@ data = ExtResource("3_xv0y1")
 
 [node name="SpectatorCamera" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.237255, 2.20909, 1.71842)
+current = true
 script = ExtResource("3_ba1y1")
 
 [node name="OutlinePost" type="MeshInstance3D" parent="SpectatorCamera"]

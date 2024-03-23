@@ -55,6 +55,7 @@ public static class PuzzleImporter {
 		var shape = new List<Vector3>();
 		foreach (string coord in coordSplit) {
 			string[] xyz = coord.Split(" ");
+			if (xyz.Length != 3) continue;
 			shape.Add(new Vector3(float.Parse(xyz[0]), float.Parse(xyz[2]), float.Parse(xyz[1])));
 		}
 
