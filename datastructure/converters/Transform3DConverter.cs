@@ -12,45 +12,45 @@ public class Transform3DConverter : JsonConverter<Transform3D> {
         }
 
         reader.Read();
-        var column00 = reader.GetSingle();
+        float xx = reader.GetSingle();
         reader.Read();
-        var column01 = reader.GetSingle();
+        float xy = reader.GetSingle();
         reader.Read();
-        var column02 = reader.GetSingle();
+        float xz = reader.GetSingle();
         reader.Read();
-        var column10 = reader.GetSingle();
+        float yx = reader.GetSingle();
         reader.Read();
-        var column11 = reader.GetSingle();
+        float yy = reader.GetSingle();
         reader.Read();
-        var column12 = reader.GetSingle();
+        float yz = reader.GetSingle();
         reader.Read();
-        var column20 = reader.GetSingle();
+        float zx = reader.GetSingle();
         reader.Read();
-        var column21 = reader.GetSingle();
+        float zy = reader.GetSingle();
         reader.Read();
-        var column22 = reader.GetSingle();
+        float zz = reader.GetSingle();
         reader.Read();
-        var originX = reader.GetSingle();
+        float ox = reader.GetSingle();
         reader.Read();
-        var originY = reader.GetSingle();
+        float oy = reader.GetSingle();
         reader.Read();
-        var originZ = reader.GetSingle();
+        float oz = reader.GetSingle();
         reader.Read();
 
-        return new Transform3D(column00, column01, column02, column10, column11, column12, column20, column21, column22, originX, originY, originZ);
+        return new Transform3D(xx, yx, zx, xy, yy, zy, xz, yz, zz, ox, oy, oz);
     }
 
     public override void Write(Utf8JsonWriter writer, Transform3D value, JsonSerializerOptions options) {
         writer.WriteStartArray();
-        writer.WriteNumberValue(value.Basis.Column0.X);
-        writer.WriteNumberValue(value.Basis.Column0.Y);
-        writer.WriteNumberValue(value.Basis.Column0.Z);
-        writer.WriteNumberValue(value.Basis.Column1.X);
-        writer.WriteNumberValue(value.Basis.Column1.Y);
-        writer.WriteNumberValue(value.Basis.Column1.Z);
-        writer.WriteNumberValue(value.Basis.Column2.X);
-        writer.WriteNumberValue(value.Basis.Column2.Y);
-        writer.WriteNumberValue(value.Basis.Column2.Z);
+        writer.WriteNumberValue(value.Basis.X.X);
+        writer.WriteNumberValue(value.Basis.X.Y);
+        writer.WriteNumberValue(value.Basis.X.Z);
+        writer.WriteNumberValue(value.Basis.Y.X);
+        writer.WriteNumberValue(value.Basis.Y.Y);
+        writer.WriteNumberValue(value.Basis.Y.Z);
+        writer.WriteNumberValue(value.Basis.Z.X);
+        writer.WriteNumberValue(value.Basis.Z.Y);
+        writer.WriteNumberValue(value.Basis.Z.Z);
         writer.WriteNumberValue(value.Origin.X);
         writer.WriteNumberValue(value.Origin.Y);
         writer.WriteNumberValue(value.Origin.Z);
