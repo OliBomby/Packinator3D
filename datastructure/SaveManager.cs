@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using Godot;
+using Packinator3D.datastructure.converters;
 using FileAccess = Godot.FileAccess;
 
 namespace Packinator3D.datastructure;
@@ -15,6 +16,10 @@ public static class SaveManager {
     public static List<Puzzle> Puzzles { get; set; }
 
     private static string lastSaveString;
+
+    private static readonly JsonSerializerOptions jsonOptions = new() {
+        Converters = { new Vector3Converter(), new ColorConverter(), new Transform3DConverter() }
+    };
 
     public static void Init() {
         if (Puzzles is not null) return;
@@ -35,11 +40,11 @@ public static class SaveManager {
 
         if (!FileAccess.FileExists(SavePath)) return;
         string jsonString = FileAccess.GetFileAsString(SavePath);
-        SaveData = JsonSerializer.Deserialize<SaveData>(jsonString);
+        SaveData = JsonSerializer.Deserialize<SaveData>(jsonString, jsonOptions);
     }
 
     public static void Save() {
-        string jsonString = JsonSerializer.Serialize(SaveData);
+        string jsonString = JsonSerializer.Serialize(SaveData, jsonOptions);
         if (jsonString == lastSaveString) return;
 
         using var saveGame = FileAccess.Open(SavePath, FileAccess.ModeFlags.Write);
@@ -49,14 +54,14 @@ public static class SaveManager {
 
     public static void ImportPuzzle(string path) {
         string jsonString = FileAccess.GetFileAsString(path);
-        var puzzle = JsonSerializer.Deserialize<Puzzle>(jsonString);
+        var puzzle = JsonSerializer.Deserialize<Puzzle>(jsonString, jsonOptions);
         SaveData.CustomPuzzles.Add(puzzle);
     }
 
     public static string ExportPuzzle(Puzzle puzzle) {
         DirAccess.MakeDirAbsolute("user://exports");
         string path = "user://exports/" + MakeValidFileName(puzzle.Name) + ".json";
-        string jsonString = JsonSerializer.Serialize(puzzle);
+        string jsonString = JsonSerializer.Serialize(puzzle, jsonOptions);
         using var file = FileAccess.Open(path, FileAccess.ModeFlags.Write);
         file.StoreString(jsonString);
         return path;
