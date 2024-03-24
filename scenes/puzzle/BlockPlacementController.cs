@@ -2,6 +2,7 @@ using System.Linq;
 using Godot;
 using Godot.Collections;
 using Packinator3D.datastructure;
+using System.Collections.Generic;
 
 namespace Packinator3D.scenes.puzzle;
 
@@ -18,6 +19,7 @@ public partial class BlockPlacementController : Node3D {
 	private Transform3D heldPieceOriginalState;
 	private Basis targetBasis;
 	private Array<Rid> exclude = new();
+	private HashSet<Vector3> targetBlocks = new();
 
 	[Export]
 	private bool ViewSolution { get; set; }
@@ -49,14 +51,23 @@ public partial class BlockPlacementController : Node3D {
 			SetHeldPieceToValidMousePosition();
 		}
 
+		if (Input.IsActionJustPressed("target_build_mode")) {
+			GD.Print("Setting target shape");
+			var shape = targetBlocks.ToList();
+			GD.Print(shape);
+			GD.Print(shape.Count);
+			puzzleNode.SetTargetShape(shape);
+
+			targetBlocks.Clear();
+		}
+
 		if (Input.IsActionJustPressed("move_piece")) {
 			if (heldPiece == null) {
 				// Try to pick up a piece
 				var result = ShootRay(1);
 
-				if (result.TryGetValue("collider", out var collider2) && collider2.Obj is TargetBuildingBlock block) {
-                    block.Transform = block.Transform.Translated(new Vector3(0, 1, 0));
-                }
+
+				TryPlaceTargetBlock();
 
 				if (!result.TryGetValue("collider", out var collider) || collider.Obj is not PuzzlePieceNode piece) return;
 				heldPiece = piece;
@@ -74,6 +85,12 @@ public partial class BlockPlacementController : Node3D {
 			if (heldPiece == null) {
 				// Try reset the piece we are looking at
 				var result = ShootRay(1);
+
+				if (result.TryGetValue("collider", out var collider2) && collider2.Obj is TargetBuildingBlock block) {
+					targetBlocks.Remove(block.Position);
+					RemoveChild(block);
+				}
+
 				if (!result.TryGetValue("collider", out var collider) || collider.Obj is not PuzzlePieceNode piece) return;
 
 				var originalState = piece.PieceData.State;
@@ -136,6 +153,39 @@ public partial class BlockPlacementController : Node3D {
 
 			return true;
 		}
+	}
+
+	private bool TryPlaceTargetBlock() {
+		var spaceState = GetWorld3D().DirectSpaceState;
+		var mousePos = GetViewport().GetMousePosition();
+
+		var origin = camera.ProjectRayOrigin(mousePos);
+		var normal = camera.ProjectRayNormal(mousePos);
+		var end = origin + normal * RayLength;
+		var query = PhysicsRayQueryParameters3D.Create(origin, end, 3, exclude);
+		var result = spaceState.IntersectRay(query);
+
+		if (!result.TryGetValue("position", out var position)) return false;
+
+		var pos = (Vector3) position;
+
+		Vector3 block_position = pos.Round();
+
+		int maxIters = Mathf.FloorToInt(origin.DistanceTo(pos)) * 2;
+		var i = 0;
+		while (targetBlocks.Contains(block_position)) {
+			pos -= normal * 0.5f;
+			block_position = ((Vector3) position).Round();
+			if (i++ >= maxIters) return false;
+		}
+
+		TargetBuildingBlock block = new TargetBuildingBlock();
+		AddChild(block);
+
+		targetBlocks.Add(block_position);
+		block.Position = block_position;
+
+		return true;
 	}
 
 	private void ClearHeldPiece() {

@@ -11,7 +11,6 @@ public partial class ViewScene : Node3D
 	{
 		pauseMenu = GetNode<PauseMenu>("PauseMenu");
 		pauseMenu.Hide();
-		TargetBuildingBlock block = new TargetBuildingBlock();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

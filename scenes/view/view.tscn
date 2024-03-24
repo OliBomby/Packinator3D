@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://c82cqueavh1mq"]
+[gd_scene load_steps=28 format=3 uid="uid://c82cqueavh1mq"]
 
 [ext_resource type="Script" path="res://scenes/view/ViewScene.cs" id="1_iwres"]
 [ext_resource type="Environment" uid="uid://c7hvhnwnxbxc0" path="res://scenes/environments/view_environment.tres" id="2_0at1c"]
@@ -10,7 +10,6 @@
 [ext_resource type="Texture2D" uid="uid://b7eeojg8w7b23" path="res://scenes/cameras/crosshair.png" id="7_aplrx"]
 [ext_resource type="Script" path="res://scenes/puzzle/PuzzleNode.cs" id="8_tq7y4"]
 [ext_resource type="PackedScene" uid="uid://cmn7yl0c860nf" path="res://scenes/pause_menu.tscn" id="14_i0rss"]
-[ext_resource type="Script" path="res://scenes/view/TargetBuildingBlock.cs" id="14_lalya"]
 [ext_resource type="Script" path="res://scenes/FpsCounter.cs" id="15_doi0l"]
 [ext_resource type="Script" path="res://scenes/puzzle/BlockPlacementController.cs" id="16_h81hl"]
 
@@ -181,6 +180,3 @@ skeleton = NodePath("../YClip")
 [node name="BlockPlacementController" type="Node3D" parent="."]
 script = ExtResource("16_h81hl")
 ViewSolution = true
-
-[node name="TargetBuildingBlock" type="StaticBody3D" parent="."]
-script = ExtResource("14_lalya")
