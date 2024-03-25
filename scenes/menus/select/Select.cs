@@ -84,20 +84,33 @@ public partial class Select : Control
 		LoadPuzzle(GetSelectedPuzzle());
 	}
 
+	private Puzzle currentSolutionMenuPuzzle;
+
 	private void View() {
 		var puzzle = GetSelectedPuzzle();
 		if (puzzle is null) return;
 
 		if (puzzle.Solutions.Count == 1) {
-			LoadPuzzle(currentSolutionMenuPuzzle, 0);
+			LoadPuzzle(puzzle, 0);
+			return;
 		}
 
+		currentSolutionMenuPuzzle = puzzle;
+		PopupSolutionMenu(puzzle);
+	}
+
+	private void PopupSolutionMenu(Puzzle puzzle) {
 		var solutionMenu = GetNode<PopupMenu>("SolutionMenu");
 
 		// Add all puzzle solutions to the menu
 		solutionMenu.Clear();
 		foreach (var solution in puzzle.Solutions) {
 			solutionMenu.AddItem(solution.Time.ToString(CultureInfo.CurrentCulture));
+		}
+
+		if (puzzle.Solutions.Count == 0) {
+			solutionMenu.AddItem("No solutions");
+			currentSolutionMenuPuzzle = null;
 		}
 
 		// Move solution menu to the top of view button
@@ -110,11 +123,8 @@ public partial class Select : Control
 			Mathf.RoundToInt(rect.Size.X),
 			Mathf.RoundToInt(rect.Size.Y));
 
-		currentSolutionMenuPuzzle = puzzle;
 		solutionMenu.PopupOnParent(irect);
 	}
-
-	private Puzzle currentSolutionMenuPuzzle;
 
 	private void OnSolutionMenuIndexPressed(int index) {
 		if (currentSolutionMenuPuzzle is null) return;
