@@ -20,7 +20,7 @@ public partial class PuzzleNode : Node3D {
 	public readonly List<PuzzlePieceNode> PuzzlePieceNodes = new();
 	private MeshInstance3D targetShape;
 
-	public void LoadData(Puzzle puzzle, bool solved=false) {
+	public void LoadData(Puzzle puzzle, int solutionIndex=-1) {
 		PuzzleData = puzzle;
 
 		foreach (var puzzlePieceNode in PuzzlePieceNodes) {
@@ -53,10 +53,10 @@ public partial class PuzzleNode : Node3D {
 			PuzzlePieceNodes.Add(puzzlePieceNode);
 		}
 
-		if (solved && puzzle.Solutions.Count > 0) {
+		if (solutionIndex >= 0 && solutionIndex < puzzle.Solutions.Count) {
 			// Set the initial state of the puzzle pieces to the solution state
 			for (var i = 0; i < PuzzlePieceNodes.Count; i++) {
-				PuzzlePieceNodes[i].Transform = PuzzleData.Solutions[^1].States[i];
+				PuzzlePieceNodes[i].Transform = PuzzleData.Solutions[solutionIndex].States[i];
 			}
 		}
 	}

@@ -180,4 +180,3 @@ skeleton = NodePath("../YClip")
 
 [node name="BlockPlacementController" type="Node3D" parent="."]
 script = ExtResource("16_h81hl")
-ViewSolution = true

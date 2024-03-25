@@ -1,3 +1,4 @@
+using System.Globalization;
 using Godot;
 using Packinator3D.datastructure;
 using Packinator3D.scenes.menus.select.tasks;
@@ -46,11 +47,11 @@ public partial class Select : Control
 		LoadPuzzle(SaveManager.SaveData.CustomPuzzles[index]);
 	}
 
-	private void LoadPuzzle(Puzzle puzzle, bool solved=false) {
+	private void LoadPuzzle(Puzzle puzzle, int solutionIndex=-1) {
 		if (puzzle == null) return;
 		var viewScene = ResourceLoader.Load<PackedScene>("res://scenes/view/view.tscn").Instantiate();
-		viewScene.GetNode<PuzzleNode>("PuzzleNode").LoadData(puzzle, solved);
-		viewScene.GetNode<BlockPlacementController>("BlockPlacementController").ViewSolution = solved;
+		viewScene.GetNode<PuzzleNode>("PuzzleNode").LoadData(puzzle, solutionIndex);
+		viewScene.GetNode<BlockPlacementController>("BlockPlacementController").ViewSolution = solutionIndex;
 		var tree = GetTree();
 		tree.Root.AddChild(viewScene);
 		tree.CurrentScene = viewScene;
@@ -84,7 +85,40 @@ public partial class Select : Control
 	}
 
 	private void View() {
-		LoadPuzzle(GetSelectedPuzzle(), true);
+		var puzzle = GetSelectedPuzzle();
+		if (puzzle is null) return;
+
+		if (puzzle.Solutions.Count == 1) {
+			LoadPuzzle(currentSolutionMenuPuzzle, 0);
+		}
+
+		var solutionMenu = GetNode<PopupMenu>("SolutionMenu");
+
+		// Add all puzzle solutions to the menu
+		solutionMenu.Clear();
+		foreach (var solution in puzzle.Solutions) {
+			solutionMenu.AddItem(solution.Time.ToString(CultureInfo.CurrentCulture));
+		}
+
+		// Move solution menu to the top of view button
+		var viewButton = GetNode<Button>("MarginContainer2/HBoxContainer/ViewButton");
+		int yOffset = Mathf.Max(90, puzzle.Solutions.Count * 24);
+		var rect = viewButton.GetGlobalRect();
+		var irect = new Rect2I(
+			Mathf.RoundToInt(rect.Position.X),
+			Mathf.RoundToInt(rect.Position.Y - yOffset),
+			Mathf.RoundToInt(rect.Size.X),
+			Mathf.RoundToInt(rect.Size.Y));
+
+		currentSolutionMenuPuzzle = puzzle;
+		solutionMenu.PopupOnParent(irect);
+	}
+
+	private Puzzle currentSolutionMenuPuzzle;
+
+	private void OnSolutionMenuIndexPressed(int index) {
+		if (currentSolutionMenuPuzzle is null) return;
+		LoadPuzzle(currentSolutionMenuPuzzle, index);
 	}
 
 	private void Edit() { }

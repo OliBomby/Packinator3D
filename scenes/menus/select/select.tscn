@@ -113,6 +113,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "SOLVE"
 
+[node name="SolutionMenu" type="PopupMenu" parent="."]
+max_size = Vector2i(32768, 500)
+hide_on_state_item_selection = true
+
 [node name="ImportFileDialog" type="FileDialog" parent="."]
 mode = 2
 title = "Open a File"
@@ -191,5 +195,6 @@ script = ExtResource("4_2fkkw")
 [connection signal="pressed" from="MarginContainer2/HBoxContainer/ImportButton" to="." method="Import"]
 [connection signal="pressed" from="MarginContainer2/HBoxContainer/ExportButton" to="." method="Export"]
 [connection signal="pressed" from="MarginContainer2/HBoxContainer/SolveButton" to="." method="Solve"]
+[connection signal="index_pressed" from="SolutionMenu" to="." method="OnSolutionMenuIndexPressed"]
 [connection signal="pressed" from="CollapseArea" to="TasksPanel" method="Collapse"]
 [connection signal="pressed" from="TasksButton" to="TasksPanel" method="_on_tasks_button_pressed"]
