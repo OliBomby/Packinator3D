@@ -253,7 +253,7 @@ public static class PuzzleUtils {
 				transformed[i] = basis * startShape[i];
 			}
 			var offset = targetCenter - GetCenterExact(transformed);
-			bool valid = transformed.All(p => IsFull(voxels, p + offset - vOffset));
+			bool valid = transformed.All(p => (p + offset).Round().DistanceSquaredTo(p + offset) < 0.1 && IsFull(voxels, p + offset - vOffset));
 			if (valid)
 				return new Transform3D(basis, offset);
 		}
