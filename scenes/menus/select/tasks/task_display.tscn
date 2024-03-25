@@ -1,0 +1,75 @@
+[gd_scene load_steps=4 format=3 uid="uid://dnlrr537v86ru"]
+
+[ext_resource type="Script" path="res://scenes/menus/select/tasks/TaskDisplay.cs" id="1_w677d"]
+[ext_resource type="Texture2D" uid="uid://703wjs1gmei3" path="res://scenes/menus/select/tasks/spinner_progress.png" id="2_xqmn5"]
+[ext_resource type="Texture2D" uid="uid://c4rre7ucqwfua" path="res://scenes/menus/select/tasks/xmark-solid.svg" id="3_3qvfm"]
+
+[node name="TaskDisplay" type="Control"]
+custom_minimum_size = Vector2(220, 60)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -972.0
+offset_bottom = -588.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+script = ExtResource("1_w677d")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.207843, 0.607843, 0.74902, 1)
+
+[node name="Label" type="Label" parent="ColorRect"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -160.0
+offset_bottom = 60.0
+grow_horizontal = 0
+text = "Solving
+puzzle 3"
+vertical_alignment = 1
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="ColorRect"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 9.0
+offset_right = 48.0
+offset_bottom = 52.0
+value = 100.0
+fill_mode = 4
+nine_patch_stretch = true
+texture_progress = ExtResource("2_xqmn5")
+radial_fill_degrees = 60.0
+
+[node name="Button" type="Button" parent="ColorRect/TextureProgressBar"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -12.5
+offset_top = -14.5
+offset_right = 13.5
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+icon = ExtResource("3_3qvfm")
+flat = true
+vertical_icon_alignment = 0
+expand_icon = true
+
+[connection signal="mouse_entered" from="ColorRect" to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="ColorRect" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="ColorRect/TextureProgressBar/Button" to="." method="_on_button_pressed"]

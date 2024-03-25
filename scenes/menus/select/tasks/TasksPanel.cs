@@ -1,9 +1,10 @@
 using Godot;
 
-namespace Packinator3D.scenes.menus.@select;
+namespace Packinator3D.scenes.menus.@select.tasks;
 
 public partial class TasksPanel : Panel {
-	private const float MaxWidth = 200;
+	[Export]
+	private float MaxWidth { get; set; } = 200;
 
 	private bool expanded;
 	private Button collapseArea;
@@ -35,7 +36,7 @@ public partial class TasksPanel : Panel {
 		}
 	}
 
-	private void Expand() {
+	public void Expand() {
 		expanded = true;
 
 		var tween = CreateTween().SetTrans(Tween.TransitionType.Quint).SetEase(Tween.EaseType.Out);
@@ -44,7 +45,7 @@ public partial class TasksPanel : Panel {
 		collapseArea.Visible = true;
 	}
 
-	private void Collapse() {
+	public void Collapse() {
 		expanded = false;
 
 		var tween = CreateTween().SetTrans(Tween.TransitionType.Quint).SetEase(Tween.EaseType.Out);

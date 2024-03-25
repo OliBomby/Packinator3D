@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://bq2oefoojtys0"]
+[gd_scene load_steps=5 format=3 uid="uid://bq2oefoojtys0"]
 
 [ext_resource type="Script" path="res://scenes/menus/select/Select.cs" id="1_7x6eg"]
 [ext_resource type="Texture2D" uid="uid://cphbxwwgghhbo" path="res://icons/bars-solid.svg" id="2_5u4rh"]
-[ext_resource type="Script" path="res://scenes/menus/select/TasksPanel.cs" id="3_7uymi"]
+[ext_resource type="Script" path="res://scenes/menus/select/tasks/TasksPanel.cs" id="3_7uymi"]
+[ext_resource type="Script" path="res://scenes/menus/select/tasks/TasksDisplay.cs" id="4_2fkkw"]
 
 [node name="Select" type="Control"]
 layout_mode = 3
@@ -156,16 +157,23 @@ anchor_bottom = 1.0
 grow_horizontal = 0
 grow_vertical = 2
 script = ExtResource("3_7uymi")
+MaxWidth = 230.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TasksPanel"]
-custom_minimum_size = Vector2(200, 0)
+[node name="MarginContainer" type="MarginContainer" parent="TasksPanel"]
 layout_mode = 1
-anchors_preset = 11
-anchor_left = 1.0
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-grow_horizontal = 0
+grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="TasksDisplay" type="VBoxContainer" parent="TasksPanel/MarginContainer"]
+layout_mode = 2
+script = ExtResource("4_2fkkw")
 
 [connection signal="item_activated" from="MarginContainer/TabContainer/Normal Levels" to="." method="OnNormalPuzzleListItemActivated"]
 [connection signal="item_activated" from="MarginContainer/TabContainer/Custom Levels" to="." method="OnCustomPuzzleListItemActivated"]

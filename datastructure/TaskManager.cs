@@ -8,13 +8,38 @@ using Godot;
 namespace Packinator3D.datastructure;
 
 public static class TaskManager {
-    public static List<SolveTask> Tasks { get; } = new();
+    private static List<SolveTask> MyTasks { get; } = new();
+
+    public static IReadOnlyList<SolveTask> Tasks => MyTasks;
+
+    public static event Action<SolveTask> TaskAdded;
+
+    public static event Action<SolveTask> TaskRemoved;
+
+    public static void Add(SolveTask task) {
+	    MyTasks.Add(task);
+	    TaskAdded?.Invoke(task);
+	}
+
+    public static void Remove(SolveTask task) {
+	    // Make sure the task is cancelled before removing it
+	    if (task.Status == Status.Running)
+			task.CancellationToken.Cancel();
+
+	    MyTasks.Remove(task);
+	    TaskRemoved?.Invoke(task);
+	}
 
     public static void CancelAll() {
-	    foreach (var task in Tasks) {
-		    task.CancellationToken.Cancel();
+	    foreach (var task in MyTasks) {
+		    Cancel(task);
 	    }
     }
+
+    public static void Cancel(SolveTask task) {
+	    if (task.Status == Status.Running)
+		    task.CancellationToken.Cancel();
+	}
 
 	private static readonly Dictionary<string, string> blockSolverPaths = new() {
 		{ "Windows", "res://lib/blocks-win.exe" },
@@ -110,7 +135,7 @@ public static class TaskManager {
 			}
 		});
 
-		Tasks.Add(solveTask);
+		Add(solveTask);
 	}
 }
 

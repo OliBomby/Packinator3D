@@ -1,7 +1,6 @@
-using System.Threading.Tasks;
 using Godot;
-using Godot.Collections;
 using Packinator3D.datastructure;
+using Packinator3D.scenes.menus.select.tasks;
 using Packinator3D.scenes.puzzle;
 
 namespace Packinator3D.scenes.menus.@select;
@@ -11,6 +10,7 @@ public partial class Select : Control
 	private TabContainer tabContainer;
 	private ItemList normalPuzzleList;
 	private ItemList customPuzzleList;
+	private TasksPanel tasksPanel;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -18,6 +18,7 @@ public partial class Select : Control
 		tabContainer = GetNode<TabContainer>("MarginContainer/TabContainer");
 		normalPuzzleList = GetNode<ItemList>("MarginContainer/TabContainer/Normal Levels");
 		customPuzzleList = GetNode<ItemList>("MarginContainer/TabContainer/Custom Levels");
+		tasksPanel = GetNode<TasksPanel>("TasksPanel");
 
 		foreach (var puzzle in SaveManager.Puzzles) {
 			normalPuzzleList.AddItem(puzzle.Name);
@@ -116,5 +117,6 @@ public partial class Select : Control
 
 	private void Solve() {
 		TaskManager.Solve(GetSelectedPuzzle());
+		tasksPanel.Expand();
 	}
 }
