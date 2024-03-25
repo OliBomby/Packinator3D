@@ -157,7 +157,7 @@ anchor_bottom = 1.0
 grow_horizontal = 0
 grow_vertical = 2
 script = ExtResource("3_7uymi")
-MaxWidth = 230.0
+MaxWidth = 240.0
 
 [node name="MarginContainer" type="MarginContainer" parent="TasksPanel"]
 layout_mode = 1
@@ -168,10 +168,15 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 5
+theme_override_constants/margin_right = 3
 theme_override_constants/margin_bottom = 5
 
-[node name="TasksDisplay" type="VBoxContainer" parent="TasksPanel/MarginContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="TasksPanel/MarginContainer"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
+
+[node name="TasksDisplay" type="VBoxContainer" parent="TasksPanel/MarginContainer/ScrollContainer"]
 layout_mode = 2
 script = ExtResource("4_2fkkw")
 

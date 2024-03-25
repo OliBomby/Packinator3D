@@ -116,7 +116,10 @@ public partial class Select : Control
 	}
 
 	private void Solve() {
-		TaskManager.Solve(GetSelectedPuzzle());
+		var puzzle = GetSelectedPuzzle();
+		if (puzzle is null) return;
+
+		TaskManager.Solve(puzzle);
 		tasksPanel.Expand();
 	}
 }

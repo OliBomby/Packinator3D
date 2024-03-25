@@ -18,11 +18,17 @@ public partial class TasksDisplay : VBoxContainer
 		TaskManager.TaskRemoved += RemoveTask;
 	}
 
+	public override void _ExitTree() {
+		TaskManager.TaskAdded -= AddTask;
+		TaskManager.TaskRemoved -= RemoveTask;
+	}
+
 	private void AddTask(SolveTask task)
 	{
 		var taskDisplay = ResourceLoader.Load<PackedScene>("res://scenes/menus/select/tasks/task_display.tscn").Instantiate<TaskDisplay>();
 		taskDisplay.Task = task;
 		AddChild(taskDisplay);
+		MoveChild(taskDisplay, 0);
 		taskDisplays.Add(task.Id, taskDisplay);
 	}
 
