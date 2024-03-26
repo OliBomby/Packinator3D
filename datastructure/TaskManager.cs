@@ -102,7 +102,7 @@ public static class TaskManager {
 				var token = solveTask.CancellationToken.Token;
 				while (!process.HasExited) {
 					if (!token.IsCancellationRequested) continue;
-					process.Kill();
+					process.Kill(true);
 					solveTask.Status = Status.Cancelled;
 					return;
 				}
