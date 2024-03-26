@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using Packinator3D.datastructure;
 
@@ -86,5 +88,16 @@ public partial class PuzzleNode : Node3D {
 			// PuzzlePieceNodes[i].Position = PuzzleData.Pieces[i].State.Offset.Lerp(currentPuzzle.Solutions[0].States[i].Offset, t);
 			// PuzzlePieceNodes[i].Rotation = PuzzleData.Pieces[i].State.Rotation.Lerp(currentPuzzle.Solutions[0].States[i].Rotation, t);
 		// }
+	}
+
+	public bool IsSolved() {
+		return PuzzleUtils.IsSolution(PuzzleData.Pieces, PuzzlePieceNodes.Select(p => p.Transform), PuzzleData.TargetShape);
+	}
+
+	public Solution GetState() {
+		return new Solution {
+			States = PuzzlePieceNodes.Select(p => p.Transform).ToList(),
+			Time = DateTime.Now
+		};
 	}
 }

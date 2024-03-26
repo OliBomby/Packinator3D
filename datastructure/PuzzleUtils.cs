@@ -36,6 +36,15 @@ public static class PuzzleUtils {
         return !voxels[x, y, z];
     }
 
+    public static void SetVoxel(bool[,,] voxels, Vector3 pos, bool value) => SetVoxel(voxels, Mathf.RoundToInt(pos.X), Mathf.RoundToInt(pos.Y), Mathf.RoundToInt(pos.Z), value);
+
+    public static void SetVoxel(bool[,,] voxels, int x, int y, int z, bool value) {
+	    if (x < 0 || x >= voxels.GetLength(0)) return;
+	    if (y < 0 || y >= voxels.GetLength(1)) return;
+	    if (z < 0 || z >= voxels.GetLength(2)) return;
+	    voxels[x, y, z] = value;
+    }
+
     public static List<Vector3> PieceNodesToShape(IEnumerable<PuzzlePieceNode> pieces) {
 		var shape = new List<Vector3>();
 		foreach (var piece in pieces) {
@@ -259,5 +268,29 @@ public static class PuzzleUtils {
 		}
 
 		throw new Exception("No valid transform found");
+	}
+
+	public static bool IsSolution(List<PuzzlePiece> pieces, IEnumerable<Transform3D> states, List<Vector3> targetShape) {
+		(bool[,,] voxels, var offset) = ShapeToVoxels(targetShape);
+		var i = 0;
+
+		foreach (var state in states) {
+			var piece = pieces[i++];
+			foreach (var p in piece.Shape) {
+				var vp = Transform(p, state) - offset;
+				if (IsAir(voxels, vp)) return false;
+				SetVoxel(voxels, vp, false);
+			}
+		}
+
+		for (var x = 0; x < voxels.GetLength(0); x++) {
+			for (var y = 0; y < voxels.GetLength(1); y++) {
+				for (var z = 0; z < voxels.GetLength(2); z++) {
+					if (voxels[x, y, z]) return false;
+				}
+			}
+		}
+
+		return true;
 	}
 }

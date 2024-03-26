@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Godot;
 using Godot.Collections;
@@ -20,7 +21,12 @@ public partial class BlockPlacementController : Node3D {
 	private Array<Rid> exclude = new();
 
 	[Export]
+	public bool IsSolved { get; set; }
+
+	[Export]
 	public int ViewSolution { get; set; }
+
+	public event Action<Solution> PuzzleSolved;
 
 	public override void _Ready() {
 		camera = GetNode<Camera3D>("../SpectatorCamera");
@@ -62,6 +68,7 @@ public partial class BlockPlacementController : Node3D {
 			else {
 				// Try to place the piece
 				ClearHeldPiece();
+				OnStateChanged();
 			}
 		}
 
@@ -84,11 +91,13 @@ public partial class BlockPlacementController : Node3D {
 				} else {
 					piece.Transform = originalState;
 				}
+				OnStateChanged();
 			}
 			else {
 				// Place the piece back to its original position when we picked it up
 				heldPiece.Transform = heldPieceOriginalState;
 				ClearHeldPiece();
+				OnStateChanged();
 			}
 		}
 	}
@@ -147,5 +156,17 @@ public partial class BlockPlacementController : Node3D {
 		var query = PhysicsRayQueryParameters3D.Create(origin, end, collisionMask, exclude);
 
 		return spaceState.IntersectRay(query);
+	}
+
+	private void OnStateChanged() {
+		if (IsSolved) return;
+		if (!puzzleNode.IsSolved()) return;
+
+		var solution = puzzleNode.GetState();
+		IsSolved = true;
+		puzzleNode.PuzzleData.Solutions.Add(solution);
+		PuzzleSolved?.Invoke(puzzleNode.GetState());
+
+		GD.Print("You're winner!");
 	}
 }
