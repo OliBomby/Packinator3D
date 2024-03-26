@@ -23,7 +23,7 @@ public partial class MainMenu : Control
 	}
 
 	private void _on_options_pressed() {
-		// Replace with function body.
+		GetTree().ChangeSceneToFile("res://scenes/menus/options/options.tscn");
 	}
 
 	private void _on_quit_pressed() {

@@ -1,0 +1,63 @@
+[gd_scene load_steps=2 format=3 uid="uid://ddrqiq13nphcs"]
+
+[ext_resource type="Script" path="res://scenes/menus/options/Options.cs" id="1_w3ntf"]
+
+[node name="Options" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_w3ntf")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color(0.564706, 0.611765, 1, 1)
+
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 25.0
+offset_top = -150.0
+offset_right = 177.0
+offset_bottom = -30.0
+grow_vertical = 0
+size_flags_horizontal = 3
+text = "BACK"
+
+[node name="HelpText" type="RichTextLabel" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -483.0
+offset_top = 63.0
+offset_right = -40.0
+offset_bottom = 401.0
+grow_horizontal = 0
+bbcode_enabled = true
+text = "[b]CONTROLS[/b]
+
+Escape to go back.
+
+[b]Play/View[/b]
+Look around with the mouse.
+Move with WASD, Shift, & Spacebar.
+
+Left-click on puzzle pieces to move them.
+Scrollwheel to rotate held pieces around the X-axis.
+Q & E to rotate held pieces around the Y-axis.
+Right-click on puzzle pieces to reset them.
+Press Tab to change view options."
+
+[connection signal="pressed" from="BackButton" to="." method="GoBack"]
