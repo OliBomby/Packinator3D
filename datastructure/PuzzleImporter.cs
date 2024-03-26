@@ -30,7 +30,7 @@ public static class PuzzleImporter {
 	public static Puzzle FromSolution(string path) {
 		using var file = FileAccess.Open(path, FileAccess.ModeFlags.Read);
 		var pieces = new List<PuzzlePiece>();
-		var solution = new Solution { States = new List<Transform3D>(), Time = DateTime.Now };
+		var solution = new Solution { States = new List<Transform3D>(), Time = DateTime.UnixEpoch };
 		var targetShape = new List<Vector3>();
 		var index = 0;
 

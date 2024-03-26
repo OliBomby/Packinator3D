@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -13,34 +12,43 @@ public static class SaveManager {
     private const string SavePath = "user://save_data.json";
 
     public static SaveData SaveData { get; private set; } = new();
-    public static List<Puzzle> Puzzles { get; set; }
 
+    private static bool initialized;
     private static string lastSaveString;
 
     private static readonly JsonSerializerOptions jsonOptions = new() {
         Converters = { new Vector3Converter(), new ColorConverter(), new Transform3DConverter() }
     };
 
-    public static void Init() {
-        if (Puzzles is not null) return;
+    public static bool Init() {
+        if (initialized) return false;
         Load();
+        initialized = true;
+        return true;
     }
 
     public static void Load() {
-        // Load all puzzles from the puzzles directory
-        const string puzzleDirectoryPath = "res://puzzles";
-        Puzzles = new List<Puzzle>();
-        var puzzleDirectory = DirAccess.Open(puzzleDirectoryPath);
-        string[] puzzles = puzzleDirectory.GetFiles();
-        foreach (string puzzleFileName in puzzles) {
-            var puzzle = PuzzleImporter.FromSolution(puzzleDirectoryPath + '/' + puzzleFileName);
-            puzzle.Name = puzzleFileName.GetFile().GetBaseName();
-            Puzzles.Add(puzzle);
-        }
-
         if (!FileAccess.FileExists(SavePath)) return;
         string jsonString = FileAccess.GetFileAsString(SavePath);
         SaveData = JsonSerializer.Deserialize<SaveData>(jsonString, jsonOptions);
+
+        InitNormalPuzzles();
+    }
+
+    private static void InitNormalPuzzles() {
+        // Load all puzzles from the puzzles directory
+        const string puzzleDirectoryPath = "res://puzzles";
+        var puzzleDirectory = DirAccess.Open(puzzleDirectoryPath);
+        string[] puzzles = puzzleDirectory.GetFiles();
+
+        if (SaveData.Puzzles.Count == puzzles.Length) return;
+
+        SaveData.Puzzles.Clear();
+        foreach (string puzzleFileName in puzzles) {
+            var puzzle = PuzzleImporter.FromSolution(puzzleDirectoryPath + '/' + puzzleFileName);
+            puzzle.Name = puzzleFileName.GetFile().GetBaseName();
+            SaveData.Puzzles.Add(puzzle);
+        }
     }
 
     public static void Save() {

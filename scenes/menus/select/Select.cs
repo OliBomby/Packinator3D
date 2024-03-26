@@ -21,7 +21,7 @@ public partial class Select : Control
 		customPuzzleList = GetNode<ItemList>("MarginContainer/TabContainer/Custom Levels");
 		tasksPanel = GetNode<TasksPanel>("TasksPanel");
 
-		foreach (var puzzle in SaveManager.Puzzles) {
+		foreach (var puzzle in SaveManager.SaveData.Puzzles) {
 			normalPuzzleList.AddItem(puzzle.Name);
 		}
 
@@ -35,12 +35,8 @@ public partial class Select : Control
 		}
 	}
 
-	public override void _ExitTree() {
-		SaveManager.Save();
-	}
-
 	private void OnNormalPuzzleListItemActivated(int index) {
-		LoadPuzzle(SaveManager.Puzzles[index]);
+		LoadPuzzle(SaveManager.SaveData.Puzzles[index]);
 	}
 
 	private void OnCustomPuzzleListItemActivated(int index) {
@@ -81,7 +77,7 @@ public partial class Select : Control
 	private Puzzle GetSelectedPuzzle() {
 		int[] selected = tabContainer.CurrentTab == 0 ? normalPuzzleList.GetSelectedItems() : customPuzzleList.GetSelectedItems();
 		if (selected.Length == 0) return null;
-		return tabContainer.CurrentTab == 0 ? SaveManager.Puzzles[selected[0]] : SaveManager.SaveData.CustomPuzzles[selected[0]];
+		return tabContainer.CurrentTab == 0 ? SaveManager.SaveData.Puzzles[selected[0]] : SaveManager.SaveData.CustomPuzzles[selected[0]];
 	}
 
 	private void Play() {
