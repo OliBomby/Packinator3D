@@ -114,7 +114,7 @@ public partial class Select : Control
 
 		// Move solution menu to the top of view button
 		var viewButton = GetNode<Button>("MarginContainer2/HBoxContainer/ViewButton");
-		int yOffset = Mathf.Max(90, puzzle.Solutions.Count * 24);
+		int yOffset = Mathf.Clamp(puzzle.Solutions.Count * 28, 90, 500);
 		var rect = viewButton.GetGlobalRect();
 		var irect = new Rect2I(
 			Mathf.RoundToInt(rect.Position.X),
