@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://c82cqueavh1mq"]
+[gd_scene load_steps=30 format=3 uid="uid://c82cqueavh1mq"]
 
 [ext_resource type="Script" path="res://scenes/view/ViewScene.cs" id="1_iwres"]
 [ext_resource type="Environment" uid="uid://c7hvhnwnxbxc0" path="res://scenes/environments/view_environment.tres" id="2_0at1c"]
@@ -9,6 +9,8 @@
 [ext_resource type="Shader" path="res://shaders/square_grid.gdshader" id="6_4xd4x"]
 [ext_resource type="Texture2D" uid="uid://b7eeojg8w7b23" path="res://scenes/cameras/crosshair.png" id="7_aplrx"]
 [ext_resource type="Script" path="res://scenes/puzzle/PuzzleNode.cs" id="8_tq7y4"]
+[ext_resource type="Script" path="res://scenes/view/Congratulations.cs" id="13_3gc8e"]
+[ext_resource type="AudioStream" uid="uid://dn8ynqejghfpf" path="res://scenes/view/yippee-tbh.mp3" id="14_32m8t"]
 [ext_resource type="PackedScene" uid="uid://cmn7yl0c860nf" path="res://scenes/pause_menu.tscn" id="14_i0rss"]
 [ext_resource type="Script" path="res://scenes/FpsCounter.cs" id="15_doi0l"]
 [ext_resource type="Script" path="res://scenes/puzzle/BlockPlacementController.cs" id="16_h81hl"]
@@ -180,3 +182,28 @@ skeleton = NodePath("../YClip")
 
 [node name="BlockPlacementController" type="Node3D" parent="."]
 script = ExtResource("16_h81hl")
+
+[node name="Congratulations" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -78.0
+offset_top = -11.5
+offset_right = 78.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 91
+text = "CONGRATULATIONS"
+script = ExtResource("13_3gc8e")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Congratulations"]
+stream = ExtResource("14_32m8t")
+bus = &"Effects"
+
+[connection signal="PuzzleSolved" from="BlockPlacementController" to="Congratulations" method="_on_block_placement_controller_puzzle_solved"]

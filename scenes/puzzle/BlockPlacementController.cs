@@ -26,7 +26,8 @@ public partial class BlockPlacementController : Node3D {
 	[Export]
 	public int ViewSolution { get; set; }
 
-	public event Action<Solution> PuzzleSolved;
+	[Signal]
+	public delegate void PuzzleSolvedEventHandler();
 
 	public override void _Ready() {
 		camera = GetNode<Camera3D>("../SpectatorCamera");
@@ -165,8 +166,6 @@ public partial class BlockPlacementController : Node3D {
 		var solution = puzzleNode.GetState();
 		IsSolved = true;
 		puzzleNode.PuzzleData.Solutions.Add(solution);
-		PuzzleSolved?.Invoke(puzzleNode.GetState());
-
-		GD.Print("You're winner!");
+		EmitSignal(SignalName.PuzzleSolved);
 	}
 }
