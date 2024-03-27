@@ -1,4 +1,3 @@
-using System.Globalization;
 using Godot;
 using Packinator3D.datastructure;
 using Packinator3D.scenes.menus.select.tasks;
@@ -104,8 +103,8 @@ public partial class Select : Control
 
 		// Add all puzzle solutions to the menu
 		solutionMenu.Clear();
-		foreach (var solution in puzzle.Solutions) {
-			solutionMenu.AddItem(solution.Time.ToString(CultureInfo.CurrentCulture));
+		foreach (string solutionName in PuzzleUtils.CreateSolutionNames(puzzle.Solutions)) {
+			solutionMenu.AddItem(solutionName);
 		}
 
 		if (puzzle.Solutions.Count == 0) {
