@@ -31,6 +31,10 @@ public partial class Select : Control
 		ReloadCustomPuzzles();
 	}
 
+	public override void _ExitTree() {
+		SaveManager.Save();
+	}
+
 	private void ReloadCustomPuzzles() {
 		customPuzzleList.Clear();
 		foreach (var puzzle in SaveManager.SaveData.CustomPuzzles) {
