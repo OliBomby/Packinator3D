@@ -11,6 +11,7 @@ public partial class Select : Control
 	private ItemList normalPuzzleList;
 	private ItemList customPuzzleList;
 	private TasksPanel tasksPanel;
+	private FileDialog importFileDialog;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -19,6 +20,9 @@ public partial class Select : Control
 		normalPuzzleList = GetNode<ItemList>("MarginContainer/TabContainer/Normal Levels");
 		customPuzzleList = GetNode<ItemList>("MarginContainer/TabContainer/Custom Levels");
 		tasksPanel = GetNode<TasksPanel>("TasksPanel");
+		importFileDialog = GetNode<FileDialog>("ImportFileDialog");
+
+		importFileDialog.FilesSelected += ImportPuzzle;
 
 		foreach (var puzzle in SaveManager.SaveData.Puzzles) {
 			normalPuzzleList.AddItem(puzzle.Name);
@@ -143,10 +147,22 @@ public partial class Select : Control
 	}
 
 	private void Import() {
-		var dialog = GetNode<FileDialog>("ImportFileDialog");
-		dialog.Show();
-		if (!FileAccess.FileExists(dialog.CurrentFile)) return;
-		SaveManager.ImportPuzzle(dialog.CurrentFile);
+		importFileDialog.Show();
+	}
+
+	private void ImportPuzzle(string[] paths) {
+		if (paths.Length == 0) return;
+		if (paths.Length == 1 && paths[0].EndsWith(".json"))
+			SaveManager.ImportPuzzleJson(paths[0]);
+		else if (paths.Length == 1 && paths[0].EndsWith(".txt"))
+			SaveManager.ImportPuzzle(PuzzleImporter.FromSolution(paths[0]));
+		else if (paths.Length == 2 && paths[0].EndsWith(".txt") && paths[1].EndsWith(".txt"))
+			SaveManager.ImportPuzzle(PuzzleImporter.FromPiecesAndGoal(paths[0], paths[1]));
+		else {
+			GD.PrintErr("Invalid import files");
+			return;
+		}
+
 		ReloadCustomPuzzles();
 		tabContainer.CurrentTab = 1;
 	}
