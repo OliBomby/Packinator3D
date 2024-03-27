@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Godot;
 using Godot.Collections;
@@ -65,6 +64,7 @@ public partial class BlockPlacementController : Node3D {
 				heldPieceOriginalState = piece.Transform;
 				targetBasis = piece.Basis;
 				exclude.Add(heldPiece.GetRid());
+				heldPiece.PickUp();
 			}
 			else {
 				// Try to place the piece
@@ -144,6 +144,7 @@ public partial class BlockPlacementController : Node3D {
 	}
 
 	private void ClearHeldPiece() {
+		heldPiece?.PutDown();
 		heldPiece = null;
 		exclude.Clear();
 	}

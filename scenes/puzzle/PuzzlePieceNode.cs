@@ -57,24 +57,18 @@ public partial class PuzzlePieceNode : StaticBody3D
 		};
 	}
 
+	public void PickUp() {
+		if (renderMesh.MaterialOverride is not StandardMaterial3D material) return;
+		material.AlbedoColor = Color * 1.5f;
+	}
+
+	public void PutDown() {
+		if (renderMesh.MaterialOverride is not StandardMaterial3D material) return;
+		material.AlbedoColor = Color;
+	}
+
 	private void CreateCollisionObject() {
 		uint shapeOwner = CreateShapeOwner(this);
 		ShapeOwnerAddShape(shapeOwner, renderMesh.Mesh.CreateTrimeshShape());
 	}
-
-	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
-	{
-
-	}
-
-	// // Called every frame. 'delta' is the elapsed time since the previous frame.
-	// private float rotation;
-	// public override void _Process(double delta) {
-	// 	rotation += (float)delta;
-	// 	if (rotation > 1) {
-	// 		RotateY(Mathf.Pi / 2);
-	// 		rotation -= 1;
-	// 	}
-	// }
 }
