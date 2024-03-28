@@ -4,14 +4,14 @@ using System;
 
 public partial class BuildingBlock : StaticBody3D
 {
-    public Color Color {get; set;}
-    public Vector3 PositionInShape {get; set;}
+	public Color Color {get; set;}
+	public Vector3 PositionInShape {get; set;}
 	private readonly MeshInstance3D renderMesh;
-    
+	
 
 	public BuildingBlock(Color? color = null) {
-        PositionInShape = new();
-        Color = color.GetValueOrDefault(Color.Color8(255, 100, 0, 255));
+		PositionInShape = new();
+		Color = color.GetValueOrDefault(Color.Color8(255, 100, 0, 255));
 		var st = new SurfaceTool();
 
 		st.Begin(Mesh.PrimitiveType.Triangles);
@@ -79,14 +79,43 @@ public partial class BuildingBlock : StaticBody3D
 
 		// Commit to a mesh.
 		var mesh = st.Commit();
+		var material = new StandardMaterial3D {
+				AlbedoColor = Color,
+				Transparency = BaseMaterial3D.TransparencyEnum.Disabled,
+				NormalEnabled = true,
+			};
+
 		renderMesh = new MeshInstance3D {
 			Mesh = mesh,
-			MaterialOverride = new StandardMaterial3D {
-				AlbedoColor = Color,
-                NormalEnabled = true,
-			}
+			MaterialOverride =	material,
 		};
+
+		renderMesh.SetSurfaceOverrideMaterial(
+			0,
+			material
+		);
 		CreateCollisionObject();
+	}
+
+	public void SetTransparency(float a) {
+
+		StandardMaterial3D material = renderMesh.GetSurfaceOverrideMaterial(0) as StandardMaterial3D;
+		Color c = material.AlbedoColor;
+		c.A = a;
+		material.AlbedoColor = c;
+		
+		if (a == 1.0f) {
+			material.Transparency = BaseMaterial3D.TransparencyEnum.Disabled;
+		}
+		else {
+			material.Transparency = BaseMaterial3D.TransparencyEnum.Alpha;
+		}
+
+
+		renderMesh.SetSurfaceOverrideMaterial(
+			0,
+			material
+		);
 	}
 
 	// Called when the node enters the scene tree for the first time.
