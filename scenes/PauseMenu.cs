@@ -15,6 +15,8 @@ public partial class PauseMenu : ColorRect
 	private Node3D xClip;
 	private Node3D yClip;
 	private Node3D zClip;
+	
+	public bool IsTargetVisible {get; private set;}
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -183,5 +185,6 @@ public partial class PauseMenu : ColorRect
 	private void _on_check_box_toggled(bool toggledOn)
 	{
 		puzzleNode.SetTargetShapeVisible(toggledOn);
+		IsTargetVisible = toggledOn;
 	}
 }

@@ -22,6 +22,33 @@ public partial class PuzzleNode : Node3D {
 	public readonly List<PuzzlePieceNode> PuzzlePieceNodes = new();
 	private MeshInstance3D targetShape;
 
+    public void AddPiece(PuzzlePiece piece) {
+        var puzzlePieceNode = new PuzzlePieceNode(piece, Width);
+        AddChild(puzzlePieceNode);
+        PuzzlePieceNodes.Add(puzzlePieceNode);
+    }
+
+    public void AddTargetShape(List<Vector3> shape) {
+        bool visible = true;
+        if (targetShape != null) {
+            visible = targetShape.Visible;
+			RemoveChild(targetShape);
+        }
+
+		AddChild(targetShape = new MeshInstance3D {
+			Mesh = PuzzleUtils.ShapeToMesh(shape),
+			MaterialOverride = new StandardMaterial3D {
+				AlbedoColor = Color.Color8(255, 100, 0, 100),
+				Transparency = BaseMaterial3D.TransparencyEnum.Alpha,
+				DistanceFadeMode = BaseMaterial3D.DistanceFadeModeEnum.PixelAlpha,
+				DistanceFadeMaxDistance = 1,
+				DistanceFadeMinDistance = 0.3f,
+			}
+		});
+
+        targetShape.Visible = visible;
+    }
+
 	public void LoadData(Puzzle puzzle, int solutionIndex=-1) {
 		PuzzleData = puzzle;
 
@@ -37,22 +64,11 @@ public partial class PuzzleNode : Node3D {
 		}
 
 		// Add the target shape
-		AddChild(targetShape = new MeshInstance3D {
-			Mesh = PuzzleUtils.ShapeToMesh(puzzle.TargetShape),
-			MaterialOverride = new StandardMaterial3D {
-				AlbedoColor = Color.Color8(255, 100, 0, 100),
-				Transparency = BaseMaterial3D.TransparencyEnum.Alpha,
-				DistanceFadeMode = BaseMaterial3D.DistanceFadeModeEnum.PixelAlpha,
-				DistanceFadeMaxDistance = 1,
-				DistanceFadeMinDistance = 0.3f,
-			}
-		});
+        AddTargetShape(puzzle.TargetShape);
 
 		// Add puzzle piece nodes as children
 		foreach (var piece in puzzle.Pieces) {
-			var puzzlePieceNode = new PuzzlePieceNode(piece, Width);
-			AddChild(puzzlePieceNode);
-			PuzzlePieceNodes.Add(puzzlePieceNode);
+            AddPiece(piece);
 		}
 
 		if (solutionIndex >= 0 && solutionIndex < puzzle.Solutions.Count) {

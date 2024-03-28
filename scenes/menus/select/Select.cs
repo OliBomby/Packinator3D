@@ -1,5 +1,6 @@
 using System.Globalization;
 using Godot;
+using Packinator3D.scenes.view;
 using Packinator3D.datastructure;
 using Packinator3D.scenes.menus.select.tasks;
 using Packinator3D.scenes.puzzle;
@@ -43,10 +44,11 @@ public partial class Select : Control
 		LoadPuzzle(SaveManager.SaveData.CustomPuzzles[index]);
 	}
 
-	private void LoadPuzzle(Puzzle puzzle, int solutionIndex=-1) {
+	private void LoadPuzzle(Puzzle puzzle, int solutionIndex=-1, bool edit=false) {
 		if (puzzle == null) return;
 
 		var viewScene = ResourceLoader.Load<PackedScene>("res://scenes/view/view.tscn").Instantiate();
+		viewScene.GetNode<ViewScene>(".").IsEdit = edit;
 		viewScene.GetNode<PuzzleNode>("PuzzleNode").LoadData(puzzle, solutionIndex);
 		var placementController = viewScene.GetNode<BlockPlacementController>("BlockPlacementController");
 		placementController.ViewSolution = solutionIndex;
@@ -99,6 +101,19 @@ public partial class Select : Control
 		PopupSolutionMenu(puzzle);
 	}
 
+	private void Edit() {
+		var puzzle = GetSelectedPuzzle();
+		if (puzzle is null) return;
+
+		if (puzzle.Solutions.Count == 1) {
+			LoadPuzzle(puzzle, 0, true);
+			return;
+		}
+
+		currentSolutionMenuPuzzle = puzzle;
+		PopupSolutionMenu(puzzle);
+	}
+
 	private void PopupSolutionMenu(Puzzle puzzle) {
 		var solutionMenu = GetNode<PopupMenu>("SolutionMenu");
 
@@ -131,7 +146,6 @@ public partial class Select : Control
 		LoadPuzzle(currentSolutionMenuPuzzle, index);
 	}
 
-	private void Edit() { }
 
 	private void New() { }
 
