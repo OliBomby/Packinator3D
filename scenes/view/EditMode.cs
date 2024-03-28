@@ -42,6 +42,8 @@ partial class EditMode: Node3D {
 				blockIndex = 0;
 			}
 
+			GD.Print("Block index", blockIndex);
+
 			if (blockIndex == pieces.Count) {
 				foreach(List<BuildingBlock> piece in pieces) {
 					foreach(BuildingBlock block in piece) {
@@ -177,10 +179,8 @@ partial class EditMode: Node3D {
 		BuildingBlock block = new(pieces[blockIndex][0].Color);
 
 		GD.Print("Position is ", pos);
-		Vector3 block_position = new();
-		block_position.X = pos.X < 0.0f ? (float) Math.Floor(pos.X) : (float) Math.Floor(pos.X);
-		block_position.Y = pos.Y < 0.0f ? (float) Math.Floor(pos.Y) : (float) Math.Floor(pos.Y);
-		block_position.Z = pos.Z < 0.0f ? (float) Math.Floor(pos.Z) : (float) Math.Floor(pos.Z);
+		Vector3 block_position = puzzleNode.ToLocal(pos).Round();
+
 		GD.Print("block_position is ", block_position);
 		block.Position = block_position;
 
