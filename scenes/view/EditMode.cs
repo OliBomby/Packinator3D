@@ -158,7 +158,12 @@ partial class EditMode: Node3D {
 		var result = spaceState.IntersectRay(query);
 
 		if (!result.TryGetValue("position", out var position)) return false;
+		if (!result.TryGetValue("normal", out var collision_normal)) return false;
+
 		var pos = (Vector3) position;
+		var norm = (Vector3) collision_normal;
+		GD.Print(norm);
+		pos += norm * 0.5f;
 
 
 		int maxIters = Mathf.FloorToInt(origin.DistanceTo(pos)) * 2;
@@ -173,9 +178,9 @@ partial class EditMode: Node3D {
 
 		GD.Print("Position is ", pos);
 		Vector3 block_position = new();
-		block_position.X = (float) Math.Floor(pos.X);
-		block_position.Y = (float) Math.Floor(pos.Y);
-		block_position.Z = (float) Math.Floor(pos.Z);
+		block_position.X = pos.X < 0.0f ? (float) Math.Floor(pos.X) : (float) Math.Floor(pos.X);
+		block_position.Y = pos.Y < 0.0f ? (float) Math.Floor(pos.Y) : (float) Math.Floor(pos.Y);
+		block_position.Z = pos.Z < 0.0f ? (float) Math.Floor(pos.Z) : (float) Math.Floor(pos.Z);
 		GD.Print("block_position is ", block_position);
 		block.Position = block_position;
 
