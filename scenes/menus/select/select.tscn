@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://bq2oefoojtys0"]
 
 [ext_resource type="Script" path="res://scenes/menus/select/Select.cs" id="1_7x6eg"]
-[ext_resource type="Texture2D" uid="uid://cphbxwwgghhbo" path="res://icons/bars-solid.svg" id="2_5u4rh"]
+[ext_resource type="Texture2D" uid="uid://l6krmi36iq5r" path="res://scenes/menus/select/bars-solid.svg" id="2_db27x"]
 [ext_resource type="Script" path="res://scenes/menus/select/tasks/TasksPanel.cs" id="3_7uymi"]
 [ext_resource type="Script" path="res://scenes/menus/select/tasks/TasksDisplay.cs" id="4_2fkkw"]
 
@@ -32,9 +32,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 45
-theme_override_constants/margin_top = 45
-theme_override_constants/margin_right = 45
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 105
 
 [node name="TabContainer" type="TabContainer" parent="MarginContainer"]
@@ -59,9 +59,9 @@ anchor_bottom = 1.0
 offset_top = -99.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_constants/margin_left = 5
+theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 5
+theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer2"]
@@ -144,11 +144,13 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -38.0
-offset_bottom = 42.2857
+offset_left = -53.0
+offset_top = -1.0
+offset_right = -10.0
+offset_bottom = 47.0
 grow_horizontal = 0
 theme_override_constants/icon_max_width = 35
-icon = ExtResource("2_5u4rh")
+icon = ExtResource("2_db27x")
 flat = true
 
 [node name="TasksPanel" type="Panel" parent="."]
