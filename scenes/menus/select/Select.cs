@@ -1,4 +1,3 @@
-using System.Globalization;
 using Godot;
 using Packinator3D.scenes.view;
 using Packinator3D.datastructure;
@@ -13,6 +12,7 @@ public partial class Select : Control
 	private ItemList normalPuzzleList;
 	private ItemList customPuzzleList;
 	private TasksPanel tasksPanel;
+	private FileDialog importFileDialog;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -21,12 +21,19 @@ public partial class Select : Control
 		normalPuzzleList = GetNode<ItemList>("MarginContainer/TabContainer/Normal Levels");
 		customPuzzleList = GetNode<ItemList>("MarginContainer/TabContainer/Custom Levels");
 		tasksPanel = GetNode<TasksPanel>("TasksPanel");
+		importFileDialog = GetNode<FileDialog>("ImportFileDialog");
+
+		importFileDialog.FilesSelected += ImportPuzzle;
 
 		foreach (var puzzle in SaveManager.SaveData.Puzzles) {
 			normalPuzzleList.AddItem(puzzle.Name);
 		}
 
 		ReloadCustomPuzzles();
+	}
+
+	public override void _ExitTree() {
+		SaveManager.Save();
 	}
 
 	private void ReloadCustomPuzzles() {
@@ -119,8 +126,8 @@ public partial class Select : Control
 
 		// Add all puzzle solutions to the menu
 		solutionMenu.Clear();
-		foreach (var solution in puzzle.Solutions) {
-			solutionMenu.AddItem(solution.Time.ToString(CultureInfo.CurrentCulture));
+		foreach (string solutionName in PuzzleUtils.CreateSolutionNames(puzzle.Solutions)) {
+			solutionMenu.AddItem(solutionName);
 		}
 
 		if (puzzle.Solutions.Count == 0) {
@@ -130,7 +137,7 @@ public partial class Select : Control
 
 		// Move solution menu to the top of view button
 		var viewButton = GetNode<Button>("MarginContainer2/HBoxContainer/ViewButton");
-		int yOffset = Mathf.Max(90, puzzle.Solutions.Count * 24);
+		int yOffset = Mathf.Clamp(puzzle.Solutions.Count * 28, 90, 500);
 		var rect = viewButton.GetGlobalRect();
 		var irect = new Rect2I(
 			Mathf.RoundToInt(rect.Position.X),
@@ -158,10 +165,22 @@ public partial class Select : Control
 	}
 
 	private void Import() {
-		var dialog = GetNode<FileDialog>("ImportFileDialog");
-		dialog.Show();
-		if (!FileAccess.FileExists(dialog.CurrentFile)) return;
-		SaveManager.ImportPuzzle(dialog.CurrentFile);
+		importFileDialog.Show();
+	}
+
+	private void ImportPuzzle(string[] paths) {
+		if (paths.Length == 0) return;
+		if (paths.Length == 1 && paths[0].EndsWith(".json"))
+			SaveManager.ImportPuzzleJson(paths[0]);
+		else if (paths.Length == 1 && paths[0].EndsWith(".txt"))
+			SaveManager.ImportPuzzle(PuzzleImporter.FromSolution(paths[0]));
+		else if (paths.Length == 2 && paths[0].EndsWith(".txt") && paths[1].EndsWith(".txt"))
+			SaveManager.ImportPuzzle(PuzzleImporter.FromPiecesAndGoal(paths[0], paths[1]));
+		else {
+			GD.PrintErr("Invalid import files");
+			return;
+		}
+
 		ReloadCustomPuzzles();
 		tabContainer.CurrentTab = 1;
 	}

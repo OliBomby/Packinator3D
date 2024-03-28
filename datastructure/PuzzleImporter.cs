@@ -50,10 +50,48 @@ public static class PuzzleImporter {
 		}
 
 		return new Puzzle {
-			Name = path.GetFile(),
+			Name = path.GetFile().GetBaseName(),
 			Pieces = pieces,
 			TargetShape = targetShape,
 			Solutions = new List<Solution> { solution }
+		};
+	}
+
+	public static Puzzle FromPiecesAndGoal(string piecesPath, string goalPath) {
+		using var file1 = FileAccess.Open(piecesPath, FileAccess.ModeFlags.Read);
+		using var file2 = FileAccess.Open(goalPath, FileAccess.ModeFlags.Read);
+		var pieces = getPieces(file1);
+		var goal = getPieces(file2);
+
+		List<PuzzlePiece> getPieces(FileAccess file) {
+			var p = new List<PuzzlePiece>();
+			var index = 0;
+			while (!file.EofReached()) {
+				string line = file.GetLine();
+				if (string.IsNullOrWhiteSpace(line) || line[0] == '#') continue;
+				var piece = PieceFromString(line, PuzzleUtils.DefaultColors[index++ % PuzzleUtils.DefaultColors.Length]);
+				p.Add(piece);
+			}
+			return p;
+		}
+
+		// The file with fewer pieces is the goal
+		if (pieces.Count < goal.Count) {
+			(pieces, goal) = (goal, pieces);
+			(piecesPath, goalPath) = (goalPath, piecesPath);
+		}
+
+		// Move the pieces to the start position
+		var states = PuzzleUtils.GetStartStates(pieces);
+		for (var i = 0; i < pieces.Count; i++) {
+			pieces[i].State = states[i];
+		}
+
+		return new Puzzle {
+			Name = $"{piecesPath.GetFile().GetBaseName()}-{goalPath.GetFile().GetBaseName()}",
+			Pieces = pieces,
+			TargetShape = goal.SelectMany(piece => piece.Shape.Select(v => PuzzleUtils.Transform(v, piece.State))).ToList(),
+			Solutions = new List<Solution>()
 		};
 	}
 

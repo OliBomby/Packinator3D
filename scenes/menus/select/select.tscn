@@ -119,12 +119,12 @@ hide_on_state_item_selection = true
 
 [node name="ImportFileDialog" type="FileDialog" parent="."]
 mode = 2
-title = "Open a File"
+title = "Open File(s)"
 size = Vector2i(690, 594)
 ok_button_text = "Open"
-file_mode = 0
+file_mode = 1
 access = 2
-filters = PackedStringArray("*.json ; Saved Puzzles")
+filters = PackedStringArray("*.json, *.txt ; Saved Puzzles")
 use_native_dialog = true
 
 [node name="CollapseArea" type="Button" parent="."]

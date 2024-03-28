@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Godot;
 using Packinator3D.scenes.puzzle;
@@ -292,5 +293,13 @@ public static class PuzzleUtils {
 		}
 
 		return true;
+	}
+
+	public static IEnumerable<string> CreateSolutionNames(List<Solution> solutions) {
+		HashSet<Solution> solutionSet = new(new SolutionComparer());
+		foreach (var solution in solutions) {
+			solutionSet.Add(solution);
+			yield return $"Solution {solutionSet.Count} ({solution.Time.ToString(CultureInfo.CurrentCulture)})";
+		}
 	}
 }

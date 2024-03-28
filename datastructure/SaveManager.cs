@@ -46,7 +46,6 @@ public static class SaveManager {
         SaveData.Puzzles.Clear();
         foreach (string puzzleFileName in puzzles) {
             var puzzle = PuzzleImporter.FromSolution(puzzleDirectoryPath + '/' + puzzleFileName);
-            puzzle.Name = puzzleFileName.GetFile().GetBaseName();
             SaveData.Puzzles.Add(puzzle);
         }
     }
@@ -60,9 +59,13 @@ public static class SaveManager {
         lastSaveString = jsonString;
     }
 
-    public static void ImportPuzzle(string path) {
+    public static void ImportPuzzleJson(string path) {
         string jsonString = FileAccess.GetFileAsString(path);
         var puzzle = JsonSerializer.Deserialize<Puzzle>(jsonString, jsonOptions);
+        ImportPuzzle(puzzle);
+    }
+
+    public static void ImportPuzzle(Puzzle puzzle) {
         SaveData.CustomPuzzles.Add(puzzle);
     }
 
