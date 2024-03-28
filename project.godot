@@ -13,7 +13,8 @@ config_version=5
 config/name="PACKINATOR 3D"
 run/main_scene="res://scenes/menus/main/main_menu.tscn"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
-config/icon="res://icons/icon.svg"
+config/icon="res://icons/PACKINATOR3D.png"
+config/windows_native_icon="res://icons/PACKINATOR3D.ico"
 
 [dotnet]
 
