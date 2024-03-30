@@ -13,5 +13,4 @@ background_mode = 2
 background_color = Color(0.184314, 0.466667, 0.639216, 1)
 sky = SubResource("Sky_0oya4")
 ssao_enabled = true
-sdfgi_enabled = true
 glow_enabled = true

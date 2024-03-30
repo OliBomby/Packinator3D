@@ -1,0 +1,4 @@
+[gd_resource type="CameraAttributesPractical" format=3 uid="uid://cfk0huqlq8bgl"]
+
+[resource]
+dof_blur_near_distance = 1.2

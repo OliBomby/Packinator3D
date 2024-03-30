@@ -1,7 +1,8 @@
-[gd_scene load_steps=30 format=3 uid="uid://c82cqueavh1mq"]
+[gd_scene load_steps=32 format=3 uid="uid://c82cqueavh1mq"]
 
 [ext_resource type="Script" path="res://scenes/view/ViewScene.cs" id="1_iwres"]
 [ext_resource type="Environment" uid="uid://c7hvhnwnxbxc0" path="res://scenes/environments/view_environment.tres" id="2_0at1c"]
+[ext_resource type="CameraAttributesPractical" uid="uid://cfk0huqlq8bgl" path="res://scenes/environments/camera_attributes.tres" id="3_16map"]
 [ext_resource type="Script" path="res://scenes/cameras/SpectatorCamera.cs" id="3_ba1y1"]
 [ext_resource type="VoxelGIData" uid="uid://blub5fjgyakdb" path="res://scenes/view/view.VoxelGI_data.res" id="3_xv0y1"]
 [ext_resource type="Shader" path="res://shaders/hexgrid.gdshader" id="4_m4n71"]
@@ -14,9 +15,8 @@
 [ext_resource type="PackedScene" uid="uid://cmn7yl0c860nf" path="res://scenes/pause_menu.tscn" id="14_i0rss"]
 [ext_resource type="Script" path="res://scenes/FpsCounter.cs" id="15_doi0l"]
 [ext_resource type="Script" path="res://scenes/puzzle/BlockPlacementController.cs" id="16_h81hl"]
-
-[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_bthwb"]
-dof_blur_near_distance = 1.2
+[ext_resource type="LightmapGIData" uid="uid://b8iadoi51qrt5" path="res://scenes/view/view.lmbake" id="17_1h05b"]
+[ext_resource type="PackedScene" uid="uid://ckqu6y3lkle2l" path="res://scenes/view/models/Another bedroom.glb" id="17_ccmc3"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_iu6b4"]
 render_priority = 0
@@ -99,7 +99,7 @@ script = ExtResource("1_iwres")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("2_0at1c")
-camera_attributes = SubResource("CameraAttributesPractical_bthwb")
+camera_attributes = ExtResource("3_16map")
 
 [node name="VoxelGI" type="VoxelGI" parent="."]
 subdiv = 0
@@ -151,10 +151,6 @@ shape = SubResource("WorldBoundaryShape3D_jxyt3")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 script = ExtResource("8_tq7y4")
 DebugPuzzlePath = "res://puzzles/pentomino-chair.txt"
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.961262, 0.21022, -0.178279, 0, 0.64679, 0.762668, 0.275637, -0.733124, 0.621734, -0.632015, 4.56161, 2.25)
-shadow_enabled = true
 
 [node name="PauseMenu" parent="." instance=ExtResource("14_i0rss")]
 
@@ -211,5 +207,23 @@ script = ExtResource("13_3gc8e")
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Congratulations"]
 stream = ExtResource("14_32m8t")
 bus = &"Effects"
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.961262, 0.21022, -0.178279, 0, 0.64679, 0.762668, 0.275637, -0.733124, 0.621734, -0.632015, 97.7197, 104.463)
+visible = false
+light_indirect_energy = 16.0
+light_bake_mode = 1
+shadow_enabled = true
+
+[node name="LightmapGI" type="LightmapGI" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.90732, 0)
+quality = 3
+bounces = 5
+interior = true
+camera_attributes = ExtResource("3_16map")
+light_data = ExtResource("17_1h05b")
+
+[node name="Another bedroom" parent="." instance=ExtResource("17_ccmc3")]
+transform = Transform3D(33, 0, 0, 0, 33, 0, 0, 0, 33, -37.485, -22.63, 27.02)
 
 [connection signal="PuzzleSolved" from="BlockPlacementController" to="Congratulations" method="_on_block_placement_controller_puzzle_solved"]

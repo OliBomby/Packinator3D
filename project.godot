@@ -20,6 +20,10 @@ config/windows_native_icon="res://icons/PACKINATOR3D.ico"
 
 project/assembly_name="Packinator3D"
 
+[filesystem]
+
+import/fbx/enabled=false
+
 [gui]
 
 theme/custom="res://scenes/themes/theme.res"
