@@ -30,7 +30,57 @@ partial class EditMode: Node3D {
 
 	public override void _Ready() {
 		puzzleNode = GetNode<PuzzleNode>("../PuzzleNode");
-		camera = GetNode<Camera3D>("../SpectatorCamera"); 
+		camera = GetNode<Camera3D>("../SpectatorCamera");
+		enterEditMode();
+	}
+	
+	private void editDisablePiece(int index) {
+		foreach(BuildingBlock block in pieces[index]) {
+			block.DisableCollisions();
+		}
+		puzzleNode.PuzzlePieceNodes[index].SetTransparency(0.4f);
+	}
+
+	private void editEnablePiece(int index, bool puzzlePieceCollisions = false) {
+		foreach(BuildingBlock block in pieces[index]) {
+			block.EnableCollisions();
+		}
+		puzzleNode.PuzzlePieceNodes[index].SetTransparency(1.0f);
+
+		if (puzzlePieceCollisions) {
+			puzzleNode.PuzzlePieceNodes[index].EnableCollisions();
+		}
+		else {
+			puzzleNode.PuzzlePieceNodes[index].DisableCollisions();
+		}
+	}
+
+	private void buildPuzzlePiece(int index) {
+		buildTargetShape();
+
+		puzzleNode.RemoveChild(puzzleNode.PuzzlePieceNodes[index]);
+
+		List<BuildingBlock> piece = pieces[index];
+
+		PuzzlePiece newPiece = new();
+		newPiece.Shape = piece.ConvertAll(block => block.PositionInShape);
+		newPiece.Color = piece[0].Color;
+		newPiece.State = pieceStates[blockIndex];
+
+		puzzleNode.AddPiece(newPiece, index);
+		puzzleNode.PuzzlePieceNodes[index].DisableCollisions();
+	}
+
+	private void buildTargetShape() {
+		List<Vector3> target_shape = new();
+
+		foreach(List<BuildingBlock> p in pieces) {
+			foreach(BuildingBlock block in p) {
+				target_shape.Add(block.Position); 
+			}
+		}
+
+		puzzleNode.AddTargetShape(target_shape);
 	}
 
 	public override void _PhysicsProcess(double delta) {
@@ -41,144 +91,77 @@ partial class EditMode: Node3D {
 				blockIndex = 0;
 			}
 
-			GD.Print("Block index", blockIndex);
-
 			if (blockIndex == pieces.Count) {
-				foreach(List<BuildingBlock> piece in pieces) {
-					foreach(BuildingBlock block in piece) {
-						block.SetTransparency(1.0f);
-						block.EnableCollisions();
-					}
-				}
-				foreach(PuzzlePieceNode pn in puzzleNode.PuzzlePieceNodes) {
-					pn.SetTransparency(1.0f);
+				for (int i = 0; i < pieces.Count; i++) {
+					editEnablePiece(i, true);
 				}
 			}
 			else {
-
 				for(int i = 0; i < pieces.Count; i++) {
-					foreach(BuildingBlock block in pieces[i]) {
-						if (i == blockIndex) {
-							block.SetTransparency(1.0f);
-							puzzleNode.PuzzlePieceNodes[i].SetTransparency(1.0f);
-							block.EnableCollisions();
-						}
-						else {
-							block.SetTransparency(0.4f);
-							puzzleNode.PuzzlePieceNodes[i].SetTransparency(0.4f);
-							block.DisableCollisions();
-						}
+					if (i == blockIndex) {
+						editEnablePiece(i);
+					}
+					else {
+						editDisablePiece(i);
 					}
 				}
 			}
 		}
-		if (currentlyEditing && Input.IsActionJustPressed("move_piece") && blockIndex != pieces.Count) {
+		if (Input.IsActionJustPressed("move_piece") && blockIndex != pieces.Count) {
 			if (TryPlaceTargetBlock()) {
-				// Change target shape
-				List<Vector3> target_shape = new();
-
-				foreach(List<BuildingBlock> p in pieces) {
-					foreach(BuildingBlock block in p) {
-						target_shape.Add(block.Position); 
-					}
-				}
-
-				puzzleNode.AddTargetShape(target_shape);
-				puzzleNode.SetTargetShapeVisible(viewScene.IsTargetVisible());
-				puzzleNode.RemoveChild(puzzleNode.PuzzlePieceNodes[blockIndex]);
-
-				List<BuildingBlock> piece = pieces[blockIndex];
-
-				PuzzlePiece newPiece = new();
-				newPiece.Shape = piece.ConvertAll(block => block.PositionInShape);
-				newPiece.Color = piece[0].Color;
-				newPiece.State = pieceStates[blockIndex];
-
-				puzzleNode.AddPiece(newPiece, blockIndex);
-				puzzleNode.PuzzlePieceNodes[blockIndex].DisableCollisions();
+				buildPuzzlePiece(blockIndex);
 			}
 		}
-		if (currentlyEditing && Input.IsActionJustPressed("reset_piece") && blockIndex != pieces.Count) {
+
+		if (Input.IsActionJustPressed("reset_piece") && blockIndex != pieces.Count) {
 			if (TryRemoveTargetBlock()) {
-				// Change target shape
-				List<Vector3> target_shape = new();
-
-				foreach(List<BuildingBlock> p in pieces) {
-					foreach(BuildingBlock block in p) {
-						target_shape.Add(block.Position); 
-					}
-				}
-
-				puzzleNode.AddTargetShape(target_shape);
-				puzzleNode.SetTargetShapeVisible(viewScene.IsTargetVisible());
-				puzzleNode.RemoveChild(puzzleNode.PuzzlePieceNodes[blockIndex]);
-
-				List<BuildingBlock> piece = pieces[blockIndex];
-
-				PuzzlePiece newPiece = new();
-				newPiece.Shape = piece.ConvertAll(block => block.PositionInShape);
-				newPiece.Color = piece[0].Color;
-				newPiece.State = pieceStates[blockIndex];
-
-				puzzleNode.AddPiece(newPiece, blockIndex);
-				puzzleNode.PuzzlePieceNodes[blockIndex].DisableCollisions();
+				buildPuzzlePiece(blockIndex);
 			}
 		}
 	}
 
 
 	public void SwitchMode() {
-		if (currentlyEditing) {
-			// Switch to view mode
-			enterViewMode();
-		}
-		else {
-			// Switch to edit mode
-			enterEditMode();
-		}
-		currentlyEditing ^= true;
+		// if (currentlyEditing) {
+		// 	// Switch to view mode
+		// 	enterViewMode();
+		// }
+		// else {
+		// 	// Switch to edit mode
+		// 	enterEditMode();
+		// }
+		// currentlyEditing ^= true;
 	}
 
-	private void enterViewMode() {
-		// Change target shape
-		List<Vector3> target_shape = new();
+	// private void enterViewMode() {
+	// 	// Change target shape
+	// 	buildTargetShape();
 
-		foreach(List<BuildingBlock> piece in pieces) {
-			foreach(BuildingBlock block in piece) {
-				target_shape.Add(block.Position); 
-			}
-		}
+	// 	// Explicitly remove the pieces -> fixes something with collision
+	// 	foreach(PuzzlePieceNode ppn in puzzleNode.PuzzlePieceNodes) {
+	// 		puzzleNode.RemoveChild(ppn);
+	// 	}
+	// 	puzzleNode.PuzzlePieceNodes.Clear();
 
-		puzzleNode.AddTargetShape(target_shape);
-		puzzleNode.SetTargetShapeVisible(viewScene.IsTargetVisible());
-		// Explicitly remove the pieces -> fixes something with collision
-		foreach(PuzzlePieceNode ppn in puzzleNode.PuzzlePieceNodes) {
-			puzzleNode.RemoveChild(ppn);
-		}
-		puzzleNode.PuzzlePieceNodes.Clear();
+	// 	for (int i = 0; i < pieces.Count; i++) {
+	// 		List<BuildingBlock> piece = pieces[i];
 
-		for (int i = 0; i < pieces.Count; i++) {
-			List<BuildingBlock> piece = pieces[i];
+	// 		PuzzlePiece newPiece = new();
+	// 		newPiece.Shape = piece.ConvertAll(block => block.PositionInShape);
+	// 		newPiece.Color = piece[0].Color;
+	// 		newPiece.State = pieceStates[i];
 
-			PuzzlePiece newPiece = new();
-			newPiece.Shape = piece.ConvertAll(block => block.PositionInShape);
-			newPiece.Color = piece[0].Color;
-			newPiece.State = pieceStates[i];
-
-			puzzleNode.AddPiece(newPiece);
-		}
-	}
+	// 		puzzleNode.AddPiece(newPiece);
+	// 	}
+	// }
 
 	private void enterEditMode() {
-		puzzleNode.SetTargetShapeVisible(false);
 		pieces.Clear();
 		pieceStates.Clear();
 
 		foreach (var puzzle_piece in puzzleNode.PuzzlePieceNodes) {
-			// puzzle_piece.Hide();
-			puzzle_piece.DisableCollisions();
 			pieceStates.Add(puzzle_piece.Transform);
-
+			puzzle_piece.PieceData.State = puzzle_piece.Transform;
 			List<BuildingBlock> piece = new();
 
 			var piece_data = puzzle_piece.PieceData;
@@ -196,6 +179,9 @@ partial class EditMode: Node3D {
 			pieces.Add(piece);
 		}
 		blockIndex = pieces.Count;
+		for (int i = 0; i < pieces.Count; i++) {
+			editEnablePiece(i, true);
+		}
 	}
 
 	private bool TryPlaceTargetBlock() {
