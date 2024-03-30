@@ -25,12 +25,12 @@ public partial class PuzzleNode : Node3D {
 	public void AddPiece(PuzzlePiece piece, int? index = null) {
 		var puzzlePieceNode = new PuzzlePieceNode(piece, Width);
 		AddChild(puzzlePieceNode);
-	if (index is int i) {
+		if (index is int i && i < PuzzlePieceNodes.Count) {
 			PuzzlePieceNodes[i] = puzzlePieceNode;
-	}
-	else {
+		}
+		else {
 			PuzzlePieceNodes.Add(puzzlePieceNode);
-	}
+		}
 	}
 
 	public void AddTargetShape(List<Vector3> shape) {

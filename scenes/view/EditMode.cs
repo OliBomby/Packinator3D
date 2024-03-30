@@ -61,7 +61,9 @@ partial class EditMode: Node3D {
 	private void buildPuzzlePiece(int index) {
 		buildTargetShape();
 
-		puzzleNode.RemoveChild(puzzleNode.PuzzlePieceNodes[index]);
+		if (index < puzzleNode.PuzzlePieceNodes.Count) {
+			puzzleNode.RemoveChild(puzzleNode.PuzzlePieceNodes[index]);
+		}
 		List<BuildingBlock> piece = pieces[index];
 
 		if (piece.Count > 0) {
@@ -88,8 +90,11 @@ partial class EditMode: Node3D {
 	}
 
 	private void updateStatusText() {
-		if (blockIndex == pieces.Count) {
+		if (blockIndex == pieces.Count + 1) {
 			editModeSelected.Text = "View";
+		}
+		else if (blockIndex == pieces.Count) {
+			editModeSelected.Text = "New piece";
 		}
 		else {
 			editModeSelected.Text = $"Editing piece {blockIndex}";
@@ -98,7 +103,7 @@ partial class EditMode: Node3D {
 
 	private void blockIndexUpdate() {
 		updateStatusText();
-		if (blockIndex == pieces.Count) {
+		if (blockIndex == pieces.Count + 1) {
 			for (int i = 0; i < pieces.Count; i++) {
 				editEnablePiece(i, true);
 			}
@@ -119,21 +124,22 @@ partial class EditMode: Node3D {
 	public override void _PhysicsProcess(double delta) {
 		if (Input.IsActionJustPressed("block_build_select")) {
 			blockIndex += 1;
-			// blockIndex = pieces.Count -> show all
-			if (blockIndex > pieces.Count) {
+			// blockIndex = pieces.Count + 1 -> show all
+			if (blockIndex > pieces.Count + 1) {
 				blockIndex = 0;
 			}
 
 			blockIndexUpdate();
 
 		}
-		if (Input.IsActionJustPressed("move_piece") && blockIndex != pieces.Count) {
+		if (Input.IsActionJustPressed("move_piece") && blockIndex != pieces.Count + 1) {
 			if (TryPlaceTargetBlock()) {
 				buildPuzzlePiece(blockIndex);
+				blockIndexUpdate();
 			}
 		}
 
-		if (Input.IsActionJustPressed("reset_piece") && blockIndex != pieces.Count) {
+		if (Input.IsActionJustPressed("reset_piece") && blockIndex != pieces.Count + 1) {
 			if (TryRemoveTargetBlock()) {
 				buildPuzzlePiece(blockIndex);
 				if (pieces[blockIndex].Count == 0) {
@@ -208,14 +214,14 @@ partial class EditMode: Node3D {
 
 			pieces.Add(piece);
 		}
-		blockIndex = pieces.Count;
+		blockIndex = pieces.Count + 1;
 		for (int i = 0; i < pieces.Count; i++) {
 			editEnablePiece(i, true);
 		}
 	}
 
 	private bool TryPlaceTargetBlock() {
-		if (blockIndex == pieces.Count) {
+		if (blockIndex == pieces.Count + 1) {
 			return false;
 		}
 
@@ -258,21 +264,42 @@ partial class EditMode: Node3D {
 			if (i++ >= maxIters) return false;
 		}
 
-		BuildingBlock block = new(pieces[blockIndex][0].Color);
-		block.Hide();
+		if (blockIndex == pieces.Count) {
+			BuildingBlock block = new();
+			block.Hide();
 
-		Vector3 block_position = puzzleNode.ToLocal(pos).Round();
+			Vector3 block_position = puzzleNode.ToLocal(pos).Round();
 
-		block.Position = block_position;
+			block.Position = block_position;
 
-		block.PositionInShape = pieceStates[blockIndex].Inverse() * block_position;
-		pieces[blockIndex].Add(block);
-		viewScene.AddChild(block);
-		return true;
+			block.PositionInShape = block_position;
+			List<BuildingBlock> piece = new();
+			piece.Add(block);
+			pieceStates.Add(Transform3D.Identity);
+			pieces.Add(piece);
+			viewScene.AddChild(block);
+
+			blockIndex = pieces.Count - 1;
+
+			return true;
+		}
+		else {
+			BuildingBlock block = new(pieces[blockIndex][0].Color);
+			block.Hide();
+
+			Vector3 block_position = puzzleNode.ToLocal(pos).Round();
+
+			block.Position = block_position;
+
+			block.PositionInShape = pieceStates[blockIndex].Inverse() * block_position;
+			pieces[blockIndex].Add(block);
+			viewScene.AddChild(block);
+			return true;
+		}
 	}
 
 	private bool TryRemoveTargetBlock() {
-		if (blockIndex == pieces.Count) {
+		if (blockIndex >= pieces.Count) {
 			return false;
 		}
 
