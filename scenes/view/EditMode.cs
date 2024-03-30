@@ -16,6 +16,7 @@ partial class EditMode: Node3D {
 	private ViewScene viewScene;
 	private Camera3D camera;
 	private PuzzleNode puzzleNode;
+	private Label editModeSelected;
 
 	// List of pieces
 	private List<List<BuildingBlock>> pieces;
@@ -31,7 +32,9 @@ partial class EditMode: Node3D {
 	public override void _Ready() {
 		puzzleNode = GetNode<PuzzleNode>("../PuzzleNode");
 		camera = GetNode<Camera3D>("../SpectatorCamera");
+		editModeSelected = GetNode<Label>("../EditModeSelected");
 		enterEditMode();
+		updateStatusText();
 	}
 	
 	private void editDisablePiece(int index) {
@@ -59,16 +62,17 @@ partial class EditMode: Node3D {
 		buildTargetShape();
 
 		puzzleNode.RemoveChild(puzzleNode.PuzzlePieceNodes[index]);
-
 		List<BuildingBlock> piece = pieces[index];
 
-		PuzzlePiece newPiece = new();
-		newPiece.Shape = piece.ConvertAll(block => block.PositionInShape);
-		newPiece.Color = piece[0].Color;
-		newPiece.State = pieceStates[blockIndex];
+		if (piece.Count > 0) {
+			PuzzlePiece newPiece = new();
+			newPiece.Shape = piece.ConvertAll(block => block.PositionInShape);
+			newPiece.Color = piece[0].Color;
+			newPiece.State = pieceStates[blockIndex];
 
-		puzzleNode.AddPiece(newPiece, index);
-		puzzleNode.PuzzlePieceNodes[index].DisableCollisions();
+			puzzleNode.AddPiece(newPiece, index);
+			puzzleNode.PuzzlePieceNodes[index].DisableCollisions();
+		}
 	}
 
 	private void buildTargetShape() {
@@ -83,6 +87,35 @@ partial class EditMode: Node3D {
 		puzzleNode.AddTargetShape(target_shape);
 	}
 
+	private void updateStatusText() {
+		if (blockIndex == pieces.Count) {
+			editModeSelected.Text = "View";
+		}
+		else {
+			editModeSelected.Text = $"Editing piece {blockIndex}";
+		}
+	}
+
+	private void blockIndexUpdate() {
+		updateStatusText();
+		if (blockIndex == pieces.Count) {
+			for (int i = 0; i < pieces.Count; i++) {
+				editEnablePiece(i, true);
+			}
+		}
+		else {
+			for(int i = 0; i < pieces.Count; i++) {
+				if (i == blockIndex) {
+					editEnablePiece(i);
+				}
+				else {
+					editDisablePiece(i);
+				}
+			}
+		}
+	}
+
+
 	public override void _PhysicsProcess(double delta) {
 		if (Input.IsActionJustPressed("block_build_select")) {
 			blockIndex += 1;
@@ -91,21 +124,8 @@ partial class EditMode: Node3D {
 				blockIndex = 0;
 			}
 
-			if (blockIndex == pieces.Count) {
-				for (int i = 0; i < pieces.Count; i++) {
-					editEnablePiece(i, true);
-				}
-			}
-			else {
-				for(int i = 0; i < pieces.Count; i++) {
-					if (i == blockIndex) {
-						editEnablePiece(i);
-					}
-					else {
-						editDisablePiece(i);
-					}
-				}
-			}
+			blockIndexUpdate();
+
 		}
 		if (Input.IsActionJustPressed("move_piece") && blockIndex != pieces.Count) {
 			if (TryPlaceTargetBlock()) {
@@ -116,6 +136,16 @@ partial class EditMode: Node3D {
 		if (Input.IsActionJustPressed("reset_piece") && blockIndex != pieces.Count) {
 			if (TryRemoveTargetBlock()) {
 				buildPuzzlePiece(blockIndex);
+				if (pieces[blockIndex].Count == 0) {
+					pieces.RemoveAt(blockIndex);
+					pieceStates.RemoveAt(blockIndex);
+					puzzleNode.PuzzlePieceNodes.RemoveAt(blockIndex);
+
+					if (blockIndex == pieces.Count && blockIndex != 0) {
+						blockIndex -= 1;
+					}
+					blockIndexUpdate();
+				}
 			}
 		}
 	}

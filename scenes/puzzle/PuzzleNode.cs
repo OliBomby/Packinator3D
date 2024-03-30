@@ -22,37 +22,41 @@ public partial class PuzzleNode : Node3D {
 	public readonly List<PuzzlePieceNode> PuzzlePieceNodes = new();
 	private MeshInstance3D targetShape;
 
-    public void AddPiece(PuzzlePiece piece, int? index = null) {
-        var puzzlePieceNode = new PuzzlePieceNode(piece, Width);
-        AddChild(puzzlePieceNode);
+	public void AddPiece(PuzzlePiece piece, int? index = null) {
+		var puzzlePieceNode = new PuzzlePieceNode(piece, Width);
+		AddChild(puzzlePieceNode);
 	if (index is int i) {
-        	PuzzlePieceNodes[i] = puzzlePieceNode;
+			PuzzlePieceNodes[i] = puzzlePieceNode;
 	}
 	else {
-        	PuzzlePieceNodes.Add(puzzlePieceNode);
+			PuzzlePieceNodes.Add(puzzlePieceNode);
 	}
-    }
+	}
 
-    public void AddTargetShape(List<Vector3> shape) {
-        bool visible = true;
-        if (targetShape != null) {
-            visible = targetShape.Visible;
+	public void AddTargetShape(List<Vector3> shape) {
+		bool visible = true;
+		if (targetShape != null) {
+			visible = targetShape.Visible;
 			RemoveChild(targetShape);
-        }
+		}
 
-		AddChild(targetShape = new MeshInstance3D {
-			Mesh = PuzzleUtils.ShapeToMesh(shape),
-			MaterialOverride = new StandardMaterial3D {
-				AlbedoColor = Color.Color8(255, 100, 0, 100),
-				Transparency = BaseMaterial3D.TransparencyEnum.Alpha,
-				DistanceFadeMode = BaseMaterial3D.DistanceFadeModeEnum.PixelAlpha,
-				DistanceFadeMaxDistance = 1,
-				DistanceFadeMinDistance = 0.3f,
-			}
-		});
-
-        targetShape.Visible = visible;
-    }
+		if (shape.Count > 0) {
+			AddChild(targetShape = new MeshInstance3D {
+				Mesh = PuzzleUtils.ShapeToMesh(shape),
+				MaterialOverride = new StandardMaterial3D {
+					AlbedoColor = Color.Color8(255, 100, 0, 100),
+					Transparency = BaseMaterial3D.TransparencyEnum.Alpha,
+					DistanceFadeMode = BaseMaterial3D.DistanceFadeModeEnum.PixelAlpha,
+					DistanceFadeMaxDistance = 1,
+					DistanceFadeMinDistance = 0.3f,
+				}
+			});
+			targetShape.Visible = visible;
+		}
+		else {
+			targetShape.Visible = false;
+		}
+	}
 
 	public void LoadData(Puzzle puzzle, int solutionIndex=-1) {
 		PuzzleData = puzzle;
@@ -69,11 +73,11 @@ public partial class PuzzleNode : Node3D {
 		}
 
 		// Add the target shape
-        AddTargetShape(puzzle.TargetShape);
+		AddTargetShape(puzzle.TargetShape);
 
 		// Add puzzle piece nodes as children
 		foreach (var piece in puzzle.Pieces) {
-            AddPiece(piece);
+			AddPiece(piece);
 		}
 
 		if (solutionIndex >= 0 && solutionIndex < puzzle.Solutions.Count) {

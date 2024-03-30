@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -8,45 +8,45 @@ using Packinator3D.scenes.puzzle;
 namespace Packinator3D.datastructure;
 
 public static class PuzzleUtils {
-    public static readonly Color[] DefaultColors = {
-        Colors.Yellow,
-        Colors.Orange,
-        Colors.Green,
-        Colors.Pink,
-        Colors.Red,
-        Colors.SkyBlue,
-        Colors.Blue,
-        Colors.LightGreen,
-    };
+	public static readonly Color[] DefaultColors = {
+		Colors.Yellow,
+		Colors.Orange,
+		Colors.Green,
+		Colors.Pink,
+		Colors.Red,
+		Colors.SkyBlue,
+		Colors.Blue,
+		Colors.LightGreen,
+	};
 
-    public static bool IsFull(bool[,,] voxels, Vector3 pos) => IsFull(voxels, Mathf.RoundToInt(pos.X), Mathf.RoundToInt(pos.Y), Mathf.RoundToInt(pos.Z));
+	public static bool IsFull(bool[,,] voxels, Vector3 pos) => IsFull(voxels, Mathf.RoundToInt(pos.X), Mathf.RoundToInt(pos.Y), Mathf.RoundToInt(pos.Z));
 
-    public static bool IsAir(bool[,,] voxels, Vector3 pos) => IsAir(voxels, Mathf.RoundToInt(pos.X), Mathf.RoundToInt(pos.Y), Mathf.RoundToInt(pos.Z));
+	public static bool IsAir(bool[,,] voxels, Vector3 pos) => IsAir(voxels, Mathf.RoundToInt(pos.X), Mathf.RoundToInt(pos.Y), Mathf.RoundToInt(pos.Z));
 
-    public static bool IsFull(bool[,,] voxels, int x, int y, int z) {
-        if (x < 0 || x >= voxels.GetLength(0)) return false;
-        if (y < 0 || y >= voxels.GetLength(1)) return false;
-        if (z < 0 || z >= voxels.GetLength(2)) return false;
-        return voxels[x, y, z];
-    }
+	public static bool IsFull(bool[,,] voxels, int x, int y, int z) {
+		if (x < 0 || x >= voxels.GetLength(0)) return false;
+		if (y < 0 || y >= voxels.GetLength(1)) return false;
+		if (z < 0 || z >= voxels.GetLength(2)) return false;
+		return voxels[x, y, z];
+	}
 
-    public static bool IsAir(bool[,,] voxels, int x, int y, int z) {
-        if (x < 0 || x >= voxels.GetLength(0)) return true;
-        if (y < 0 || y >= voxels.GetLength(1)) return true;
-        if (z < 0 || z >= voxels.GetLength(2)) return true;
-        return !voxels[x, y, z];
-    }
+	public static bool IsAir(bool[,,] voxels, int x, int y, int z) {
+		if (x < 0 || x >= voxels.GetLength(0)) return true;
+		if (y < 0 || y >= voxels.GetLength(1)) return true;
+		if (z < 0 || z >= voxels.GetLength(2)) return true;
+		return !voxels[x, y, z];
+	}
 
-    public static void SetVoxel(bool[,,] voxels, Vector3 pos, bool value) => SetVoxel(voxels, Mathf.RoundToInt(pos.X), Mathf.RoundToInt(pos.Y), Mathf.RoundToInt(pos.Z), value);
+	public static void SetVoxel(bool[,,] voxels, Vector3 pos, bool value) => SetVoxel(voxels, Mathf.RoundToInt(pos.X), Mathf.RoundToInt(pos.Y), Mathf.RoundToInt(pos.Z), value);
 
-    public static void SetVoxel(bool[,,] voxels, int x, int y, int z, bool value) {
-	    if (x < 0 || x >= voxels.GetLength(0)) return;
-	    if (y < 0 || y >= voxels.GetLength(1)) return;
-	    if (z < 0 || z >= voxels.GetLength(2)) return;
-	    voxels[x, y, z] = value;
-    }
+	public static void SetVoxel(bool[,,] voxels, int x, int y, int z, bool value) {
+		if (x < 0 || x >= voxels.GetLength(0)) return;
+		if (y < 0 || y >= voxels.GetLength(1)) return;
+		if (z < 0 || z >= voxels.GetLength(2)) return;
+		voxels[x, y, z] = value;
+	}
 
-    public static List<Vector3> PieceNodesToShape(IEnumerable<PuzzlePieceNode> pieces) {
+	public static List<Vector3> PieceNodesToShape(IEnumerable<PuzzlePieceNode> pieces) {
 		var shape = new List<Vector3>();
 		foreach (var piece in pieces) {
 			shape.AddRange(piece.PieceData.Shape.Select(v => Transform(v, piece.Transform)));
@@ -54,105 +54,105 @@ public static class PuzzleUtils {
 		return shape;
 	}
 
-    public static (bool[,,], Vector3) ShapeToVoxels(List<Vector3> shape) {
-        var (min, max) = GetDimensions(shape);
-        var size = max - min + Vector3.One;
-        var voxels = new bool[(int)size.X, (int)size.Y, (int)size.Z];
-        foreach (var pos in shape) {
-            var p = pos - min;
-            voxels[(int)p.X, (int)p.Y, (int)p.Z] = true;
-        }
-        return (voxels, min);
-    }
+	public static (bool[,,], Vector3) ShapeToVoxels(List<Vector3> shape) {
+		var (min, max) = GetDimensions(shape);
+		var size = max - min + Vector3.One;
+		var voxels = new bool[(int)size.X, (int)size.Y, (int)size.Z];
+		foreach (var pos in shape) {
+			var p = pos - min;
+			voxels[(int)p.X, (int)p.Y, (int)p.Z] = true;
+		}
+		return (voxels, min);
+	}
 
-    public static List<Transform3D> GetStartStates(List<PuzzlePiece> pieces) {
-        var states = new List<Transform3D>();
-        float x = -9;
+	public static List<Transform3D> GetStartStates(List<PuzzlePiece> pieces) {
+		var states = new List<Transform3D>();
+		float x = -9;
 
-        foreach (var piece in pieces) {
-            var (min, max) = GetDimensions(piece.Shape);
-            var rotation = GetRotationToMinimizeAxis(max - min, Vector3.Axis.X);
-            (min, max) = RotateDimensions(min, max, rotation);
-            var pos = new Vector3(x - min.X, -min.Y, -9 - min.Z);
-            x += max.X - min.X + 2;
-            states.Add(new Transform3D(rotation, pos));
-        }
+		foreach (var piece in pieces) {
+			var (min, max) = GetDimensions(piece.Shape);
+			var rotation = GetRotationToMinimizeAxis(max - min, Vector3.Axis.X);
+			(min, max) = RotateDimensions(min, max, rotation);
+			var pos = new Vector3(x - min.X, -min.Y, -9 - min.Z);
+			x += max.X - min.X + 2;
+			states.Add(new Transform3D(rotation, pos));
+		}
 
-        return states;
-    }
+		return states;
+	}
 
-    public static Vector3 Transform(Vector3 v, Transform3D t) => (t * v).Round();
+	public static Vector3 Transform(Vector3 v, Transform3D t) => (t * v).Round();
 
-    public static Vector3 Transform(Vector3 v, Basis t) => (t * v).Round();
+	public static Vector3 Transform(Vector3 v, Basis t) => (t * v).Round();
 
-    public static (Vector3, Vector3) RotateDimensions(Vector3 min, Vector3 max, Basis rotation) {
-        (min, max) = (Transform(min, rotation), Transform(max, rotation));
-        if (min.X > max.X) (min.X, max.X) = (max.X, min.X);
-        if (min.Y > max.Y) (min.Y, max.Y) = (max.Y, min.Y);
-        if (min.Z > max.Z) (min.Z, max.Z) = (max.Z, min.Z);
-        return (min, max);
-    }
+	public static (Vector3, Vector3) RotateDimensions(Vector3 min, Vector3 max, Basis rotation) {
+		(min, max) = (Transform(min, rotation), Transform(max, rotation));
+		if (min.X > max.X) (min.X, max.X) = (max.X, min.X);
+		if (min.Y > max.Y) (min.Y, max.Y) = (max.Y, min.Y);
+		if (min.Z > max.Z) (min.Z, max.Z) = (max.Z, min.Z);
+		return (min, max);
+	}
 
-    public static Basis GetRotationToMinimizeAxis(Vector3 dims, Vector3.Axis axis) {
-        var smallestAxis = dims.X <= dims.Z && dims.X <= dims.Y ? Vector3.Axis.X : dims.Y <= dims.Z ? Vector3.Axis.Y : Vector3.Axis.Z;
-        if (smallestAxis == axis) return Basis.Identity;
-        if (smallestAxis != Vector3.Axis.X && axis != Vector3.Axis.X) return Basis.FromEuler(new Vector3(Mathf.Pi / 2, 0, 0));
-        if (smallestAxis != Vector3.Axis.Y && axis != Vector3.Axis.Y) return Basis.FromEuler(new Vector3(0, Mathf.Pi / 2, 0));
-        return Basis.FromEuler(new Vector3(0, 0, Mathf.Pi / 2));
-    }
+	public static Basis GetRotationToMinimizeAxis(Vector3 dims, Vector3.Axis axis) {
+		var smallestAxis = dims.X <= dims.Z && dims.X <= dims.Y ? Vector3.Axis.X : dims.Y <= dims.Z ? Vector3.Axis.Y : Vector3.Axis.Z;
+		if (smallestAxis == axis) return Basis.Identity;
+		if (smallestAxis != Vector3.Axis.X && axis != Vector3.Axis.X) return Basis.FromEuler(new Vector3(Mathf.Pi / 2, 0, 0));
+		if (smallestAxis != Vector3.Axis.Y && axis != Vector3.Axis.Y) return Basis.FromEuler(new Vector3(0, Mathf.Pi / 2, 0));
+		return Basis.FromEuler(new Vector3(0, 0, Mathf.Pi / 2));
+	}
 
-    public static (Vector3, Vector3) GetDimensions(List<Vector3> shape) {
-        var min = new Vector3(
-            shape.Min(o => o.X),
-            shape.Min(o => o.Y),
-            shape.Min(o => o.Z));
-        var max = new Vector3(
-            shape.Max(o => o.X),
-            shape.Max(o => o.Y),
-            shape.Max(o => o.Z));
-        return (min, max);
-    }
+	public static (Vector3, Vector3) GetDimensions(List<Vector3> shape) {
+		var min = new Vector3(
+			shape.Min(o => o.X),
+			shape.Min(o => o.Y),
+			shape.Min(o => o.Z));
+		var max = new Vector3(
+			shape.Max(o => o.X),
+			shape.Max(o => o.Y),
+			shape.Max(o => o.Z));
+		return (min, max);
+	}
 
-    public static Vector3 GetCenter(List<Vector3> shape) {
-        float x = Mathf.Round(shape.Select(o => o.X).Average());
-        float y = Mathf.Round(shape.Select(o => o.Y).Average());
-        float z = Mathf.Round(shape.Select(o => o.Z).Average());
-        return new Vector3(x, y, z);
-    }
+	public static Vector3 GetCenter(List<Vector3> shape) {
+		float x = Mathf.Round(shape.Select(o => o.X).Average());
+		float y = Mathf.Round(shape.Select(o => o.Y).Average());
+		float z = Mathf.Round(shape.Select(o => o.Z).Average());
+		return new Vector3(x, y, z);
+	}
 
-    public static Vector3 GetCenterExact(ICollection<Vector3> shape) {
+	public static Vector3 GetCenterExact(ICollection<Vector3> shape) {
 		float x = shape.Select(o => o.X).Average();
 		float y = shape.Select(o => o.Y).Average();
 		float z = shape.Select(o => o.Z).Average();
 		return new Vector3(x, y, z);
 	}
 
-    public static Mesh ShapeToMesh(List<Vector3> shape, float width=1) {
-        // Create the mesh out of the shape voxels
-        (bool[,,] voxels, var offset) = ShapeToVoxels(shape);
-        var st = new SurfaceTool();
-        st.Begin(Mesh.PrimitiveType.Triangles);
-        // Create a quad mesh for each side of a voxel that is exposed to air
-        for (var x = 0; x < voxels.GetLength(0); x++) {
-            for (var y = 0; y < voxels.GetLength(1); y++) {
-                for (var z = 0; z < voxels.GetLength(2); z++) {
-                    if (!voxels[x, y, z]) continue;
-                    var p = new Vector3(x, y, z);
-                    // Check if the voxel is exposed to air
-                    AddSide(st, voxels, p, offset, Vector3.Left, width);
-                    AddSide(st, voxels, p, offset, Vector3.Right, width);
-                    AddSide(st, voxels, p, offset, Vector3.Down, width);
-                    AddSide(st, voxels, p, offset, Vector3.Up, width);
-                    AddSide(st, voxels, p, offset, Vector3.Forward, width);
-                    AddSide(st, voxels, p, offset, Vector3.Back, width);
-                }
-            }
-        }
+	public static Mesh ShapeToMesh(List<Vector3> shape, float width=1) {
+		// Create the mesh out of the shape voxels
+		(bool[,,] voxels, var offset) = ShapeToVoxels(shape);
+		var st = new SurfaceTool();
+		st.Begin(Mesh.PrimitiveType.Triangles);
+		// Create a quad mesh for each side of a voxel that is exposed to air
+		for (var x = 0; x < voxels.GetLength(0); x++) {
+			for (var y = 0; y < voxels.GetLength(1); y++) {
+				for (var z = 0; z < voxels.GetLength(2); z++) {
+					if (!voxels[x, y, z]) continue;
+					var p = new Vector3(x, y, z);
+					// Check if the voxel is exposed to air
+					AddSide(st, voxels, p, offset, Vector3.Left, width);
+					AddSide(st, voxels, p, offset, Vector3.Right, width);
+					AddSide(st, voxels, p, offset, Vector3.Down, width);
+					AddSide(st, voxels, p, offset, Vector3.Up, width);
+					AddSide(st, voxels, p, offset, Vector3.Forward, width);
+					AddSide(st, voxels, p, offset, Vector3.Back, width);
+				}
+			}
+		}
 
-        st.Index();
-        st.GenerateTangents();
-        return st.Commit();
-    }
+		st.Index();
+		st.GenerateTangents();
+		return st.Commit();
+	}
 
 	private static void AddSide(SurfaceTool st, bool[,,] voxels, Vector3 p, Vector3 offset, Vector3 dir, float width) {
 		var right = dir.Cross(Vector3.Up).Normalized();

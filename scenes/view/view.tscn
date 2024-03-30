@@ -74,6 +74,7 @@ cull_mode = 2
 albedo_color = Color(0.196078, 0.0470588, 0.827451, 0.431373)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_a4ckk"]
+size = Vector2(30, 30)
 orientation = 0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n3jp7"]
@@ -82,6 +83,7 @@ cull_mode = 2
 albedo_color = Color(0.968627, 0.227451, 0.443137, 0.431373)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1huvf"]
+size = Vector2(30, 30)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2j3tv"]
 transparency = 1
@@ -89,6 +91,7 @@ cull_mode = 2
 albedo_color = Color(0, 0.682353, 0.403922, 0.431373)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_4agl5"]
+size = Vector2(30, 30)
 orientation = 2
 
 [node name="ViewScene" type="Node3D"]
@@ -155,26 +158,29 @@ shadow_enabled = true
 
 [node name="PauseMenu" parent="." instance=ExtResource("14_i0rss")]
 
+[node name="EditModeSelected" type="Label" parent="."]
+offset_left = 1.0
+offset_top = 624.0
+offset_right = 201.0
+offset_bottom = 647.0
+
 [node name="FpsCounter" type="Label" parent="."]
 offset_right = 40.0
 offset_bottom = 23.0
 script = ExtResource("15_doi0l")
 
 [node name="XClip" type="MeshInstance3D" parent="."]
-transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)
 visible = false
 material_override = SubResource("StandardMaterial3D_vtvlk")
 mesh = SubResource("PlaneMesh_a4ckk")
 skeleton = NodePath("../YClip")
 
 [node name="YClip" type="MeshInstance3D" parent="."]
-transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)
 visible = false
 material_override = SubResource("StandardMaterial3D_n3jp7")
 mesh = SubResource("PlaneMesh_1huvf")
 
 [node name="ZClip" type="MeshInstance3D" parent="."]
-transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)
 visible = false
 material_override = SubResource("StandardMaterial3D_2j3tv")
 mesh = SubResource("PlaneMesh_4agl5")
