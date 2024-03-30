@@ -33,7 +33,7 @@ public partial class BlockPlacementController : Node3D {
 	public override void _Ready() {
 		camera = GetNode<Camera3D>("../SpectatorCamera");
 		puzzleNode = GetNode<PuzzleNode>("../PuzzleNode");
-		viewScene = GetNode<ViewScene>("../ViewScene");
+		viewScene = GetNode<ViewScene>("../../ViewScene");
 	}
 
 	public override void _UnhandledInput(InputEvent @event) {
