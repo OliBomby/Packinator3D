@@ -22,7 +22,6 @@ partial class EditMode: Node3D {
 	private List<Transform3D> pieceStates;
 
 	public EditMode(ViewScene view_scene, bool edit_mode) {
-		GD.Print("Constructor called");
 		editMode = edit_mode;
 		pieces = new();
 		pieceStates = new();
@@ -30,11 +29,11 @@ partial class EditMode: Node3D {
 	}
 
 	public override void _Ready() {
-		GD.Print("Ready called");
 		puzzleNode = GetNode<PuzzleNode>("../PuzzleNode");
 		camera = GetNode<Camera3D>("../SpectatorCamera"); 
 	}
-	public override void _Process(double delta) {
+
+	public override void _PhysicsProcess(double delta) {
 		if (Input.IsActionJustPressed("block_build_select")) {
 			blockIndex += 1;
 			// blockIndex = pieces.Count -> show all
@@ -48,7 +47,11 @@ partial class EditMode: Node3D {
 				foreach(List<BuildingBlock> piece in pieces) {
 					foreach(BuildingBlock block in piece) {
 						block.SetTransparency(1.0f);
+						block.EnableCollisions();
 					}
+				}
+				foreach(PuzzlePieceNode pn in puzzleNode.PuzzlePieceNodes) {
+					pn.SetTransparency(1.0f);
 				}
 			}
 			else {
@@ -57,19 +60,69 @@ partial class EditMode: Node3D {
 					foreach(BuildingBlock block in pieces[i]) {
 						if (i == blockIndex) {
 							block.SetTransparency(1.0f);
+							puzzleNode.PuzzlePieceNodes[i].SetTransparency(1.0f);
+							block.EnableCollisions();
 						}
 						else {
-							block.SetTransparency(0.2f);
+							block.SetTransparency(0.4f);
+							puzzleNode.PuzzlePieceNodes[i].SetTransparency(0.4f);
+							block.DisableCollisions();
 						}
 					}
 				}
 			}
 		}
-	}
+		if (currentlyEditing && Input.IsActionJustPressed("move_piece") && blockIndex != pieces.Count) {
+			if (TryPlaceTargetBlock()) {
+				// Change target shape
+				List<Vector3> target_shape = new();
 
-	public override void _PhysicsProcess(double delta) {
-		if (Input.IsActionJustPressed("move_piece")) {
-			TryPlaceTargetBlock();
+				foreach(List<BuildingBlock> p in pieces) {
+					foreach(BuildingBlock block in p) {
+						target_shape.Add(block.Position); 
+					}
+				}
+
+				puzzleNode.AddTargetShape(target_shape);
+				puzzleNode.SetTargetShapeVisible(viewScene.IsTargetVisible());
+				puzzleNode.RemoveChild(puzzleNode.PuzzlePieceNodes[blockIndex]);
+
+				List<BuildingBlock> piece = pieces[blockIndex];
+
+				PuzzlePiece newPiece = new();
+				newPiece.Shape = piece.ConvertAll(block => block.PositionInShape);
+				newPiece.Color = piece[0].Color;
+				newPiece.State = pieceStates[blockIndex];
+
+				puzzleNode.AddPiece(newPiece, blockIndex);
+				puzzleNode.PuzzlePieceNodes[blockIndex].DisableCollisions();
+			}
+		}
+		if (currentlyEditing && Input.IsActionJustPressed("reset_piece") && blockIndex != pieces.Count) {
+			if (TryRemoveTargetBlock()) {
+				// Change target shape
+				List<Vector3> target_shape = new();
+
+				foreach(List<BuildingBlock> p in pieces) {
+					foreach(BuildingBlock block in p) {
+						target_shape.Add(block.Position); 
+					}
+				}
+
+				puzzleNode.AddTargetShape(target_shape);
+				puzzleNode.SetTargetShapeVisible(viewScene.IsTargetVisible());
+				puzzleNode.RemoveChild(puzzleNode.PuzzlePieceNodes[blockIndex]);
+
+				List<BuildingBlock> piece = pieces[blockIndex];
+
+				PuzzlePiece newPiece = new();
+				newPiece.Shape = piece.ConvertAll(block => block.PositionInShape);
+				newPiece.Color = piece[0].Color;
+				newPiece.State = pieceStates[blockIndex];
+
+				puzzleNode.AddPiece(newPiece, blockIndex);
+				puzzleNode.PuzzlePieceNodes[blockIndex].DisableCollisions();
+			}
 		}
 	}
 
@@ -106,9 +159,6 @@ partial class EditMode: Node3D {
 
 		for (int i = 0; i < pieces.Count; i++) {
 			List<BuildingBlock> piece = pieces[i];
-			foreach (BuildingBlock block in piece) {
-				viewScene.RemoveChild(block);
-			}
 
 			PuzzlePiece newPiece = new();
 			newPiece.Shape = piece.ConvertAll(block => block.PositionInShape);
@@ -117,16 +167,16 @@ partial class EditMode: Node3D {
 
 			puzzleNode.AddPiece(newPiece);
 		}
-
-		pieces.Clear();
 	}
 
 	private void enterEditMode() {
 		puzzleNode.SetTargetShapeVisible(false);
+		pieces.Clear();
 		pieceStates.Clear();
 
 		foreach (var puzzle_piece in puzzleNode.PuzzlePieceNodes) {
-			puzzle_piece.Hide();
+			// puzzle_piece.Hide();
+			puzzle_piece.DisableCollisions();
 			pieceStates.Add(puzzle_piece.Transform);
 
 			List<BuildingBlock> piece = new();
@@ -134,6 +184,8 @@ partial class EditMode: Node3D {
 			var piece_data = puzzle_piece.PieceData;
 			foreach(var voxel_pos in piece_data.Shape) {
 				var block = new BuildingBlock(puzzle_piece.Color);
+				block.Hide();
+
 				block.PositionInShape = voxel_pos;
 				block.Position = puzzle_piece.Transform * voxel_pos;
 
@@ -143,11 +195,12 @@ partial class EditMode: Node3D {
 
 			pieces.Add(piece);
 		}
+		blockIndex = pieces.Count;
 	}
 
 	private bool TryPlaceTargetBlock() {
 		if (blockIndex == pieces.Count) {
-			return true;
+			return false;
 		}
 
 		var spaceState = GetWorld3D().DirectSpaceState;
@@ -156,37 +209,73 @@ partial class EditMode: Node3D {
 		var origin = camera.ProjectRayOrigin(mousePos);
 		var normal = camera.ProjectRayNormal(mousePos);
 		var end = origin + normal * RayLength;
-		var query = PhysicsRayQueryParameters3D.Create(origin, end, 3);
+		var query = PhysicsRayQueryParameters3D.Create(origin, end, uint.MaxValue);
 		var result = spaceState.IntersectRay(query);
 
-		if (!result.TryGetValue("position", out var position)) return false;
-		if (!result.TryGetValue("normal", out var collision_normal)) return false;
+		if (!result.TryGetValue("position", out var position)) {
+			GD.Print("No position");
+			return false;
+		}
+		if (!result.TryGetValue("normal", out var collision_normal)) {
+			GD.Print("No normal");
+			return false;
+		}
+
+		if (!result.TryGetValue("collider", out var collider)) {
+			GD.Print("No collider");
+			return false;
+		}
 
 		var pos = (Vector3) position;
 		var norm = (Vector3) collision_normal;
-		GD.Print(norm);
 		pos += norm * 0.5f;
 
+		GD.Print("pos: ", pos);
+		GD.Print("norm: ", norm);
 
 		int maxIters = Mathf.FloorToInt(origin.DistanceTo(pos)) * 2;
 		var i = 0;
 
-		while (checkForBlock(pos)) {
+		GD.Print("check for block: ", checkForBlock(pos));
+		while (checkForBlock(pos.Round())) {
 			pos -= normal * 0.5f;
 			if (i++ >= maxIters) return false;
 		}
 
 		BuildingBlock block = new(pieces[blockIndex][0].Color);
+		block.Hide();
 
-		GD.Print("Position is ", pos);
 		Vector3 block_position = puzzleNode.ToLocal(pos).Round();
 
-		GD.Print("block_position is ", block_position);
 		block.Position = block_position;
 
 		block.PositionInShape = pieceStates[blockIndex].Inverse() * block_position;
 		pieces[blockIndex].Add(block);
 		viewScene.AddChild(block);
+		return true;
+	}
+
+	private bool TryRemoveTargetBlock() {
+		if (blockIndex == pieces.Count) {
+			return false;
+		}
+
+		var spaceState = GetWorld3D().DirectSpaceState;
+		var mousePos = GetViewport().GetMousePosition();
+
+		var origin = camera.ProjectRayOrigin(mousePos);
+		var normal = camera.ProjectRayNormal(mousePos);
+		var end = origin + normal * RayLength;
+		var query = PhysicsRayQueryParameters3D.Create(origin, end, 2);
+		var result = spaceState.IntersectRay(query);
+
+		if (!result.TryGetValue("collider", out var collider) || collider.Obj is not BuildingBlock block) return false;
+		if (!pieces[blockIndex].Contains(block)) return false;
+
+
+		bool removed = pieces[blockIndex].Remove(block);
+		GD.Print("Removed: ", removed);
+		block.QueueFree();
 		return true;
 	}
 

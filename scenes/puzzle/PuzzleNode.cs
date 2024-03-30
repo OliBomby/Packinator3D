@@ -22,10 +22,15 @@ public partial class PuzzleNode : Node3D {
 	public readonly List<PuzzlePieceNode> PuzzlePieceNodes = new();
 	private MeshInstance3D targetShape;
 
-    public void AddPiece(PuzzlePiece piece) {
+    public void AddPiece(PuzzlePiece piece, int? index = null) {
         var puzzlePieceNode = new PuzzlePieceNode(piece, Width);
         AddChild(puzzlePieceNode);
-        PuzzlePieceNodes.Add(puzzlePieceNode);
+	if (index is int i) {
+        	PuzzlePieceNodes[i] = puzzlePieceNode;
+	}
+	else {
+        	PuzzlePieceNodes.Add(puzzlePieceNode);
+	}
     }
 
     public void AddTargetShape(List<Vector3> shape) {

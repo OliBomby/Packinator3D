@@ -7,6 +7,7 @@ public partial class BuildingBlock : StaticBody3D
 	public Color Color {get; set;}
 	public Vector3 PositionInShape {get; set;}
 	private readonly MeshInstance3D renderMesh;
+	private uint collisionLayer = 0b110;
 	
 
 	public BuildingBlock(Color? color = null) {
@@ -132,5 +133,17 @@ public partial class BuildingBlock : StaticBody3D
 	private void CreateCollisionObject() {
 		uint shapeOwner = CreateShapeOwner(this);
 		ShapeOwnerAddShape(shapeOwner, renderMesh.Mesh.CreateTrimeshShape());
+		this.CollisionMask = collisionLayer;
+		this.CollisionLayer = collisionLayer;
+	}
+
+	public void DisableCollisions() {
+		this.CollisionMask = 0b100;	
+		this.CollisionLayer = 0b100;
+	}
+
+	public void EnableCollisions() {
+		this.CollisionMask = collisionLayer;
+		this.CollisionLayer = collisionLayer;
 	}
 }
