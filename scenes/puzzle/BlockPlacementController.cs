@@ -2,6 +2,7 @@ using System.Linq;
 using Godot;
 using Godot.Collections;
 using Packinator3D.datastructure;
+using Packinator3D.scenes.view;
 
 namespace Packinator3D.scenes.puzzle;
 
@@ -14,6 +15,7 @@ public partial class BlockPlacementController : Node3D {
 
 	private Camera3D camera;
 	private PuzzleNode puzzleNode;
+	private ViewScene viewScene;
 	private PuzzlePieceNode heldPiece;
 	private Transform3D heldPieceOriginalState;
 	private Basis targetBasis;
@@ -31,6 +33,7 @@ public partial class BlockPlacementController : Node3D {
 	public override void _Ready() {
 		camera = GetNode<Camera3D>("../SpectatorCamera");
 		puzzleNode = GetNode<PuzzleNode>("../PuzzleNode");
+		viewScene = GetNode<ViewScene>("../ViewScene");
 	}
 
 	public override void _UnhandledInput(InputEvent @event) {
@@ -51,54 +54,56 @@ public partial class BlockPlacementController : Node3D {
 	}
 
 	public override void _PhysicsProcess(double delta) {
-		if (heldPiece != null) {
-			SetHeldPieceToValidMousePosition();
-		}
-
-		if (Input.IsActionJustPressed("move_piece")) {
-			if (heldPiece == null) {
-				// Try to pick up a piece
-				var result = ShootRay(1);
-				if (!result.TryGetValue("collider", out var collider) || collider.Obj is not PuzzlePieceNode piece) return;
-				heldPiece = piece;
-				heldPieceOriginalState = piece.Transform;
-				targetBasis = piece.Basis;
-				exclude.Add(heldPiece.GetRid());
-				heldPiece.PickUp();
+		if (!viewScene.IsEdit) {
+			if (heldPiece != null) {
+				SetHeldPieceToValidMousePosition();
 			}
-			else {
-				// Try to place the piece
-				ClearHeldPiece();
-				OnStateChanged();
-			}
-		}
 
-		if (Input.IsActionJustPressed("reset_piece")) {
-			if (heldPiece == null) {
-				// Try reset the piece we are looking at
-				var result = ShootRay(1);
-				if (!result.TryGetValue("collider", out var collider) || collider.Obj is not PuzzlePieceNode piece) return;
-
-				var originalState = piece.PieceData.State;
-				var currentState = piece.Transform;
-
-				if (ViewSolution >= 0 && ViewSolution < puzzleNode.PuzzleData.Solutions.Count) {
-					// Reset the piece to the solution state if not in the solution state
-					// Reset the piece to the start state if in the solution state
-					int index = puzzleNode.PuzzleData.Pieces.IndexOf(piece.PieceData);
-					var solutionState = puzzleNode.PuzzleData.Solutions[ViewSolution].States[index];
-
-					piece.Transform = currentState.Equals(solutionState) ? originalState : solutionState;
-				} else {
-					piece.Transform = originalState;
+			if (Input.IsActionJustPressed("move_piece")) {
+				if (heldPiece == null) {
+					// Try to pick up a piece
+					var result = ShootRay(1);
+					if (!result.TryGetValue("collider", out var collider) || collider.Obj is not PuzzlePieceNode piece) return;
+					heldPiece = piece;
+					heldPieceOriginalState = piece.Transform;
+					targetBasis = piece.Basis;
+					exclude.Add(heldPiece.GetRid());
+					heldPiece.PickUp();
 				}
-				OnStateChanged();
+				else {
+					// Try to place the piece
+					ClearHeldPiece();
+					OnStateChanged();
+				}
 			}
-			else {
-				// Place the piece back to its original position when we picked it up
-				heldPiece.Transform = heldPieceOriginalState;
-				ClearHeldPiece();
-				OnStateChanged();
+
+			if (Input.IsActionJustPressed("reset_piece")) {
+				if (heldPiece == null) {
+					// Try reset the piece we are looking at
+					var result = ShootRay(1);
+					if (!result.TryGetValue("collider", out var collider) || collider.Obj is not PuzzlePieceNode piece) return;
+
+					var originalState = piece.PieceData.State;
+					var currentState = piece.Transform;
+
+					if (ViewSolution >= 0 && ViewSolution < puzzleNode.PuzzleData.Solutions.Count) {
+						// Reset the piece to the solution state if not in the solution state
+						// Reset the piece to the start state if in the solution state
+						int index = puzzleNode.PuzzleData.Pieces.IndexOf(piece.PieceData);
+						var solutionState = puzzleNode.PuzzleData.Solutions[ViewSolution].States[index];
+
+						piece.Transform = currentState.Equals(solutionState) ? originalState : solutionState;
+					} else {
+						piece.Transform = originalState;
+					}
+					OnStateChanged();
+				}
+				else {
+					// Place the piece back to its original position when we picked it up
+					heldPiece.Transform = heldPieceOriginalState;
+					ClearHeldPiece();
+					OnStateChanged();
+				}
 			}
 		}
 	}

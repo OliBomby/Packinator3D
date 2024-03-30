@@ -161,20 +161,20 @@ offset_bottom = 23.0
 script = ExtResource("15_doi0l")
 
 [node name="XClip" type="MeshInstance3D" parent="."]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)
 visible = false
 material_override = SubResource("StandardMaterial3D_vtvlk")
 mesh = SubResource("PlaneMesh_a4ckk")
 skeleton = NodePath("../YClip")
 
 [node name="YClip" type="MeshInstance3D" parent="."]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)
 visible = false
 material_override = SubResource("StandardMaterial3D_n3jp7")
 mesh = SubResource("PlaneMesh_1huvf")
 
 [node name="ZClip" type="MeshInstance3D" parent="."]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)
 visible = false
 material_override = SubResource("StandardMaterial3D_2j3tv")
 mesh = SubResource("PlaneMesh_4agl5")
