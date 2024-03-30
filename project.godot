@@ -22,7 +22,7 @@ project/assembly_name="Packinator3D"
 
 [gui]
 
-theme/custom="res://scenes/themes/theme.tres"
+theme/custom="res://scenes/themes/theme.res"
 
 [input]
 
