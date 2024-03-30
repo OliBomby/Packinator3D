@@ -20,6 +20,10 @@ config/windows_native_icon="res://icons/PACKINATOR3D.ico"
 
 project/assembly_name="Packinator3D"
 
+[gui]
+
+theme/custom="res://scenes/themes/theme.tres"
+
 [input]
 
 move_forward={

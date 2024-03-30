@@ -36,16 +36,71 @@ grow_vertical = 0
 size_flags_horizontal = 3
 text = "BACK"
 
-[node name="HelpText" type="RichTextLabel" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
+anchors_preset = 10
 anchor_right = 1.0
-offset_left = -483.0
-offset_top = 63.0
-offset_right = -40.0
-offset_bottom = 401.0
-grow_horizontal = 0
+offset_bottom = 424.0
+grow_horizontal = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 35
+theme_override_constants/margin_right = 25
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.45
+
+[node name="Label" type="Label" parent="HBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Master volume
+"
+
+[node name="MasterVolumeSlider" type="HSlider" parent="HBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+max_value = 1.0
+step = 0.05
+script = ExtResource("2_3kujf")
+AudioBusName = "Master"
+
+[node name="Label2" type="Label" parent="HBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Music volume
+"
+
+[node name="MusicVolumeSlider" type="HSlider" parent="HBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+max_value = 1.0
+step = 0.05
+script = ExtResource("2_3kujf")
+AudioBusName = "Music"
+
+[node name="Label3" type="Label" parent="HBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Effects volume"
+
+[node name="EffectsVolumeSlider" type="HSlider" parent="HBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+max_value = 1.0
+step = 0.05
+script = ExtResource("2_3kujf")
+AudioBusName = "Effects"
+
+[node name="MarginContainer2" type="MarginContainer" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HelpText" type="RichTextLabel" parent="HBoxContainer/MarginContainer2"]
+custom_minimum_size = Vector2(470, 424)
+layout_mode = 2
+size_flags_horizontal = 3
 bbcode_enabled = true
 text = "[b]CONTROLS[/b]
 
@@ -60,47 +115,5 @@ Scrollwheel to rotate held pieces around the X-axis.
 Q & E to rotate held pieces around the Y-axis.
 Right-click on puzzle pieces to reset them.
 Press Tab to change view options."
-
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 0
-offset_left = 30.415
-offset_top = 74.27
-offset_right = 599.415
-offset_bottom = 97.27
-
-[node name="Label" type="Label" parent="VBoxContainer"]
-layout_mode = 2
-text = "Master volume
-"
-
-[node name="MasterVolumeSlider" type="HSlider" parent="VBoxContainer"]
-layout_mode = 2
-max_value = 1.0
-step = 0.05
-script = ExtResource("2_3kujf")
-AudioBusName = "Master"
-
-[node name="Label2" type="Label" parent="VBoxContainer"]
-layout_mode = 2
-text = "Music volume
-"
-
-[node name="MusicVolumeSlider" type="HSlider" parent="VBoxContainer"]
-layout_mode = 2
-max_value = 1.0
-step = 0.05
-script = ExtResource("2_3kujf")
-AudioBusName = "Music"
-
-[node name="Label3" type="Label" parent="VBoxContainer"]
-layout_mode = 2
-text = "Effects volume"
-
-[node name="EffectsVolumeSlider" type="HSlider" parent="VBoxContainer"]
-layout_mode = 2
-max_value = 1.0
-step = 0.05
-script = ExtResource("2_3kujf")
-AudioBusName = "Effects"
 
 [connection signal="pressed" from="BackButton" to="." method="GoBack"]
