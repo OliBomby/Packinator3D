@@ -123,7 +123,8 @@ public partial class BlockPlacementController : Node3D {
 		// Find a valid position for the piece where it doesnt intersect with the ground or any other pieces
 		(bool[,,] voxels, var offset) = PuzzleUtils.ShapeToVoxels(PuzzleUtils.PieceNodesToShape(puzzleNode.PuzzlePieceNodes.Except(new[] { heldPiece})));
 		var pos = (Vector3)position;
-		int maxIters = Mathf.FloorToInt(origin.DistanceTo(pos)) * 2;
+		int maxIters = Mathf.FloorToInt(origin.DistanceTo(pos)) * 2 + 4;
+		pos += normal * 2;
 		var i = 0;
 
 		while (!isValidPosition(pos)) {
