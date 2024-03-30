@@ -265,7 +265,7 @@ partial class EditMode: Node3D {
 		}
 
 		if (blockIndex == pieces.Count) {
-			BuildingBlock block = new();
+			BuildingBlock block = new(PuzzleUtils.DefaultColors[blockIndex % PuzzleUtils.DefaultColors.Length]);
 			block.Hide();
 
 			Vector3 block_position = puzzleNode.ToLocal(pos).Round();
