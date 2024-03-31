@@ -120,3 +120,7 @@ block_build_select={
 
 3d_physics/layer_1="pieces"
 3d_physics/layer_2="ground"
+
+[rendering]
+
+anti_aliasing/quality/msaa_3d=2
