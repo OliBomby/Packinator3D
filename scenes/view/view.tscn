@@ -59,8 +59,8 @@ shader_parameter/thickness = 0.1
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bq6ap"]
 next_pass = SubResource("ShaderMaterial_64qjs")
 albedo_color = Color(0, 0.831373, 0.839216, 1)
-metallic = 1.0
-roughness = 0.2
+metallic_specular = 0.0
+roughness = 0.53
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_e0dol"]
 material = SubResource("StandardMaterial3D_bq6ap")
@@ -107,7 +107,7 @@ size = Vector3(64, 64, 64)
 data = ExtResource("3_xv0y1")
 
 [node name="SpectatorCamera" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.237255, 2.20909, 1.71842)
+transform = Transform3D(1, 0, 0, 0, 0.946655, 0.322249, 0, -0.322249, 0.946655, -0.237255, 5.00381, 6.39192)
 current = true
 script = ExtResource("3_ba1y1")
 
