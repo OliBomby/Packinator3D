@@ -110,6 +110,7 @@ public partial class Select : Control
 	}
 
 	private Puzzle currentSolutionMenuPuzzle;
+	private bool currentSolutionMenuEditMode;
 
 	private void View() {
 		var puzzle = GetSelectedPuzzle();
@@ -121,6 +122,7 @@ public partial class Select : Control
 		}
 
 		currentSolutionMenuPuzzle = puzzle;
+		currentSolutionMenuEditMode = false;
 		PopupSolutionMenu(puzzle);
 	}
 
@@ -134,6 +136,7 @@ public partial class Select : Control
 		}
 
 		currentSolutionMenuPuzzle = puzzle;
+		currentSolutionMenuEditMode = true;
 		PopupSolutionMenu(puzzle);
 	}
 
@@ -166,7 +169,7 @@ public partial class Select : Control
 
 	private void OnSolutionMenuIndexPressed(int index) {
 		if (currentSolutionMenuPuzzle is null) return;
-		LoadPuzzle(currentSolutionMenuPuzzle, index);
+		LoadPuzzle(currentSolutionMenuPuzzle, index, currentSolutionMenuEditMode);
 	}
 
 
