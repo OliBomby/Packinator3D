@@ -25,7 +25,7 @@ public partial class PuzzleNode : Node3D {
 	public void AddPiece(PuzzlePiece piece, int? index = null) {
 		var puzzlePieceNode = new PuzzlePieceNode(piece, Width);
 		AddChild(puzzlePieceNode);
-		if (index is int i && i < PuzzlePieceNodes.Count) {
+		if (index is { } i && i < PuzzlePieceNodes.Count) {
 			PuzzlePieceNodes[i] = puzzlePieceNode;
 		}
 		else {
@@ -34,28 +34,29 @@ public partial class PuzzleNode : Node3D {
 	}
 
 	public void AddTargetShape(List<Vector3> shape) {
-		bool visible = true;
-		if (targetShape != null) {
+		var visible = true;
+
+		if (targetShape is not null) {
 			visible = targetShape.Visible;
+
 			RemoveChild(targetShape);
+			targetShape.QueueFree();
+			targetShape = null;
 		}
 
-		if (shape.Count > 0) {
-			AddChild(targetShape = new MeshInstance3D {
-				Mesh = PuzzleUtils.ShapeToMesh(shape),
-				MaterialOverride = new StandardMaterial3D {
-					AlbedoColor = Color.Color8(255, 100, 0, 100),
-					Transparency = BaseMaterial3D.TransparencyEnum.Alpha,
-					DistanceFadeMode = BaseMaterial3D.DistanceFadeModeEnum.PixelAlpha,
-					DistanceFadeMaxDistance = 1,
-					DistanceFadeMinDistance = 0.3f,
-				}
-			});
-			targetShape.Visible = visible;
-		}
-		else {
-			targetShape.Visible = false;
-		}
+		if (shape.Count <= 0) return;
+
+		AddChild(targetShape = new MeshInstance3D {
+			Mesh = PuzzleUtils.ShapeToMesh(shape),
+			MaterialOverride = new StandardMaterial3D {
+				AlbedoColor = Color.Color8(255, 100, 0, 100),
+				Transparency = BaseMaterial3D.TransparencyEnum.Alpha,
+				DistanceFadeMode = BaseMaterial3D.DistanceFadeModeEnum.PixelAlpha,
+				DistanceFadeMaxDistance = 1,
+				DistanceFadeMinDistance = 0.3f,
+			}
+		});
+		SetTargetShapeVisible(visible);
 	}
 
 	public void LoadData(Puzzle puzzle, int solutionIndex=-1, bool generateStartStates=false) {
@@ -83,6 +84,9 @@ public partial class PuzzleNode : Node3D {
 		// Add the target shape
 		AddTargetShape(puzzle.TargetShape);
 
+		// Only show the target shape initially if there is no solution
+		SetTargetShapeVisible(solutionIndex < 0);
+
 		// Add puzzle piece nodes as children
 		foreach (var piece in puzzle.Pieces) {
 			AddPiece(piece);
@@ -104,8 +108,11 @@ public partial class PuzzleNode : Node3D {
 	}
 
 	public void SetTargetShapeVisible(bool visible) {
+		if (targetShape is null) return;
 		targetShape.Visible = visible;
 	}
+
+	public bool TargetShapeVisible => targetShape?.Visible ?? false;
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready() {

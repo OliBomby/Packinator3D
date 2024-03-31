@@ -31,6 +31,8 @@ public partial class PauseMenu : ColorRect
 		zClip = GetNode<Node3D>("../ZClip");
 		zClipPlane = new ClipPlane(vec => vec.Z);
 		UpdateZClip(GetNode<HSlider>("ClipLabel/Z Clip").Value);
+		var targetShapeToggle = GetNode<CheckButton>("CheckBox");
+		targetShapeToggle.ButtonPressed = puzzleNode.TargetShapeVisible;
 	}
 
 	public void ShowPauseMenu() {
