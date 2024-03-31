@@ -14,14 +14,30 @@ public partial class Select : Control
 	private TasksPanel tasksPanel;
 	private FileDialog importFileDialog;
 
+	[ExportGroup("Paths")]
+	[Export]
+	public NodePath TabContainerPath { get; set; }
+
+	[Export]
+	public NodePath NormalPuzzleListPath { get; set; }
+
+	[Export]
+	public NodePath CustomPuzzleListPath { get; set; }
+
+	[Export]
+	public NodePath TasksPanelPath { get; set; }
+
+	[Export]
+	public NodePath ImportFileDialogPath { get; set; }
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		tabContainer = GetNode<TabContainer>("MarginContainer/TabContainer");
-		normalPuzzleList = GetNode<ItemList>("MarginContainer/TabContainer/Normal Levels");
-		customPuzzleList = GetNode<ItemList>("MarginContainer/TabContainer/Custom Levels");
-		tasksPanel = GetNode<TasksPanel>("TasksPanel");
-		importFileDialog = GetNode<FileDialog>("ImportFileDialog");
+		tabContainer = GetNode<TabContainer>(TabContainerPath);
+		normalPuzzleList = GetNode<ItemList>(NormalPuzzleListPath);
+		customPuzzleList = GetNode<ItemList>(CustomPuzzleListPath);
+		tasksPanel = GetNode<TasksPanel>(TasksPanelPath);
+		importFileDialog = GetNode<FileDialog>(ImportFileDialogPath);
 
 		importFileDialog.FilesSelected += ImportPuzzle;
 
@@ -56,7 +72,7 @@ public partial class Select : Control
 
 		var viewScene = ResourceLoader.Load<PackedScene>("res://scenes/view/view.tscn").Instantiate();
 		viewScene.GetNode<ViewScene>(".").IsEdit = edit;
-		viewScene.GetNode<PuzzleNode>("PuzzleNode").LoadData(puzzle, solutionIndex);
+		viewScene.GetNode<PuzzleNode>("PuzzleNode").LoadData(puzzle, solutionIndex, solutionIndex < 0);
 		var placementController = viewScene.GetNode<BlockPlacementController>("BlockPlacementController");
 		placementController.ViewSolution = solutionIndex;
 		placementController.IsSolved = solutionIndex >= 0;

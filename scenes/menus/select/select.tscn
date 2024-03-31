@@ -13,6 +13,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_7x6eg")
+TabContainerPath = NodePath("MarginContainer/TabContainer")
+NormalPuzzleListPath = NodePath("MarginContainer/TabContainer/Normal Levels")
+CustomPuzzleListPath = NodePath("MarginContainer/TabContainer/Custom Levels")
+TasksPanelPath = NodePath("TasksPanel")
+ImportFileDialogPath = NodePath("ImportFileDialog")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1

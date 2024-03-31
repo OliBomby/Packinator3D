@@ -58,8 +58,16 @@ public partial class PuzzleNode : Node3D {
 		}
 	}
 
-	public void LoadData(Puzzle puzzle, int solutionIndex=-1) {
+	public void LoadData(Puzzle puzzle, int solutionIndex=-1, bool generateStartStates=false) {
 		PuzzleData = puzzle;
+
+		if (generateStartStates) {
+			// Move the pieces to the start position
+			var states = PuzzleUtils.GetStartStates(puzzle.Pieces);
+			for (var i = 0; i < puzzle.Pieces.Count; i++) {
+				puzzle.Pieces[i].State = states[i];
+			}
+		}
 
 		foreach (var puzzlePieceNode in PuzzlePieceNodes) {
 			RemoveChild(puzzlePieceNode);

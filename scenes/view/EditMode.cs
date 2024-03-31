@@ -36,7 +36,12 @@ partial class EditMode: Node3D {
 		enterEditMode();
 		updateStatusText();
 	}
-	
+
+	public override void _Input(InputEvent @event) {
+		if (@event.IsActionPressed("edit_mode"))
+			SwitchMode();
+	}
+
 	private void editDisablePiece(int index) {
 		foreach(BuildingBlock block in pieces[index]) {
 			block.DisableCollisions();
