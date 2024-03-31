@@ -16,7 +16,7 @@ public partial class ViewScene : Node3D
 	public override void _Ready()
 	{
 		if (IsEdit) {
-			editMode = new EditMode(this, IsEdit);
+			editMode = new EditMode(IsEdit);
 			AddChild(editMode);
 		}
 

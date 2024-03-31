@@ -19,13 +19,11 @@ internal partial class EditMode : Node3D {
     private readonly List<List<BuildingBlock>> pieces;
     private readonly List<Transform3D> pieceStates;
     private PuzzleNode puzzleNode;
-    private ViewScene viewScene;
 
-    public EditMode(ViewScene viewScene, bool editMode) {
+    public EditMode(bool editMode) {
         this.editMode = editMode;
         pieces = new List<List<BuildingBlock>>();
         pieceStates = new List<Transform3D>();
-        this.viewScene = viewScene;
     }
 
     public override void _Ready() {
@@ -189,7 +187,7 @@ internal partial class EditMode : Node3D {
                 block.Position = puzzlePiece.Transform * voxelPos;
 
                 piece.Add(block);
-                viewScene.AddChild(block);
+                puzzleNode.AddChild(block);
             }
 
             pieces.Add(piece);
@@ -232,29 +230,28 @@ internal partial class EditMode : Node3D {
 
         GD.Print("pos: ", pos);
         GD.Print("norm: ", norm);
+        GD.Print("check for block: ", CheckForBlock(puzzleNode.ToLocal(pos).Round()));
 
         int maxIters = Mathf.FloorToInt(origin.DistanceTo(pos)) * 2;
         var i = 0;
-
-        GD.Print("check for block: ", CheckForBlock(pos.Round()));
-        while (CheckForBlock(pos.Round())) {
+        while (CheckForBlock(puzzleNode.ToLocal(pos).Round())) {
             pos -= normal * 0.5f;
             if (i++ >= maxIters) return false;
         }
+
+        pos = puzzleNode.ToLocal(pos).Round();
 
         if (blockIndex == pieces.Count) {
             BuildingBlock block = new(PuzzleUtils.DefaultColors[blockIndex % PuzzleUtils.DefaultColors.Length]);
             block.Hide();
 
-            var blockPosition = puzzleNode.ToLocal(pos).Round();
+            block.Position = pos;
+            block.PositionInShape = pos;
 
-            block.Position = blockPosition;
-
-            block.PositionInShape = blockPosition;
             List<BuildingBlock> piece = new() { block };
             pieceStates.Add(Transform3D.Identity);
             pieces.Add(piece);
-            viewScene.AddChild(block);
+            puzzleNode.AddChild(block);
 
             blockIndex = pieces.Count - 1;
 
@@ -264,13 +261,11 @@ internal partial class EditMode : Node3D {
             BuildingBlock block = new(pieces[blockIndex][0].Color);
             block.Hide();
 
-            var blockPosition = puzzleNode.ToLocal(pos).Round();
+            block.Position = pos;
+            block.PositionInShape = pieceStates[blockIndex].Inverse() * pos;
 
-            block.Position = blockPosition;
-
-            block.PositionInShape = pieceStates[blockIndex].Inverse() * blockPosition;
             pieces[blockIndex].Add(block);
-            viewScene.AddChild(block);
+            puzzleNode.AddChild(block);
             return true;
         }
     }
@@ -300,7 +295,7 @@ internal partial class EditMode : Node3D {
     private bool CheckForBlock(Vector3 position) {
         foreach (var piece in pieces)
         foreach (var block in piece)
-            if (block.Position == position)
+            if (block.Position.DistanceSquaredTo(position) < 0.1)
                 return true;
         return false;
     }
