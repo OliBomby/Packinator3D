@@ -6,7 +6,7 @@ using Packinator3D.scenes.puzzle;
 namespace Packinator3D.scenes.view;
 
 internal partial class EditMode : Node3D {
-    private const float RayLength = 1000;
+    private const float RayLength = 10;
     private int blockIndex;
     private Camera3D camera;
 
