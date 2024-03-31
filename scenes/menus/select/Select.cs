@@ -172,7 +172,6 @@ public partial class Select : Control
 		LoadPuzzle(currentSolutionMenuPuzzle, index, currentSolutionMenuEditMode);
 	}
 
-
 	private void New() { }
 
 	private void Delete() {
