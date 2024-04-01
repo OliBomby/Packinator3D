@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -33,6 +34,7 @@ public static class SaveManager {
         SaveData = JsonSerializer.Deserialize<SaveData>(jsonString, jsonOptions);
 
         InitNormalPuzzles();
+        LoadBusVolumes();
     }
 
     private static void InitNormalPuzzles() {
@@ -51,12 +53,27 @@ public static class SaveManager {
     }
 
     public static void Save() {
+        SaveBusVolumes();
+
         string jsonString = JsonSerializer.Serialize(SaveData, jsonOptions);
         if (jsonString == lastSaveString) return;
 
         using var saveGame = FileAccess.Open(SavePath, FileAccess.ModeFlags.Write);
         saveGame.StoreString(jsonString);
         lastSaveString = jsonString;
+    }
+
+    private static void SaveBusVolumes() {
+        SaveData.BusVolumes = new List<float>();
+        for (var i = 0; i < AudioServer.BusCount; i++) {
+            SaveData.BusVolumes.Add(AudioServer.GetBusVolumeDb(i));
+        }
+    }
+
+    private static void LoadBusVolumes() {
+        for (var i = 0; i < SaveData.BusVolumes.Count; i++) {
+            AudioServer.SetBusVolumeDb(i, SaveData.BusVolumes[i]);
+        }
     }
 
     public static void ImportPuzzleJson(string path) {
