@@ -12,6 +12,7 @@ public partial class SpectatorCamera : Camera3D {
 
 	public override void _Ready() {
 		Input.MouseMode = Input.MouseModeEnum.Captured;
+		totalPitch = -Rotation.X;
 	}
 
 	public override void _ExitTree() {
