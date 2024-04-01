@@ -7,4 +7,6 @@ public record SaveData {
     public List<Puzzle> Puzzles { get; set; } = new();
 
     public List<float> BusVolumes { get; set; }
+
+    public float Sensitivity { get; set; } = 1;
 }

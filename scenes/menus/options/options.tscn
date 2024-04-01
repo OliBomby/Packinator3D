@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://ddrqiq13nphcs"]
+[gd_scene load_steps=4 format=3 uid="uid://ddrqiq13nphcs"]
 
 [ext_resource type="Script" path="res://scenes/menus/options/Options.cs" id="1_w3ntf"]
 [ext_resource type="Script" path="res://scenes/menus/options/VolumeSlider.cs" id="2_3kujf"]
+[ext_resource type="Script" path="res://scenes/menus/options/SensitivitySlider.cs" id="3_004u8"]
 
 [node name="Options" type="Control"]
 layout_mode = 3
@@ -83,12 +84,24 @@ AudioBusName = "Music"
 layout_mode = 2
 text = "Effects volume"
 
-[node name="EffectsVolumeSlider" type="HSlider" parent="HBoxContainer/MarginContainer/VBoxContainer"]
+[node name="EffectsVolumeSlider2" type="HSlider" parent="HBoxContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 max_value = 1.0
 step = 0.05
 script = ExtResource("2_3kujf")
 AudioBusName = "Effects"
+
+[node name="Label4" type="Label" parent="HBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Sensitivity"
+
+[node name="SensitivitySlider" type="HSlider" parent="HBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+min_value = 0.1
+max_value = 1.0
+step = 0.1
+value = 1.0
+script = ExtResource("3_004u8")
 
 [node name="MarginContainer2" type="MarginContainer" parent="HBoxContainer"]
 layout_mode = 2

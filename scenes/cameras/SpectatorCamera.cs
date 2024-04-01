@@ -1,4 +1,5 @@
 using Godot;
+using Packinator3D.datastructure;
 
 namespace Packinator3D.scenes.cameras;
 
@@ -32,7 +33,7 @@ public partial class SpectatorCamera : Camera3D {
 		if (Input.MouseMode != Input.MouseModeEnum.Captured)
 			return;
 
-		mouseDelta *= Sensitivity;
+		mouseDelta *= Sensitivity * SaveManager.SaveData.Sensitivity;
 		float yaw = mouseDelta.X;
 		float pitch = mouseDelta.Y;
 		mouseDelta = Vector2.Zero;
