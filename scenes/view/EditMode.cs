@@ -119,6 +119,8 @@ internal partial class EditMode : Node3D {
     }
 
     private void BlockIndexUpdate() {
+        blockIndex = Mathf.PosMod(blockIndex, pieces.Count + 2);
+
         UpdateStatusText();
         if (blockIndex >= pieces.Count)
             for (var i = 0; i < pieces.Count; i++)
@@ -131,21 +133,28 @@ internal partial class EditMode : Node3D {
                     EditDisablePiece(i);
     }
 
-
-    public override void _PhysicsProcess(double delta) {
-        if (Input.IsActionJustPressed("block_build_select")) {
-            blockIndex += 1;
-            // blockIndex = pieces.Count + 1 -> show all
-            if (blockIndex > pieces.Count + 1) blockIndex = 0;
-
+    public override void _Input(InputEvent @event) {
+        if (@event.IsActionPressed("block_build_select_up")) {
+            blockIndex++;
             BlockIndexUpdate();
         }
 
-        if (Input.IsActionJustPressed("move_piece") && blockIndex != pieces.Count + 1)
-            TryPlaceTargetBlock();
+        if (@event.IsActionPressed("block_build_select_down")) {
+            blockIndex--;
+            BlockIndexUpdate();
+        }
 
-        if (Input.IsActionJustPressed("reset_piece") && blockIndex != pieces.Count + 1)
+        if (@event.IsActionPressed("block_build_select")) {
+            PickBlock();
+        }
+
+        if (@event.IsActionPressed("move_piece") && blockIndex != pieces.Count + 1) {
+            TryPlaceTargetBlock();
+        }
+
+        if (@event.IsActionPressed("reset_piece") && blockIndex != pieces.Count + 1) {
             TryRemoveTargetBlock();
+        }
     }
 
     private void EnterEditMode() {
@@ -255,6 +264,22 @@ internal partial class EditMode : Node3D {
 
         HandleRemoved(ref blockIndex, block);
         return true;
+    }
+
+    private void PickBlock() {
+        var spaceState = GetWorld3D().DirectSpaceState;
+        var mousePos = GetViewport().GetMousePosition();
+
+        var origin = camera.ProjectRayOrigin(mousePos);
+        var normal = camera.ProjectRayNormal(mousePos);
+        var end = origin + normal * RayLength;
+        var query = PhysicsRayQueryParameters3D.Create(origin, end, 0b001);
+        var result = spaceState.IntersectRay(query);
+
+        if (!result.TryGetValue("collider", out var collider) || collider.Obj is not BuildingBlock block) return;
+
+        blockIndex = pieces.FindIndex(piece => piece.Contains(block));
+        BlockIndexUpdate();
     }
 
     private void HandlePlaced(int blockIndex2, BuildingBlock block) {
