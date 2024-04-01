@@ -215,10 +215,10 @@ public static class PuzzleUtils {
 		if (r && !(fr && f)) addQuad(right * width + down * width, right + down * width, right + up * width, right * width + up * width);
 		if (u && !(fu && f)) addQuad(left * width + up * width, right * width + up * width, right * width + up, left * width + up);
 		if (d && !(fd && f)) addQuad(left * width + down, right * width + down, right * width + down * width, left * width + down * width);
-		if (l && u && lu && !(fl && fu && flu)) addQuad(left + up * width, left * width + up * width, left * width + up, left + up);
-		if (r && u && ru && !(fr && fu && fru)) addQuad(right * width + up * width, right + up * width, right + up, right * width + up);
-		if (l && d && ld && !(fl && fd && fld)) addQuad(left + down, left * width + down, left * width + down * width, left + down * width);
-		if (r && d && rd && !(fr && fd && frd)) addQuad(right * width + down, right + down, right + down * width, right * width + down * width);
+		if (l && u && lu && !(fl && fu && flu && f)) addQuad(left + up * width, left * width + up * width, left * width + up, left + up);
+		if (r && u && ru && !(fr && fu && fru && f)) addQuad(right * width + up * width, right + up * width, right + up, right * width + up);
+		if (l && d && ld && !(fl && fd && fld && f)) addQuad(left + down, left * width + down, left * width + down * width, left + down * width);
+		if (r && d && rd && !(fr && fd && frd && f)) addQuad(right * width + down, right + down, right + down * width, right * width + down * width);
 	}
 
 	private static readonly Basis[] allRotations = {
