@@ -1,10 +1,9 @@
-[gd_scene load_steps=32 format=3 uid="uid://c82cqueavh1mq"]
+[gd_scene load_steps=31 format=3 uid="uid://c82cqueavh1mq"]
 
 [ext_resource type="Script" path="res://scenes/view/ViewScene.cs" id="1_iwres"]
 [ext_resource type="Environment" uid="uid://c7hvhnwnxbxc0" path="res://scenes/environments/view_environment.tres" id="2_0at1c"]
 [ext_resource type="CameraAttributesPractical" uid="uid://cfk0huqlq8bgl" path="res://scenes/environments/camera_attributes.tres" id="3_16map"]
 [ext_resource type="Script" path="res://scenes/cameras/SpectatorCamera.cs" id="3_ba1y1"]
-[ext_resource type="VoxelGIData" uid="uid://blub5fjgyakdb" path="res://scenes/view/view.VoxelGI_data.res" id="3_xv0y1"]
 [ext_resource type="Shader" path="res://shaders/hexgrid.gdshader" id="4_m4n71"]
 [ext_resource type="Shader" path="res://shaders/outline.gdshader" id="6_0enan"]
 [ext_resource type="Shader" path="res://shaders/square_grid.gdshader" id="6_4xd4x"]
@@ -58,7 +57,7 @@ shader_parameter/thickness = 0.1
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bq6ap"]
 next_pass = SubResource("ShaderMaterial_64qjs")
-albedo_color = Color(0, 0.831373, 0.839216, 1)
+albedo_color = Color(0.258824, 0.619608, 0.658824, 1)
 metallic_specular = 0.0
 roughness = 0.53
 
@@ -100,11 +99,6 @@ script = ExtResource("1_iwres")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("2_0at1c")
 camera_attributes = ExtResource("3_16map")
-
-[node name="VoxelGI" type="VoxelGI" parent="."]
-subdiv = 0
-size = Vector3(64, 64, 64)
-data = ExtResource("3_xv0y1")
 
 [node name="SpectatorCamera" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.946655, 0.322249, 0, -0.322249, 0.946655, -0.237255, 5.00381, 6.39192)

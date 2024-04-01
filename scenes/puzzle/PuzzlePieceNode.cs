@@ -1,3 +1,4 @@
+using System;
 using Godot;
 using Packinator3D.datastructure;
 
@@ -21,7 +22,7 @@ public partial class PuzzlePieceNode : StaticBody3D
 		Width = width;
 		PieceData = puzzlePieceData;
 		AddChild(renderMesh = new MeshInstance3D {
-			GIMode = GeometryInstance3D.GIModeEnum.Dynamic
+			GIMode = GeometryInstance3D.GIModeEnum.Static
 		});
 		LoadData(puzzlePieceData);
 		CreateCollisionObject();
@@ -38,18 +39,13 @@ public partial class PuzzlePieceNode : StaticBody3D
 
 	public void SetTransparency(float a) {
 
-		StandardMaterial3D material = renderMesh.GetSurfaceOverrideMaterial(0) as StandardMaterial3D;
-		Color c = material.AlbedoColor;
+		var material = (StandardMaterial3D)renderMesh.GetSurfaceOverrideMaterial(0);
+		var c = material.AlbedoColor;
 		c.A = a;
 		material.AlbedoColor = c;
-		
-		if (a == 1.0f) {
-			material.Transparency = BaseMaterial3D.TransparencyEnum.Disabled;
-		}
-		else {
-			material.Transparency = BaseMaterial3D.TransparencyEnum.Alpha;
-		}
-
+		material.Transparency = Math.Abs(a - 1.0f) < 1E-5f ?
+			BaseMaterial3D.TransparencyEnum.Disabled :
+			BaseMaterial3D.TransparencyEnum.Alpha;
 
 		renderMesh.SetSurfaceOverrideMaterial(
 			0,
