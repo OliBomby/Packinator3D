@@ -60,10 +60,10 @@ text = "Paused"
 
 [node name="PieceWidth" type="HSlider" parent="."]
 layout_mode = 0
-offset_left = 42.0
-offset_top = 62.0
-offset_right = 262.0
-offset_bottom = 78.0
+offset_left = 40.0
+offset_top = 166.0
+offset_right = 260.0
+offset_bottom = 182.0
 min_value = 0.1
 max_value = 1.0
 step = 0.05
@@ -77,10 +77,10 @@ text = "Voxel Width"
 
 [node name="CheckBox" type="CheckButton" parent="."]
 layout_mode = 0
-offset_left = 42.0
-offset_top = 115.0
-offset_right = 251.0
-offset_bottom = 146.0
+offset_left = 40.0
+offset_top = 213.0
+offset_right = 249.0
+offset_bottom = 244.0
 button_pressed = true
 text = "Show target shape"
 
@@ -199,6 +199,15 @@ offset_right = 259.0
 offset_bottom = -3.0
 text = "Invert"
 
+[node name="NameEdit" type="LineEdit" parent="."]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 38.0
+offset_right = 260.0
+offset_bottom = 69.0
+placeholder_text = "Puzzle name"
+editable = false
+
 [connection signal="pressed" from="CloseButton" to="." method="HidePauseMenu"]
 [connection signal="value_changed" from="PieceWidth" to="." method="_on_piece_width_value_changed"]
 [connection signal="toggled" from="CheckBox" to="." method="_on_check_box_toggled"]
@@ -208,3 +217,4 @@ text = "Invert"
 [connection signal="toggled" from="ClipLabel/Y Clip/InvertY" to="." method="_on_invert_y_toggled"]
 [connection signal="value_changed" from="ClipLabel/Z Clip" to="." method="_on_z_clip_value_changed"]
 [connection signal="toggled" from="ClipLabel/Z Clip/InvertZ" to="." method="_on_invert_z_toggled"]
+[connection signal="text_changed" from="NameEdit" to="." method="_on_name_edit_text_changed"]

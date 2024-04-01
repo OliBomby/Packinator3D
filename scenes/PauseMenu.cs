@@ -1,6 +1,7 @@
 using Godot;
 using Packinator3D.datastructure;
 using Packinator3D.scenes.puzzle;
+using Packinator3D.scenes.view;
 
 namespace Packinator3D.scenes;
 
@@ -31,6 +32,8 @@ public partial class PauseMenu : Control
 		UpdateZClip(GetNode<HSlider>("ClipLabel/Z Clip").Value);
 		var targetShapeToggle = GetNode<CheckButton>("CheckBox");
 		targetShapeToggle.ButtonPressed = puzzleNode.TargetShapeVisible;
+		var nameEdit = GetNode<LineEdit>("NameEdit");
+		nameEdit.Text = puzzleNode.PuzzleData.Name;
 	}
 
 	public void ShowPauseMenu() {
@@ -180,5 +183,10 @@ public partial class PauseMenu : Control
 	private void _on_check_box_toggled(bool toggledOn)
 	{
 		puzzleNode.SetTargetShapeVisible(toggledOn);
+	}
+
+	private void _on_name_edit_text_changed(string newText)
+	{
+		puzzleNode.PuzzleData.Name = newText;
 	}
 }

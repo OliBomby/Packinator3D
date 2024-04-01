@@ -20,6 +20,7 @@ internal partial class EditMode : Node3D {
     private readonly List<List<BuildingBlock>> pieces;
     private readonly List<Transform3D> pieceStates;
     private PuzzleNode puzzleNode;
+    private LineEdit nameEdit;
 
     public EditMode(bool editMode) {
         this.editMode = editMode;
@@ -28,9 +29,11 @@ internal partial class EditMode : Node3D {
     }
 
     public override void _Ready() {
+        Name = "EditMode";
         puzzleNode = GetNode<PuzzleNode>("../PuzzleNode");
         camera = GetNode<Camera3D>("../SpectatorCamera");
         editModeSelected = GetNode<Label>("../EditModeSelected");
+        nameEdit = GetNode<LineEdit>("../PauseMenu/NameEdit");
         EnterEditMode();
         UpdateStatusText();
     }
@@ -146,6 +149,8 @@ internal partial class EditMode : Node3D {
     }
 
     private void EnterEditMode() {
+        nameEdit.Editable = true;
+
         pieces.Clear();
         pieceStates.Clear();
 
