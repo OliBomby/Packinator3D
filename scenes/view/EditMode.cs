@@ -64,7 +64,7 @@ internal partial class EditMode : Node3D {
             PuzzlePiece newPiece = new() {
                 Shape = piece.ConvertAll(block => block.PositionInShape),
                 Color = piece[0].Color,
-                State = pieceStates[blockIndex]
+                State = pieceStates[index]
             };
 
             puzzleNode.AddPiece(newPiece, index);
@@ -115,25 +115,11 @@ internal partial class EditMode : Node3D {
         }
 
         if (Input.IsActionJustPressed("move_piece") && blockIndex != pieces.Count + 1)
-            if (TryPlaceTargetBlock()) {
-                BuildPuzzlePiece(blockIndex);
-                BlockIndexUpdate();
-            }
+            TryPlaceTargetBlock();
 
         if (Input.IsActionJustPressed("reset_piece") && blockIndex != pieces.Count + 1)
-            if (TryRemoveTargetBlock()) {
-                BuildPuzzlePiece(blockIndex);
-                if (pieces[blockIndex].Count == 0) {
-                    pieces.RemoveAt(blockIndex);
-                    pieceStates.RemoveAt(blockIndex);
-                    puzzleNode.PuzzlePieceNodes.RemoveAt(blockIndex);
-
-                    if (blockIndex == pieces.Count && blockIndex != 0) blockIndex -= 1;
-                    BlockIndexUpdate();
-                }
-            }
+            TryRemoveTargetBlock();
     }
-
 
     public void SwitchMode() {
         // if (currentlyEditing) {
@@ -221,55 +207,40 @@ internal partial class EditMode : Node3D {
             return false;
         }
 
-        if (!result.TryGetValue("collider", out _)) {
-            GD.Print("No collider");
-            return false;
-        }
-
         var pos = (Vector3)position;
         var norm = (Vector3)collisionNormal;
         pos += norm * 0.5f;
 
         GD.Print("pos: ", pos);
         GD.Print("norm: ", norm);
-        GD.Print("check for block: ", CheckForBlock(puzzleNode.ToLocal(pos).Round()));
-
-        int maxIters = Mathf.FloorToInt(origin.DistanceTo(pos)) * 2;
-        var i = 0;
-        while (CheckForBlock(puzzleNode.ToLocal(pos).Round())) {
-            pos -= normal * 0.5f;
-            if (i++ >= maxIters) return false;
-        }
 
         pos = puzzleNode.ToLocal(pos).Round();
 
+        if (CheckForBlock(pos, out int blockIndex2, out var otherBlock)) {
+            GD.Print("removing block.");
+            if (blockIndex2 == blockIndex) return false;
+            HandleRemoved(ref blockIndex2, otherBlock);
+        }
+
+        BuildingBlock block;
         if (blockIndex == pieces.Count) {
-            BuildingBlock block = new(PuzzleUtils.DefaultColors[blockIndex % PuzzleUtils.DefaultColors.Length]);
-            block.Hide();
-
-            block.Position = pos;
-            block.PositionInShape = pos;
-
-            List<BuildingBlock> piece = new() { block };
+            List<BuildingBlock> piece = new();
             pieceStates.Add(Transform3D.Identity);
             pieces.Add(piece);
-            puzzleNode.AddChild(block);
-
             blockIndex = pieces.Count - 1;
 
-            return true;
+            block = new BuildingBlock(PuzzleUtils.DefaultColors[blockIndex % PuzzleUtils.DefaultColors.Length]);
         }
         else {
-            BuildingBlock block = new(pieces[blockIndex][0].Color);
-            block.Hide();
-
-            block.Position = pos;
-            block.PositionInShape = pieceStates[blockIndex].Inverse() * pos;
-
-            pieces[blockIndex].Add(block);
-            puzzleNode.AddChild(block);
-            return true;
+            block = new BuildingBlock(pieces[blockIndex][0].Color);
         }
+
+        block.Hide();
+        block.Position = pos;
+        block.PositionInShape = pieceStates[blockIndex].Inverse() * pos;
+
+        HandlePlaced(blockIndex, block);
+        return true;
     }
 
     private bool TryRemoveTargetBlock() {
@@ -287,18 +258,47 @@ internal partial class EditMode : Node3D {
         if (!result.TryGetValue("collider", out var collider) || collider.Obj is not BuildingBlock block) return false;
         if (!pieces[blockIndex].Contains(block)) return false;
 
-
-        bool removed = pieces[blockIndex].Remove(block);
-        GD.Print("Removed: ", removed);
-        block.QueueFree();
+        HandleRemoved(ref blockIndex, block);
         return true;
     }
 
-    private bool CheckForBlock(Vector3 position) {
-        foreach (var piece in pieces)
-        foreach (var block in piece)
-            if (block.Position.DistanceSquaredTo(position) < 0.1)
+    private void HandlePlaced(int blockIndex2, BuildingBlock block) {
+        pieces[blockIndex2].Add(block);
+        puzzleNode.AddChild(block);
+
+        BuildPuzzlePiece(blockIndex2);
+        BlockIndexUpdate();
+    }
+
+    private void HandleRemoved(ref int blockIndex2, BuildingBlock block) {
+        bool removed = pieces[blockIndex2].Remove(block);
+        GD.Print("Removed: ", removed);
+        block.QueueFree();
+
+        BuildPuzzlePiece(blockIndex2);
+
+        if (pieces[blockIndex2].Count == 0) {
+            pieces.RemoveAt(blockIndex2);
+            pieceStates.RemoveAt(blockIndex2);
+            puzzleNode.PuzzlePieceNodes.RemoveAt(blockIndex2);
+
+            BlockIndexUpdate();
+        }
+    }
+
+    private bool CheckForBlock(Vector3 position, out int blockIndex2, out BuildingBlock block) {
+        blockIndex2 = 0;
+        foreach (var piece in pieces) {
+            foreach (var b in piece) {
+                if (!(b.Position.DistanceSquaredTo(position) < 0.1)) continue;
+                block = b;
                 return true;
+            }
+
+            blockIndex2++;
+        }
+
+        block = null;
         return false;
     }
 }
