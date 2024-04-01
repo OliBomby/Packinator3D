@@ -34,11 +34,6 @@ internal partial class EditMode : Node3D {
         UpdateStatusText();
     }
 
-    public override void _Input(InputEvent @event) {
-        if (@event.IsActionPressed("edit_mode"))
-            SwitchMode();
-    }
-
     private void EditDisablePiece(int index) {
         foreach (var block in pieces[index]) block.DisableCollisions();
         puzzleNode.PuzzlePieceNodes[index].SetTransparency(0.4f);
@@ -93,7 +88,7 @@ internal partial class EditMode : Node3D {
 
     private void BlockIndexUpdate() {
         UpdateStatusText();
-        if (blockIndex == pieces.Count + 1)
+        if (blockIndex >= pieces.Count)
             for (var i = 0; i < pieces.Count; i++)
                 EditEnablePiece(i, true);
         else
@@ -121,40 +116,6 @@ internal partial class EditMode : Node3D {
             TryRemoveTargetBlock();
     }
 
-    public void SwitchMode() {
-        // if (currentlyEditing) {
-        // 	// Switch to view mode
-        // 	enterViewMode();
-        // }
-        // else {
-        // 	// Switch to edit mode
-        // 	enterEditMode();
-        // }
-        // currentlyEditing ^= true;
-    }
-
-    // private void enterViewMode() {
-    // 	// Change target shape
-    // 	buildTargetShape();
-
-    // 	// Explicitly remove the pieces -> fixes something with collision
-    // 	foreach(PuzzlePieceNode ppn in puzzleNode.PuzzlePieceNodes) {
-    // 		puzzleNode.RemoveChild(ppn);
-    // 	}
-    // 	puzzleNode.PuzzlePieceNodes.Clear();
-
-    // 	for (int i = 0; i < pieces.Count; i++) {
-    // 		List<BuildingBlock> piece = pieces[i];
-
-    // 		PuzzlePiece newPiece = new();
-    // 		newPiece.Shape = piece.ConvertAll(block => block.PositionInShape);
-    // 		newPiece.Color = piece[0].Color;
-    // 		newPiece.State = pieceStates[i];
-
-    // 		puzzleNode.AddPiece(newPiece);
-    // 	}
-    // }
-
     private void EnterEditMode() {
         pieces.Clear();
         pieceStates.Clear();
@@ -179,8 +140,8 @@ internal partial class EditMode : Node3D {
             pieces.Add(piece);
         }
 
-        blockIndex = pieces.Count + 1;
-        for (var i = 0; i < pieces.Count; i++) EditEnablePiece(i, true);
+        blockIndex = pieces.Count;
+        BlockIndexUpdate();
     }
 
     private bool TryPlaceTargetBlock() {

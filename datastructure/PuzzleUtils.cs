@@ -128,6 +128,8 @@ public static class PuzzleUtils {
 	}
 
 	public static Mesh ShapeToMesh(List<Vector3> shape, float width=1) {
+		if (shape.Count == 0) return null;
+
 		// Create the mesh out of the shape voxels
 		(bool[,,] voxels, var offset) = ShapeToVoxels(shape);
 		var st = new SurfaceTool();
@@ -302,4 +304,15 @@ public static class PuzzleUtils {
 			yield return $"Solution {solutionSet.Count} ({solution.Time.ToString(CultureInfo.CurrentCulture)})";
 		}
 	}
+
+	public static Puzzle EmptyPuzzle => new() {
+		Pieces = new List<PuzzlePiece>(),
+		TargetShape = new List<Vector3>(),
+		Solutions = new List<Solution> {
+			new() {
+				States = new List<Transform3D>(),
+				Time = DateTime.Now,
+			}
+		}
+	};
 }

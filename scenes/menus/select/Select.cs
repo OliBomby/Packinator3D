@@ -172,7 +172,12 @@ public partial class Select : Control
 		LoadPuzzle(currentSolutionMenuPuzzle, index, currentSolutionMenuEditMode);
 	}
 
-	private void New() { }
+	private void New() {
+		// Make a new empty puzzle
+		var puzzle = PuzzleUtils.EmptyPuzzle;
+		puzzle.Name = "Puzzle " + (SaveManager.SaveData.CustomPuzzles.Count + 1);
+		LoadPuzzle(puzzle, 0, true);
+	}
 
 	private void Delete() {
 		if (tabContainer.CurrentTab != 1) return;

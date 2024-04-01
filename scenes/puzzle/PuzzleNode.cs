@@ -44,8 +44,6 @@ public partial class PuzzleNode : Node3D {
 			targetShape = null;
 		}
 
-		if (shape.Count <= 0) return;
-
 		AddChild(targetShape = new MeshInstance3D {
 			Mesh = PuzzleUtils.ShapeToMesh(shape),
 			MaterialOverride = new StandardMaterial3D {
