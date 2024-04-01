@@ -10,7 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://b7eeojg8w7b23" path="res://scenes/cameras/crosshair.png" id="7_aplrx"]
 [ext_resource type="Script" path="res://scenes/puzzle/PuzzleNode.cs" id="8_tq7y4"]
 [ext_resource type="Script" path="res://scenes/view/Congratulations.cs" id="13_3gc8e"]
-[ext_resource type="AudioStream" uid="uid://dn8ynqejghfpf" path="res://scenes/view/yippee-tbh.mp3" id="14_32m8t"]
+[ext_resource type="AudioStream" uid="uid://dn8ynqejghfpf" path="res://sounds/yippee-tbh.mp3" id="14_32m8t"]
 [ext_resource type="PackedScene" uid="uid://cmn7yl0c860nf" path="res://scenes/pause_menu.tscn" id="14_i0rss"]
 [ext_resource type="Script" path="res://scenes/FpsCounter.cs" id="15_doi0l"]
 [ext_resource type="Script" path="res://scenes/puzzle/BlockPlacementController.cs" id="16_h81hl"]
@@ -154,7 +154,7 @@ offset_top = 624.0
 offset_right = 201.0
 offset_bottom = 647.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_outline_size = 10
+theme_override_constants/shadow_outline_size = 9
 
 [node name="FpsCounter" type="Label" parent="."]
 offset_right = 40.0

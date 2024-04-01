@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://dnlrr537v86ru"]
+[gd_scene load_steps=6 format=3 uid="uid://dnlrr537v86ru"]
 
 [ext_resource type="Script" path="res://scenes/menus/select/tasks/TaskDisplay.cs" id="1_w677d"]
 [ext_resource type="Texture2D" uid="uid://703wjs1gmei3" path="res://scenes/menus/select/tasks/spinner_progress.png" id="2_xqmn5"]
 [ext_resource type="Texture2D" uid="uid://c4rre7ucqwfua" path="res://scenes/menus/select/tasks/xmark-solid.svg" id="3_3qvfm"]
+[ext_resource type="AudioStream" uid="uid://c1ouyplqmwqcs" path="res://sounds/delete.ogg" id="3_oltil"]
+[ext_resource type="AudioStream" uid="uid://y5ooo7v7ks4s" path="res://sounds/delete2.ogg" id="5_k8kke"]
 
 [node name="TaskDisplay" type="Control"]
 custom_minimum_size = Vector2(220, 60)
@@ -16,6 +18,8 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 script = ExtResource("1_w677d")
+CancelSound = ExtResource("5_k8kke")
+RemoveSound = ExtResource("3_oltil")
 
 [node name="ColorRect" type="Panel" parent="."]
 layout_mode = 1

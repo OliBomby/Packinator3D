@@ -1,7 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://6k3y8kpexili"]
+[gd_scene load_steps=9 format=3 uid="uid://6k3y8kpexili"]
 
 [ext_resource type="Script" path="res://scenes/menus/main/MainMenu.cs" id="1_xtvok"]
 [ext_resource type="Texture2D" uid="uid://3opkde6xpdgw" path="res://scenes/menus/main/3D-15-3-2024.png" id="2_wyr85"]
+[ext_resource type="Script" path="res://scenes/menus/NavButton.cs" id="3_0dt5u"]
+[ext_resource type="PackedScene" uid="uid://bq2oefoojtys0" path="res://scenes/menus/select/select.tscn" id="4_g5e2f"]
+[ext_resource type="AudioStream" uid="uid://dicgbc4a1ihhd" path="res://sounds/confirm.ogg" id="4_qqhlc"]
+[ext_resource type="PackedScene" uid="uid://ddrqiq13nphcs" path="res://scenes/menus/options/options.tscn" id="6_rxgsh"]
 
 [sub_resource type="Theme" id="Theme_eg2b1"]
 
@@ -104,12 +108,18 @@ alignment = 1
 layout_mode = 2
 size_flags_vertical = 3
 text = "PLAY"
+script = ExtResource("3_0dt5u")
+Scene = ExtResource("4_g5e2f")
+Sound = ExtResource("4_qqhlc")
 
 [node name="Button2" type="Button" parent="MarginContainer2/GridContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 text = "OPTIONS
 "
+script = ExtResource("3_0dt5u")
+Scene = ExtResource("6_rxgsh")
+Sound = ExtResource("4_qqhlc")
 
 [node name="Button3" type="Button" parent="MarginContainer2/GridContainer/VBoxContainer"]
 layout_mode = 2
@@ -117,6 +127,4 @@ size_flags_vertical = 3
 text = "QUIT
 "
 
-[connection signal="pressed" from="MarginContainer2/GridContainer/VBoxContainer/Button" to="." method="_on_play_pressed"]
-[connection signal="pressed" from="MarginContainer2/GridContainer/VBoxContainer/Button2" to="." method="_on_options_pressed"]
 [connection signal="pressed" from="MarginContainer2/GridContainer/VBoxContainer/Button3" to="." method="_on_quit_pressed"]

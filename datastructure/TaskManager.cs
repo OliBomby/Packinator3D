@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Godot;
+using Packinator3D.scenes.menus.main;
 
 namespace Packinator3D.datastructure;
 
@@ -45,7 +46,7 @@ public static class TaskManager {
 		{ "Windows", "res://lib/blocks-win.exe" },
 	};
 
-	public static void Solve(Puzzle puzzle) {
+	public static void Solve(Puzzle puzzle, SoundPlayer soundPlayer) {
 		var solveTask = new SolveTask {
 			Id = Guid.NewGuid(),
 			Puzzle = puzzle,
@@ -56,6 +57,8 @@ public static class TaskManager {
 
 		solveTask.Task = Task.Run(() => {
 			try {
+				var stream = ResourceLoader.Load<AudioStreamOggVorbis>("res://sounds/notification.ogg");
+
 				if (!blockSolverPaths.TryGetValue(OS.GetName(), out string path)) {
 					solveTask.Error = "No block solver available for this platform.";
 					solveTask.Status = Status.Error;
@@ -113,6 +116,8 @@ public static class TaskManager {
 					solveTask.Error = error;
 					solveTask.Status = Status.Error;
 					GD.PrintErr(solveTask.Error);
+
+					soundPlayer.CallDeferred("Play", stream);
 					return;
 				}
 
@@ -127,6 +132,8 @@ public static class TaskManager {
 					solveTask.Status = Status.NoSolution;
 					GD.PrintErr("Failed to solve puzzle.");
 				}
+
+				soundPlayer.CallDeferred("Play", stream);
 			}
 			catch (Exception e) {
 				solveTask.Error = e.Message;

@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://ddrqiq13nphcs"]
+[gd_scene load_steps=5 format=3 uid="uid://ddrqiq13nphcs"]
 
 [ext_resource type="Script" path="res://scenes/menus/options/Options.cs" id="1_w3ntf"]
 [ext_resource type="Script" path="res://scenes/menus/options/VolumeSlider.cs" id="2_3kujf"]
+[ext_resource type="AudioStream" uid="uid://c3b3to1myu8o4" path="res://sounds/back2.ogg" id="2_xax7e"]
 [ext_resource type="Script" path="res://scenes/menus/options/SensitivitySlider.cs" id="3_004u8"]
 
 [node name="Options" type="Control"]
@@ -12,6 +13,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_w3ntf")
+BackSound = ExtResource("2_xax7e")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1

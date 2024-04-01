@@ -1,9 +1,18 @@
-[gd_scene load_steps=5 format=3 uid="uid://bq2oefoojtys0"]
+[gd_scene load_steps=14 format=3 uid="uid://bq2oefoojtys0"]
 
 [ext_resource type="Script" path="res://scenes/menus/select/Select.cs" id="1_7x6eg"]
 [ext_resource type="Texture2D" uid="uid://l6krmi36iq5r" path="res://scenes/menus/select/bars-solid.svg" id="2_db27x"]
+[ext_resource type="AudioStream" uid="uid://k2anraxavpe1" path="res://sounds/solve.ogg" id="2_elcho"]
+[ext_resource type="Script" path="res://scenes/menus/SoundTabContainer.cs" id="2_i5rkq"]
+[ext_resource type="Script" path="res://scenes/menus/SoundButton.cs" id="2_ixw5l"]
+[ext_resource type="AudioStream" uid="uid://c3b3to1myu8o4" path="res://sounds/back2.ogg" id="2_ndw7o"]
+[ext_resource type="AudioStream" uid="uid://bgj5udmel7pon" path="res://sounds/slide.ogg" id="3_3h1ke"]
 [ext_resource type="Script" path="res://scenes/menus/select/tasks/TasksPanel.cs" id="3_7uymi"]
+[ext_resource type="AudioStream" uid="uid://c5g3sj6311eni" path="res://sounds/select.ogg" id="3_qnohs"]
+[ext_resource type="AudioStream" uid="uid://cuusm0iq0ak56" path="res://sounds/confirm2.ogg" id="3_yfhsl"]
 [ext_resource type="Script" path="res://scenes/menus/select/tasks/TasksDisplay.cs" id="4_2fkkw"]
+[ext_resource type="AudioStream" uid="uid://c1ouyplqmwqcs" path="res://sounds/delete.ogg" id="7_qt647"]
+[ext_resource type="AudioStream" uid="uid://dmnw61584csch" path="res://sounds/select2.ogg" id="8_xkvpf"]
 
 [node name="Select" type="Control"]
 layout_mode = 3
@@ -18,6 +27,11 @@ NormalPuzzleListPath = NodePath("MarginContainer/TabContainer/Normal Levels")
 CustomPuzzleListPath = NodePath("MarginContainer/TabContainer/Custom Levels")
 TasksPanelPath = NodePath("TasksPanel")
 ImportFileDialogPath = NodePath("ImportFileDialog")
+BackSound = ExtResource("2_ndw7o")
+PlaySound = ExtResource("3_yfhsl")
+ViewSound = ExtResource("3_yfhsl")
+EditSound = ExtResource("3_yfhsl")
+NewSound = ExtResource("3_yfhsl")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1
@@ -45,6 +59,8 @@ theme_override_constants/margin_bottom = 105
 [node name="TabContainer" type="TabContainer" parent="MarginContainer"]
 layout_mode = 2
 tab_alignment = 1
+script = ExtResource("2_i5rkq")
+Sound = ExtResource("3_qnohs")
 
 [node name="Normal Levels" type="ItemList" parent="MarginContainer/TabContainer"]
 layout_mode = 2
@@ -102,21 +118,29 @@ text = "NEW"
 layout_mode = 2
 size_flags_horizontal = 3
 text = "DELETE"
+script = ExtResource("2_ixw5l")
+Sound = ExtResource("7_qt647")
 
 [node name="ImportButton" type="Button" parent="MarginContainer2/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "IMPORT"
+script = ExtResource("2_ixw5l")
+Sound = ExtResource("8_xkvpf")
 
 [node name="ExportButton" type="Button" parent="MarginContainer2/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "EXPORT"
+script = ExtResource("2_ixw5l")
+Sound = ExtResource("8_xkvpf")
 
 [node name="SolveButton" type="Button" parent="MarginContainer2/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "SOLVE"
+script = ExtResource("2_ixw5l")
+Sound = ExtResource("3_3h1ke")
 
 [node name="SolutionMenu" type="PopupMenu" parent="."]
 max_size = Vector2i(32768, 500)
@@ -143,6 +167,8 @@ grow_vertical = 2
 mouse_filter = 1
 theme_override_constants/icon_max_width = 35
 flat = true
+script = ExtResource("2_ixw5l")
+Sound = ExtResource("2_elcho")
 
 [node name="TasksButton" type="Button" parent="."]
 layout_mode = 1
@@ -157,6 +183,8 @@ grow_horizontal = 0
 theme_override_constants/icon_max_width = 35
 icon = ExtResource("2_db27x")
 flat = true
+script = ExtResource("2_ixw5l")
+Sound = ExtResource("3_3h1ke")
 
 [node name="TasksPanel" type="Panel" parent="."]
 clip_contents = true

@@ -1,6 +1,7 @@
 using Godot;
 using Packinator3D.scenes.view;
 using Packinator3D.datastructure;
+using Packinator3D.scenes.menus.main;
 using Packinator3D.scenes.menus.select.tasks;
 using Packinator3D.scenes.puzzle;
 
@@ -29,6 +30,22 @@ public partial class Select : Control
 
 	[Export]
 	public NodePath ImportFileDialogPath { get; set; }
+
+	[ExportGroup("Sounds")]
+	[Export]
+	public AudioStream BackSound { get; set; }
+
+	[Export]
+	public AudioStream PlaySound { get; set; }
+
+	[Export]
+	public AudioStream ViewSound { get; set; }
+
+	[Export]
+	public AudioStream EditSound { get; set; }
+
+	[Export]
+	public AudioStream NewSound { get; set; }
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -77,6 +94,15 @@ public partial class Select : Control
 		placementController.ViewSolution = solutionIndex;
 		placementController.IsSolved = solutionIndex >= 0;
 
+		// Play sound
+		if (edit) {
+			GetTree().Root.GetNode<SoundPlayer>("SoundPlayer").Play(puzzle.Pieces.Count == 0 ? NewSound : EditSound);
+		} else if (solutionIndex >= 0) {
+			GetTree().Root.GetNode<SoundPlayer>("SoundPlayer").Play(ViewSound);
+		} else {
+			GetTree().Root.GetNode<SoundPlayer>("SoundPlayer").Play(PlaySound);
+		}
+
 		var tree = GetTree();
 		tree.Root.AddChild(viewScene);
 		tree.CurrentScene = viewScene;
@@ -96,6 +122,7 @@ public partial class Select : Control
 	}
 
 	private void GoBack() {
+		GetTree().Root.GetNode<SoundPlayer>("SoundPlayer").Play(BackSound);
 		GetTree().ChangeSceneToFile("res://scenes/menus/main/main_menu.tscn");
 	}
 
@@ -231,7 +258,8 @@ public partial class Select : Control
 		var puzzle = GetSelectedPuzzle();
 		if (puzzle is null) return;
 
-		TaskManager.Solve(puzzle);
+		var soundPlayer = GetTree().Root.GetNode<SoundPlayer>("SoundPlayer");
+		TaskManager.Solve(puzzle, soundPlayer);
 		tasksPanel.Expand();
 	}
 }

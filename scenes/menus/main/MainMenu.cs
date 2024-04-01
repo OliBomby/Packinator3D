@@ -10,20 +10,13 @@ public partial class MainMenu : Control
 	{
 		if (SaveManager.Init()) {
 			GetTree().Root.CallDeferred("add_child", new QuitHandler());
+			GetTree().Root.CallDeferred("add_child", new SoundPlayer());
 		}
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-	}
-
-	private void _on_play_pressed() {
-		GetTree().ChangeSceneToFile("res://scenes/menus/select/select.tscn");
-	}
-
-	private void _on_options_pressed() {
-		GetTree().ChangeSceneToFile("res://scenes/menus/options/options.tscn");
 	}
 
 	private void _on_quit_pressed() {

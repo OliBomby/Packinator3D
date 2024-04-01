@@ -1,5 +1,6 @@
 using Godot;
 using Packinator3D.datastructure;
+using Packinator3D.scenes.menus.main;
 
 namespace Packinator3D.scenes.menus.@select.tasks;
 
@@ -9,6 +10,12 @@ public partial class TaskDisplay : Control {
 	private Button cancelButton;
 
 	public SolveTask Task { get; set; }
+
+	[Export]
+	public AudioStream CancelSound { get; set; }
+
+	[Export]
+	public AudioStream RemoveSound { get; set; }
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready() {
@@ -57,9 +64,13 @@ public partial class TaskDisplay : Control {
 	}
 
 	private void _on_button_pressed() {
-		if (Task.Status == Status.Running && Task != null)
+		if (Task.Status == Status.Running && Task != null) {
+			GetTree().Root.GetNode<SoundPlayer>("SoundPlayer").Play(CancelSound);
 			TaskManager.Cancel(Task);
-		else if (Task != null)
+		}
+		else if (Task != null) {
+			GetTree().Root.GetNode<SoundPlayer>("SoundPlayer").Play(RemoveSound);
 			TaskManager.Remove(Task);
+		}
 	}
 }
