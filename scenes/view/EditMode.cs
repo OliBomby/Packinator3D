@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Godot;
 using Packinator3D.datastructure;
@@ -34,6 +35,26 @@ internal partial class EditMode : Node3D {
         UpdateStatusText();
     }
 
+    public override void _ExitTree() {
+        // Save the puzzle
+        puzzleNode.PuzzleData.Pieces = new List<PuzzlePiece>();
+        for (var i = 0; i < pieces.Count; i++) {
+            var piece = GetPuzzlePiece(i);
+            PuzzleUtils.CenterizePiece(piece);
+            pieceStates[i] = piece.State;
+            puzzleNode.PuzzleData.Pieces.Add(piece);
+        }
+
+        puzzleNode.PuzzleData.TargetShape = GetTargetShape();
+
+        puzzleNode.PuzzleData.Solutions = new List<Solution> {
+            new() {
+                States = pieceStates,
+                Time = DateTime.Now,
+            }
+        };
+    }
+
     private void EditDisablePiece(int index) {
         foreach (var block in pieces[index]) block.DisableCollisions();
         puzzleNode.PuzzlePieceNodes[index].SetTransparency(0.4f);
@@ -52,29 +73,37 @@ internal partial class EditMode : Node3D {
     private void BuildPuzzlePiece(int index) {
         BuildTargetShape();
 
-        if (index < puzzleNode.PuzzlePieceNodes.Count) puzzleNode.RemoveChild(puzzleNode.PuzzlePieceNodes[index]);
+        if (index < puzzleNode.PuzzlePieceNodes.Count)
+            puzzleNode.RemoveChild(puzzleNode.PuzzlePieceNodes[index]);
+
         var piece = pieces[index];
+        if (piece.Count <= 0) return;
 
-        if (piece.Count > 0) {
-            PuzzlePiece newPiece = new() {
-                Shape = piece.ConvertAll(block => block.PositionInShape),
-                Color = piece[0].Color,
-                State = pieceStates[index]
-            };
+        puzzleNode.AddPiece(GetPuzzlePiece(index), index);
+        puzzleNode.PuzzlePieceNodes[index].DisableCollisions();
+    }
 
-            puzzleNode.AddPiece(newPiece, index);
-            puzzleNode.PuzzlePieceNodes[index].DisableCollisions();
-        }
+    private PuzzlePiece GetPuzzlePiece(int index) {
+        var piece = pieces[index];
+        return new() {
+            Shape = piece.ConvertAll(block => block.PositionInShape),
+            Color = piece[0].Color,
+            State = pieceStates[index]
+        };
     }
 
     private void BuildTargetShape() {
+        puzzleNode.AddTargetShape(GetTargetShape());
+    }
+
+    private List<Vector3> GetTargetShape() {
         List<Vector3> targetShape = new();
 
         foreach (var p in pieces)
         foreach (var block in p)
             targetShape.Add(block.Position);
 
-        puzzleNode.AddTargetShape(targetShape);
+        return targetShape;
     }
 
     private void UpdateStatusText() {

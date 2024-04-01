@@ -315,4 +315,12 @@ public static class PuzzleUtils {
 			}
 		}
 	};
+
+	public static void CenterizePiece(PuzzlePiece piece) {
+		var center = GetCenter(piece.Shape);
+		for (var i = 0; i < piece.Shape.Count; i++) {
+			piece.Shape[i] -= center;
+		}
+		piece.State = piece.State.Translated(center);
+	}
 }

@@ -156,8 +156,9 @@ public partial class Select : Control
 
 		// Move solution menu to the top of view button
 		var viewButton = GetNode<Button>("MarginContainer2/HBoxContainer/ViewButton");
+		var editButton = GetNode<Button>("MarginContainer2/HBoxContainer/EditButton");
 		int yOffset = Mathf.Clamp(puzzle.Solutions.Count * 28, 90, 500);
-		var rect = viewButton.GetGlobalRect();
+		var rect = currentSolutionMenuEditMode ? editButton.GetGlobalRect() : viewButton.GetGlobalRect();
 		var irect = new Rect2I(
 			Mathf.RoundToInt(rect.Position.X),
 			Mathf.RoundToInt(rect.Position.Y - yOffset),
@@ -169,6 +170,16 @@ public partial class Select : Control
 
 	private void OnSolutionMenuIndexPressed(int index) {
 		if (currentSolutionMenuPuzzle is null) return;
+
+		// We do not allow editing the normal levels,
+		// so we make a copy of the puzzle to edit and add it to the custom levels
+		if (currentSolutionMenuEditMode && SaveManager.SaveData.Puzzles.Contains(currentSolutionMenuPuzzle)) {
+			var newPuzzle = currentSolutionMenuPuzzle.Copy();
+			newPuzzle.Name = currentSolutionMenuPuzzle.Name + " (Edited)";
+			SaveManager.SaveData.CustomPuzzles.Add(newPuzzle);
+			currentSolutionMenuPuzzle = newPuzzle;
+		}
+
 		LoadPuzzle(currentSolutionMenuPuzzle, index, currentSolutionMenuEditMode);
 	}
 
@@ -176,6 +187,7 @@ public partial class Select : Control
 		// Make a new empty puzzle
 		var puzzle = PuzzleUtils.EmptyPuzzle;
 		puzzle.Name = "Puzzle " + (SaveManager.SaveData.CustomPuzzles.Count + 1);
+		SaveManager.SaveData.CustomPuzzles.Add(puzzle);
 		LoadPuzzle(puzzle, 0, true);
 	}
 
