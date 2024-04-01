@@ -206,7 +206,7 @@ internal partial class EditMode : Node3D {
         var origin = camera.ProjectRayOrigin(mousePos);
         var normal = camera.ProjectRayNormal(mousePos);
         var end = origin + normal * RayLength;
-        var query = PhysicsRayQueryParameters3D.Create(origin, end);
+        var query = PhysicsRayQueryParameters3D.Create(origin, end, 0b011);
         var result = spaceState.IntersectRay(query);
 
         if (!result.TryGetValue("position", out var position)) {
@@ -279,7 +279,7 @@ internal partial class EditMode : Node3D {
         var origin = camera.ProjectRayOrigin(mousePos);
         var normal = camera.ProjectRayNormal(mousePos);
         var end = origin + normal * RayLength;
-        var query = PhysicsRayQueryParameters3D.Create(origin, end, 2);
+        var query = PhysicsRayQueryParameters3D.Create(origin, end, 0b100);
         var result = spaceState.IntersectRay(query);
 
         if (!result.TryGetValue("collider", out var collider) || collider.Obj is not BuildingBlock block) return false;

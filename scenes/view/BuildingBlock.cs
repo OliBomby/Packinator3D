@@ -1,25 +1,27 @@
-using Godot;
 using System;
+using Godot;
 
+namespace Packinator3D.scenes.view;
 
 public partial class BuildingBlock : StaticBody3D
 {
 	public Color Color {get; set;}
 	public Vector3 PositionInShape {get; set;}
 	private readonly MeshInstance3D renderMesh;
-	private uint collisionLayer = 0b110;
-	
+	private const uint SelectedCollisionLayer = 0b101;
+	private const uint DeselectedCollisionLayer = 0b001;
+
 
 	public BuildingBlock(Color? color = null) {
-		PositionInShape = new();
-		Color = color.GetValueOrDefault(Color.Color8(255, 100, 0, 255));
+		PositionInShape = new Vector3();
+		Color = color.GetValueOrDefault(Color.Color8(255, 100, 0));
 
 		var mesh = new BoxMesh();
 		var material = new StandardMaterial3D {
-				AlbedoColor = Color,
-				Transparency = BaseMaterial3D.TransparencyEnum.Disabled,
-				NormalEnabled = true,
-			};
+			AlbedoColor = Color,
+			Transparency = BaseMaterial3D.TransparencyEnum.Disabled,
+			NormalEnabled = true,
+		};
 
 		renderMesh = new MeshInstance3D {
 			Mesh = mesh,
@@ -35,17 +37,14 @@ public partial class BuildingBlock : StaticBody3D
 
 	public void SetTransparency(float a) {
 
-		StandardMaterial3D material = renderMesh.GetSurfaceOverrideMaterial(0) as StandardMaterial3D;
-		Color c = material.AlbedoColor;
+		var material = (StandardMaterial3D)renderMesh.GetSurfaceOverrideMaterial(0);
+		var c = material.AlbedoColor;
 		c.A = a;
 		material.AlbedoColor = c;
-		
-		if (a == 1.0f) {
-			material.Transparency = BaseMaterial3D.TransparencyEnum.Disabled;
-		}
-		else {
-			material.Transparency = BaseMaterial3D.TransparencyEnum.Alpha;
-		}
+
+		material.Transparency = Math.Abs(a - 1.0f) < 1E-5f ?
+			BaseMaterial3D.TransparencyEnum.Disabled :
+			BaseMaterial3D.TransparencyEnum.Alpha;
 
 
 		renderMesh.SetSurfaceOverrideMaterial(
@@ -67,18 +66,18 @@ public partial class BuildingBlock : StaticBody3D
 
 	private void CreateCollisionObject() {
 		uint shapeOwner = CreateShapeOwner(this);
-		ShapeOwnerAddShape(shapeOwner, renderMesh.Mesh.CreateTrimeshShape());
-		this.CollisionMask = collisionLayer;
-		this.CollisionLayer = collisionLayer;
+		ShapeOwnerAddShape(shapeOwner, new BoxShape3D());
+		CollisionMask = SelectedCollisionLayer;
+		CollisionLayer = SelectedCollisionLayer;
 	}
 
 	public void DisableCollisions() {
-		this.CollisionMask = 0b100;	
-		this.CollisionLayer = 0b100;
+		CollisionMask = DeselectedCollisionLayer;
+		CollisionLayer = DeselectedCollisionLayer;
 	}
 
 	public void EnableCollisions() {
-		this.CollisionMask = collisionLayer;
-		this.CollisionLayer = collisionLayer;
+		CollisionMask = SelectedCollisionLayer;
+		CollisionLayer = SelectedCollisionLayer;
 	}
 }
