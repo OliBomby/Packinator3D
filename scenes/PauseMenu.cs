@@ -4,7 +4,7 @@ using Packinator3D.scenes.puzzle;
 
 namespace Packinator3D.scenes;
 
-public partial class PauseMenu : ColorRect
+public partial class PauseMenu : Control
 {
 	private bool pauseReleased;
 
@@ -15,8 +15,6 @@ public partial class PauseMenu : ColorRect
 	private Node3D xClip;
 	private Node3D yClip;
 	private Node3D zClip;
-	
-	public bool IsTargetVisible {get; private set;}
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -36,39 +34,39 @@ public partial class PauseMenu : ColorRect
 	}
 
 	public void ShowPauseMenu() {
-		if (!GetTree().Paused) {
-			GetTree().Paused = true;
-			pauseReleased = false;
-			Show();
-		}
-		
+		if (Visible)
+			return;
+
+		SetProcess(true);
+		Input.MouseMode = Input.MouseModeEnum.Visible;
+		pauseReleased = false;
 		xClip.Show();
 		yClip.Show();
 		zClip.Show();
+		Show();
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
-		Input.MouseMode = Input.MouseModeEnum.Visible;
+	public void HidePauseMenu() {
+		if (!Visible)
+			return;
 
-		if (!pauseReleased && !Input.IsActionJustPressed("pause")) {
-			pauseReleased = true;
-		}
-
-		if (GetTree().Paused && Input.IsActionJustPressed("pause") && pauseReleased) {
-			OnCloseButtonPressed();
-		}
-	}
-
-	private void OnCloseButtonPressed()
-	{
 		Hide();
 		xClip.Hide();
 		yClip.Hide();
 		zClip.Hide();
 		Input.MouseMode = Input.MouseModeEnum.Captured;
-		GetTree().Paused = false;
+		SetProcess(false);
+	}
+
+	// Called every frame. 'delta' is the elapsed time since the previous frame.
+	public override void _Process(double delta) {
+		if (!pauseReleased && !Input.IsActionJustPressed("pause")) {
+			pauseReleased = true;
+		}
+
+		if (Visible && Input.IsActionJustPressed("pause") && pauseReleased) {
+			HidePauseMenu();
+		}
 	}
 		
 	private void HideClippedPieces() {
@@ -85,11 +83,6 @@ public partial class PauseMenu : ColorRect
 				}
 			}
 		}
-	}
-
-	private void _on_close_button_pressed()
-	{
-		OnCloseButtonPressed();
 	}
 
 	private void _on_piece_width_value_changed(double value)
@@ -187,6 +180,5 @@ public partial class PauseMenu : ColorRect
 	private void _on_check_box_toggled(bool toggledOn)
 	{
 		puzzleNode.SetTargetShapeVisible(toggledOn);
-		IsTargetVisible = toggledOn;
 	}
 }
