@@ -200,13 +200,15 @@ internal partial class EditMode : Node3D {
     private bool TryPlaceTargetBlock() {
         if (blockIndex == pieces.Count + 1) return false;
 
+        uint collsionMask = blockIndex == pieces.Count ? 0b011u : 0b100u;
+
         var spaceState = GetWorld3D().DirectSpaceState;
         var mousePos = GetViewport().GetMousePosition();
 
         var origin = camera.ProjectRayOrigin(mousePos);
         var normal = camera.ProjectRayNormal(mousePos);
         var end = origin + normal * RayLength;
-        var query = PhysicsRayQueryParameters3D.Create(origin, end, 0b011);
+        var query = PhysicsRayQueryParameters3D.Create(origin, end, collsionMask);
         var result = spaceState.IntersectRay(query);
 
         if (!result.TryGetValue("position", out var position)) {
