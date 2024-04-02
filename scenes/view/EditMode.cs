@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
+using Godot.Collections;
 using Packinator3D.datastructure;
 using Packinator3D.scenes.puzzle;
 
@@ -241,24 +243,15 @@ internal partial class EditMode : Node3D {
         var query = PhysicsRayQueryParameters3D.Create(origin, end, collsionMask);
         var result = spaceState.IntersectRay(query);
 
-        if (!result.TryGetValue("position", out var position)) {
-            // GD.Print("No position");
-            return false;
+        if (!IsCollisionValid(result, out var pos)) {
+            if (blockIndex == pieces.Count)
+                return false;
+
+            query = PhysicsRayQueryParameters3D.Create(origin, end, 0b011);
+            result = spaceState.IntersectRay(query);
+            if (!IsCollisionValid(result, out pos))
+                return false;
         }
-
-        if (!result.TryGetValue("normal", out var collisionNormal)) {
-            // GD.Print("No normal");
-            return false;
-        }
-
-        var pos = (Vector3)position;
-        var norm = (Vector3)collisionNormal;
-        pos += norm * 0.5f;
-
-        // GD.Print("pos: ", pos);
-        // GD.Print("norm: ", norm);
-
-        pos = puzzleNode.ToLocal(pos).Round();
 
         if (CheckForBlock(pos, out int blockIndex2, out var otherBlock)) {
             // GD.Print("removing block.");
@@ -286,6 +279,37 @@ internal partial class EditMode : Node3D {
         HandlePlaced(blockIndex, block);
         placeSoundPlayer.Play();
         return true;
+    }
+
+    private bool IsCollisionValid(Dictionary result, out Vector3 pos) {
+        pos = Vector3.Zero;
+
+        if (!result.TryGetValue("position", out var position)) {
+            // GD.Print("No position");
+            return false;
+        }
+
+        if (!result.TryGetValue("normal", out var collisionNormal)) {
+            // GD.Print("No normal");
+            return false;
+        }
+
+        pos = (Vector3)position;
+        var norm = (Vector3)collisionNormal;
+        pos += norm * 0.5f;
+        pos = puzzleNode.ToLocal(pos).Round();
+
+        // Make sure the position is above ground
+        if (pos.Y < 0)
+            return false;
+
+        if (blockIndex >= pieces.Count) return true;
+
+        // Make sure the position is adjacent to the current block
+        var positionInShape = pieceStates[blockIndex].Inverse() * pos;
+        bool found = pieces[blockIndex].Any(v => v.PositionInShape.DistanceSquaredTo(positionInShape) < 1.2);
+
+        return found;
     }
 
     private bool TryRemoveTargetBlock() {
