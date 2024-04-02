@@ -202,12 +202,12 @@ internal partial class EditMode : Node3D {
         var result = spaceState.IntersectRay(query);
 
         if (!result.TryGetValue("position", out var position)) {
-            GD.Print("No position");
+            // GD.Print("No position");
             return false;
         }
 
         if (!result.TryGetValue("normal", out var collisionNormal)) {
-            GD.Print("No normal");
+            // GD.Print("No normal");
             return false;
         }
 
@@ -215,13 +215,13 @@ internal partial class EditMode : Node3D {
         var norm = (Vector3)collisionNormal;
         pos += norm * 0.5f;
 
-        GD.Print("pos: ", pos);
-        GD.Print("norm: ", norm);
+        // GD.Print("pos: ", pos);
+        // GD.Print("norm: ", norm);
 
         pos = puzzleNode.ToLocal(pos).Round();
 
         if (CheckForBlock(pos, out int blockIndex2, out var otherBlock)) {
-            GD.Print("removing block.");
+            // GD.Print("removing block.");
             if (blockIndex2 == blockIndex) return false;
             HandleRemoved(ref blockIndex2, otherBlock);
         }
@@ -291,8 +291,8 @@ internal partial class EditMode : Node3D {
     }
 
     private void HandleRemoved(ref int blockIndex2, BuildingBlock block) {
-        bool removed = pieces[blockIndex2].Remove(block);
-        GD.Print("Removed: ", removed);
+        pieces[blockIndex2].Remove(block);
+        // GD.Print("Removed: ", removed);
         block.QueueFree();
 
         BuildPuzzlePiece(blockIndex2);
