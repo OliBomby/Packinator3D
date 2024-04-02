@@ -11,6 +11,7 @@ public partial class MainMenu : Control
 		if (SaveManager.Init()) {
 			GetTree().Root.CallDeferred("add_child", new QuitHandler());
 			GetTree().Root.CallDeferred("add_child", new SoundPlayer());
+			GetTree().Root.CallDeferred("add_child", new MusicPlayer());
 		}
 	}
 
