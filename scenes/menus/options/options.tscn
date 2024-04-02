@@ -113,7 +113,7 @@ theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
 [node name="HelpText" type="RichTextLabel" parent="HBoxContainer/MarginContainer2"]
-custom_minimum_size = Vector2(470, 424)
+custom_minimum_size = Vector2(412.705, 456.26)
 layout_mode = 2
 size_flags_horizontal = 3
 bbcode_enabled = true
@@ -126,9 +126,15 @@ Look around with the mouse.
 Move with WASD, Shift, & Spacebar.
 
 Left-click on puzzle pieces to move them.
+Right-click on puzzle pieces to reset them.
 Scrollwheel to rotate held pieces around the X-axis.
 Q & E to rotate held pieces around the Y-axis.
-Right-click on puzzle pieces to reset them.
-Press Tab to change view options."
+Press Tab to change view options.
+
+[b]Edit[/b]
+Scrollwheel to cycle between view/piece/new piece.
+Left-click to place a block.
+Right-click to remove a block.
+Middle-click to select the piece you are looking at."
 
 [connection signal="pressed" from="BackButton" to="." method="GoBack"]
