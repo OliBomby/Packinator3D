@@ -22,6 +22,24 @@ internal partial class EditMode : Node3D {
     private PuzzleNode puzzleNode;
     private LineEdit nameEdit;
 
+    [ExportGroup("Sounds")]
+    [Export]
+    public AudioStream PlaceSound { get; set; }
+
+    [Export]
+    public AudioStream DeleteSound { get; set; }
+
+    [Export]
+    public AudioStream PickSound { get; set; }
+
+    [Export]
+    public AudioStream SelectSound { get; set; }
+
+    private AudioStreamPlayer placeSoundPlayer;
+    private AudioStreamPlayer deleteSoundPlayer;
+    private AudioStreamPlayer pickSoundPlayer;
+    private AudioStreamPlayer selectSoundPlayer;
+
     public EditMode(bool editMode) {
         this.editMode = editMode;
         pieces = new List<List<BuildingBlock>>();
@@ -34,8 +52,27 @@ internal partial class EditMode : Node3D {
         camera = GetNode<Camera3D>("../SpectatorCamera");
         editModeSelected = GetNode<Label>("../EditModeSelected");
         nameEdit = GetNode<LineEdit>("../PauseMenu/NameEdit");
+
+        PlaceSound = ResourceLoader.Load<AudioStreamOggVorbis>("res://sounds/place.ogg");
+        DeleteSound = ResourceLoader.Load<AudioStreamOggVorbis>("res://sounds/delete.ogg");
+        PickSound = ResourceLoader.Load<AudioStreamOggVorbis>("res://sounds/pick.ogg");
+        SelectSound = ResourceLoader.Load<AudioStreamOggVorbis>("res://sounds/select.ogg");
+        placeSoundPlayer = CreateSoundPlayer(PlaceSound);
+        deleteSoundPlayer = CreateSoundPlayer(DeleteSound);
+        pickSoundPlayer = CreateSoundPlayer(PickSound);
+        selectSoundPlayer = CreateSoundPlayer(SelectSound);
+
         EnterEditMode();
         UpdateStatusText();
+    }
+
+    private AudioStreamPlayer CreateSoundPlayer(AudioStream stream) {
+        var soundPlayer = new AudioStreamPlayer {
+            Bus = "Effects",
+            Stream = stream,
+        };
+        AddChild(soundPlayer);
+        return soundPlayer;
     }
 
     public override void _ExitTree() {
@@ -137,15 +174,18 @@ internal partial class EditMode : Node3D {
         if (@event.IsActionPressed("block_build_select_up")) {
             blockIndex++;
             BlockIndexUpdate();
+            selectSoundPlayer.Play();
         }
 
         if (@event.IsActionPressed("block_build_select_down")) {
             blockIndex--;
             BlockIndexUpdate();
+            selectSoundPlayer.Play();
         }
 
         if (@event.IsActionPressed("block_build_select")) {
             PickBlock();
+            pickSoundPlayer.Play();
         }
 
         if (@event.IsActionPressed("move_piece") && blockIndex != pieces.Count + 1) {
@@ -244,6 +284,7 @@ internal partial class EditMode : Node3D {
         block.PositionInShape = pieceStates[blockIndex].Inverse() * pos;
 
         HandlePlaced(blockIndex, block);
+        placeSoundPlayer.Play();
         return true;
     }
 
@@ -263,6 +304,7 @@ internal partial class EditMode : Node3D {
         if (!pieces[blockIndex].Contains(block)) return false;
 
         HandleRemoved(ref blockIndex, block);
+        deleteSoundPlayer.Play();
         return true;
     }
 

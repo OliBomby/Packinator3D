@@ -89,7 +89,7 @@ public partial class Select : Control
 
 		var viewScene = ResourceLoader.Load<PackedScene>("res://scenes/view/view.tscn").Instantiate();
 		viewScene.GetNode<ViewScene>(".").IsEdit = edit;
-		viewScene.GetNode<PuzzleNode>("PuzzleNode").LoadData(puzzle, solutionIndex, solutionIndex < 0);
+		viewScene.GetNode<PuzzleNode>("PuzzleNode").LoadData(puzzle, solutionIndex, true);
 		var placementController = viewScene.GetNode<BlockPlacementController>("BlockPlacementController");
 		placementController.ViewSolution = solutionIndex;
 		placementController.IsSolved = solutionIndex >= 0;

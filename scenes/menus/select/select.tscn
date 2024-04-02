@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://bq2oefoojtys0"]
+[gd_scene load_steps=15 format=3 uid="uid://bq2oefoojtys0"]
 
 [ext_resource type="Script" path="res://scenes/menus/select/Select.cs" id="1_7x6eg"]
 [ext_resource type="Texture2D" uid="uid://l6krmi36iq5r" path="res://scenes/menus/select/bars-solid.svg" id="2_db27x"]
@@ -8,10 +8,11 @@
 [ext_resource type="AudioStream" uid="uid://c3b3to1myu8o4" path="res://sounds/back2.ogg" id="2_ndw7o"]
 [ext_resource type="AudioStream" uid="uid://bgj5udmel7pon" path="res://sounds/slide.ogg" id="3_3h1ke"]
 [ext_resource type="Script" path="res://scenes/menus/select/tasks/TasksPanel.cs" id="3_7uymi"]
-[ext_resource type="AudioStream" uid="uid://c5g3sj6311eni" path="res://sounds/select.ogg" id="3_qnohs"]
 [ext_resource type="AudioStream" uid="uid://cuusm0iq0ak56" path="res://sounds/confirm2.ogg" id="3_yfhsl"]
 [ext_resource type="Script" path="res://scenes/menus/select/tasks/TasksDisplay.cs" id="4_2fkkw"]
-[ext_resource type="AudioStream" uid="uid://c1ouyplqmwqcs" path="res://sounds/delete.ogg" id="7_qt647"]
+[ext_resource type="AudioStream" uid="uid://cbdmipvaowi8s" path="res://sounds/edit.ogg" id="4_mabsb"]
+[ext_resource type="AudioStream" uid="uid://6ui64wtx1i2w" path="res://sounds/new.ogg" id="5_8q0xv"]
+[ext_resource type="AudioStream" uid="uid://y5ooo7v7ks4s" path="res://sounds/delete2.ogg" id="7_y2mgg"]
 [ext_resource type="AudioStream" uid="uid://dmnw61584csch" path="res://sounds/select2.ogg" id="8_xkvpf"]
 
 [node name="Select" type="Control"]
@@ -30,8 +31,8 @@ ImportFileDialogPath = NodePath("ImportFileDialog")
 BackSound = ExtResource("2_ndw7o")
 PlaySound = ExtResource("3_yfhsl")
 ViewSound = ExtResource("3_yfhsl")
-EditSound = ExtResource("3_yfhsl")
-NewSound = ExtResource("3_yfhsl")
+EditSound = ExtResource("4_mabsb")
+NewSound = ExtResource("5_8q0xv")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1
@@ -60,7 +61,7 @@ theme_override_constants/margin_bottom = 105
 layout_mode = 2
 tab_alignment = 1
 script = ExtResource("2_i5rkq")
-Sound = ExtResource("3_qnohs")
+Sound = ExtResource("8_xkvpf")
 
 [node name="Normal Levels" type="ItemList" parent="MarginContainer/TabContainer"]
 layout_mode = 2
@@ -119,7 +120,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "DELETE"
 script = ExtResource("2_ixw5l")
-Sound = ExtResource("7_qt647")
+Sound = ExtResource("7_y2mgg")
 
 [node name="ImportButton" type="Button" parent="MarginContainer2/HBoxContainer"]
 layout_mode = 2

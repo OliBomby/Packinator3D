@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://cmn7yl0c860nf"]
+[gd_scene load_steps=5 format=3 uid="uid://cmn7yl0c860nf"]
 
 [ext_resource type="Script" path="res://scenes/PauseMenu.cs" id="1_ia2ak"]
 [ext_resource type="Script" path="res://scenes/menus/SoundCheckButton.cs" id="2_0bq4v"]
+[ext_resource type="AudioStream" uid="uid://dmnw61584csch" path="res://sounds/select2.ogg" id="2_kmqr3"]
 [ext_resource type="AudioStream" uid="uid://db8w84x3kfwnh" path="res://sounds/toggle.ogg" id="3_cikd0"]
 
 [node name="PauseMenu" type="Control"]
@@ -12,6 +13,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ia2ak")
+ShowSound = ExtResource("2_kmqr3")
+HideSound = ExtResource("2_kmqr3")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 custom_minimum_size = Vector2(299.01, 0)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://c82cqueavh1mq"]
+[gd_scene load_steps=36 format=3 uid="uid://c82cqueavh1mq"]
 
 [ext_resource type="Script" path="res://scenes/view/ViewScene.cs" id="1_iwres"]
 [ext_resource type="Environment" uid="uid://c7hvhnwnxbxc0" path="res://scenes/environments/view_environment.tres" id="2_0at1c"]
@@ -16,8 +16,10 @@
 [ext_resource type="PackedScene" uid="uid://cmn7yl0c860nf" path="res://scenes/pause_menu.tscn" id="14_i0rss"]
 [ext_resource type="AudioStream" uid="uid://t04v3wh2tjt" path="res://sounds/reset.ogg" id="15_726oc"]
 [ext_resource type="Script" path="res://scenes/FpsCounter.cs" id="15_doi0l"]
+[ext_resource type="AudioStream" uid="uid://c3b3to1myu8o4" path="res://sounds/back2.ogg" id="16_gx5sd"]
 [ext_resource type="Script" path="res://scenes/puzzle/BlockPlacementController.cs" id="16_h81hl"]
 [ext_resource type="LightmapGIData" uid="uid://b8iadoi51qrt5" path="res://scenes/view/view.lmbake" id="17_1h05b"]
+[ext_resource type="AudioStream" uid="uid://beujjvvvinihn" path="res://sounds/back.ogg" id="17_2sxuc"]
 [ext_resource type="PackedScene" uid="uid://ckqu6y3lkle2l" path="res://scenes/view/models/Another bedroom.glb" id="17_ccmc3"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_iu6b4"]
@@ -98,6 +100,7 @@ orientation = 2
 
 [node name="ViewScene" type="Node3D"]
 script = ExtResource("1_iwres")
+BackSound = ExtResource("16_gx5sd")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("2_0at1c")
@@ -186,6 +189,7 @@ script = ExtResource("16_h81hl")
 PickUpSound = ExtResource("14_3j8rd")
 PutDownSound = ExtResource("13_iw4ei")
 ResetSound = ExtResource("15_726oc")
+BackSound = ExtResource("17_2sxuc")
 
 [node name="Congratulations" type="Label" parent="."]
 anchors_preset = 8

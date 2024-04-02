@@ -16,6 +16,16 @@ public partial class PauseMenu : Control
 	private Node3D yClip;
 	private Node3D zClip;
 
+	[ExportGroup("Sounds")]
+	[Export]
+	public AudioStream ShowSound { get; set; }
+
+	[Export]
+	public AudioStream HideSound { get; set; }
+
+	private AudioStreamPlayer showSoundPlayer;
+	private AudioStreamPlayer hideSoundPlayer;
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -33,6 +43,18 @@ public partial class PauseMenu : Control
 		targetShapeToggle.ButtonPressed = puzzleNode.TargetShapeVisible;
 		var nameEdit = GetNode<LineEdit>("NameEdit");
 		nameEdit.Text = puzzleNode.PuzzleData.Name;
+
+		showSoundPlayer = CreateSoundPlayer(ShowSound);
+		hideSoundPlayer = CreateSoundPlayer(HideSound);
+	}
+
+	private AudioStreamPlayer CreateSoundPlayer(AudioStream stream) {
+		var soundPlayer = new AudioStreamPlayer {
+			Bus = "Effects",
+			Stream = stream,
+		};
+		AddChild(soundPlayer);
+		return soundPlayer;
 	}
 
 	public void ShowPauseMenu() {
@@ -46,6 +68,7 @@ public partial class PauseMenu : Control
 		yClip.Show();
 		zClip.Show();
 		Show();
+		showSoundPlayer.Play();
 	}
 
 	public void HidePauseMenu() {
@@ -58,6 +81,7 @@ public partial class PauseMenu : Control
 		zClip.Hide();
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 		SetProcess(false);
+		hideSoundPlayer.Play();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

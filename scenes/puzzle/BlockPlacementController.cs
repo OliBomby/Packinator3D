@@ -37,9 +37,13 @@ public partial class BlockPlacementController : Node3D {
 	[Export]
 	public AudioStream ResetSound { get; set; }
 
+	[Export]
+	public AudioStream BackSound { get; set; }
+
 	private AudioStreamPlayer pickUpSoundPlayer;
 	private AudioStreamPlayer putDownSoundPlayer;
 	private AudioStreamPlayer resetSoundPlayer;
+	private AudioStreamPlayer backSoundPlayer;
 
 	[Signal]
 	public delegate void PuzzleSolvedEventHandler();
@@ -52,6 +56,7 @@ public partial class BlockPlacementController : Node3D {
 		pickUpSoundPlayer = CreateSoundPlayer(PickUpSound);
 		putDownSoundPlayer = CreateSoundPlayer(PutDownSound);
 		resetSoundPlayer = CreateSoundPlayer(ResetSound);
+		backSoundPlayer = CreateSoundPlayer(BackSound);
 	}
 
 	private AudioStreamPlayer CreateSoundPlayer(AudioStream stream) {
@@ -131,7 +136,7 @@ public partial class BlockPlacementController : Node3D {
 				heldPiece.Transform = heldPieceOriginalState;
 				ClearHeldPiece();
 				OnStateChanged();
-				resetSoundPlayer.Play();
+				backSoundPlayer.Play();
 			}
 		}
 	}
