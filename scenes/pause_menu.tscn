@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://cmn7yl0c860nf"]
+[gd_scene load_steps=4 format=3 uid="uid://cmn7yl0c860nf"]
 
 [ext_resource type="Script" path="res://scenes/PauseMenu.cs" id="1_ia2ak"]
+[ext_resource type="Script" path="res://scenes/menus/SoundCheckButton.cs" id="2_0bq4v"]
+[ext_resource type="AudioStream" uid="uid://db8w84x3kfwnh" path="res://sounds/toggle.ogg" id="3_cikd0"]
 
 [node name="PauseMenu" type="Control"]
 layout_mode = 3
@@ -83,6 +85,8 @@ offset_right = 249.0
 offset_bottom = 244.0
 button_pressed = true
 text = "Show target shape"
+script = ExtResource("2_0bq4v")
+Sound = ExtResource("3_cikd0")
 
 [node name="ClipLabel" type="Label" parent="."]
 layout_mode = 1
@@ -122,6 +126,8 @@ offset_top = -5.0
 offset_right = 246.0
 offset_bottom = 19.0
 pivot_offset = Vector2(-272, -32)
+script = ExtResource("2_0bq4v")
+Sound = ExtResource("3_cikd0")
 
 [node name="InvertLabel" type="Label" parent="ClipLabel/X Clip"]
 layout_mode = 0
@@ -156,6 +162,8 @@ offset_top = -5.0
 offset_right = 246.0
 offset_bottom = 19.0
 pivot_offset = Vector2(-272, -32)
+script = ExtResource("2_0bq4v")
+Sound = ExtResource("3_cikd0")
 
 [node name="InvertLabel" type="Label" parent="ClipLabel/Y Clip"]
 layout_mode = 0
@@ -190,6 +198,8 @@ offset_top = -5.0
 offset_right = 246.0
 offset_bottom = 19.0
 pivot_offset = Vector2(-272, -32)
+script = ExtResource("2_0bq4v")
+Sound = ExtResource("3_cikd0")
 
 [node name="InvertLabel" type="Label" parent="ClipLabel/Z Clip"]
 layout_mode = 0

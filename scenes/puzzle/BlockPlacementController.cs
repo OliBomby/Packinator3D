@@ -27,6 +27,20 @@ public partial class BlockPlacementController : Node3D {
 	[Export]
 	public int ViewSolution { get; set; }
 
+	[ExportGroup("Sounds")]
+	[Export]
+	public AudioStream PickUpSound { get; set; }
+
+	[Export]
+	public AudioStream PutDownSound { get; set; }
+
+	[Export]
+	public AudioStream ResetSound { get; set; }
+
+	private AudioStreamPlayer pickUpSoundPlayer;
+	private AudioStreamPlayer putDownSoundPlayer;
+	private AudioStreamPlayer resetSoundPlayer;
+
 	[Signal]
 	public delegate void PuzzleSolvedEventHandler();
 
@@ -34,6 +48,19 @@ public partial class BlockPlacementController : Node3D {
 		camera = GetNode<Camera3D>("../SpectatorCamera");
 		puzzleNode = GetNode<PuzzleNode>("../PuzzleNode");
 		viewScene = GetNode<ViewScene>("../../ViewScene");
+
+		pickUpSoundPlayer = CreateSoundPlayer(PickUpSound);
+		putDownSoundPlayer = CreateSoundPlayer(PutDownSound);
+		resetSoundPlayer = CreateSoundPlayer(ResetSound);
+	}
+
+	private AudioStreamPlayer CreateSoundPlayer(AudioStream stream) {
+		var soundPlayer = new AudioStreamPlayer {
+			Bus = "Effects",
+			Stream = stream,
+		};
+		AddChild(soundPlayer);
+		return soundPlayer;
 	}
 
 	public override void _UnhandledInput(InputEvent @event) {
@@ -67,11 +94,13 @@ public partial class BlockPlacementController : Node3D {
 				targetBasis = piece.Basis;
 				exclude.Add(heldPiece.GetRid());
 				heldPiece.PickUp();
+				pickUpSoundPlayer.Play();
 			}
 			else {
 				// Try to place the piece
 				ClearHeldPiece();
 				OnStateChanged();
+				putDownSoundPlayer.Play();
 			}
 		}
 
@@ -95,12 +124,14 @@ public partial class BlockPlacementController : Node3D {
 					piece.Transform = originalState;
 				}
 				OnStateChanged();
+				resetSoundPlayer.Play();
 			}
 			else {
 				// Place the piece back to its original position when we picked it up
 				heldPiece.Transform = heldPieceOriginalState;
 				ClearHeldPiece();
 				OnStateChanged();
+				resetSoundPlayer.Play();
 			}
 		}
 	}
