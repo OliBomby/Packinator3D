@@ -1,7 +1,6 @@
 using Godot;
 using Packinator3D.datastructure;
 using Packinator3D.scenes.puzzle;
-using Packinator3D.scenes.view;
 
 namespace Packinator3D.scenes;
 

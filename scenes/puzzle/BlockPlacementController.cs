@@ -37,6 +37,7 @@ public partial class BlockPlacementController : Node3D {
 	}
 
 	public override void _UnhandledInput(InputEvent @event) {
+		if (viewScene.IsEdit) return;
 		if (heldPiece == null) return;
 
 		if (@event.IsActionPressed("rotate_x+")) DoRotation(Vector3.Right, Mathf.Pi / 2);
@@ -53,58 +54,62 @@ public partial class BlockPlacementController : Node3D {
 		tween.TweenProperty(heldPiece, "transform:basis", targetBasis, 0.3);
 	}
 
-	public override void _PhysicsProcess(double delta) {
-		if (!viewScene.IsEdit) {
-			if (heldPiece != null) {
-				SetHeldPieceToValidMousePosition();
+	public override void _Input(InputEvent @event) {
+		if (viewScene.IsEdit) return;
+
+		if (@event.IsActionPressed("move_piece")) {
+			if (heldPiece == null) {
+				// Try to pick up a piece
+				var result = ShootRay(1);
+				if (!result.TryGetValue("collider", out var collider) || collider.Obj is not PuzzlePieceNode piece) return;
+				heldPiece = piece;
+				heldPieceOriginalState = piece.Transform;
+				targetBasis = piece.Basis;
+				exclude.Add(heldPiece.GetRid());
+				heldPiece.PickUp();
 			}
-
-			if (Input.IsActionJustPressed("move_piece")) {
-				if (heldPiece == null) {
-					// Try to pick up a piece
-					var result = ShootRay(1);
-					if (!result.TryGetValue("collider", out var collider) || collider.Obj is not PuzzlePieceNode piece) return;
-					heldPiece = piece;
-					heldPieceOriginalState = piece.Transform;
-					targetBasis = piece.Basis;
-					exclude.Add(heldPiece.GetRid());
-					heldPiece.PickUp();
-				}
-				else {
-					// Try to place the piece
-					ClearHeldPiece();
-					OnStateChanged();
-				}
+			else {
+				// Try to place the piece
+				ClearHeldPiece();
+				OnStateChanged();
 			}
+		}
 
-			if (Input.IsActionJustPressed("reset_piece")) {
-				if (heldPiece == null) {
-					// Try reset the piece we are looking at
-					var result = ShootRay(1);
-					if (!result.TryGetValue("collider", out var collider) || collider.Obj is not PuzzlePieceNode piece) return;
+		if (@event.IsActionPressed("reset_piece")) {
+			if (heldPiece == null) {
+				// Try reset the piece we are looking at
+				var result = ShootRay(1);
+				if (!result.TryGetValue("collider", out var collider) || collider.Obj is not PuzzlePieceNode piece) return;
 
-					var originalState = piece.PieceData.State;
-					var currentState = piece.Transform;
+				var originalState = piece.PieceData.State;
+				var currentState = piece.Transform;
 
-					if (ViewSolution >= 0 && ViewSolution < puzzleNode.PuzzleData.Solutions.Count) {
-						// Reset the piece to the solution state if not in the solution state
-						// Reset the piece to the start state if in the solution state
-						int index = puzzleNode.PuzzleData.Pieces.IndexOf(piece.PieceData);
-						var solutionState = puzzleNode.PuzzleData.Solutions[ViewSolution].States[index];
+				if (ViewSolution >= 0 && ViewSolution < puzzleNode.PuzzleData.Solutions.Count) {
+					// Reset the piece to the solution state if not in the solution state
+					// Reset the piece to the start state if in the solution state
+					int index = puzzleNode.PuzzleData.Pieces.IndexOf(piece.PieceData);
+					var solutionState = puzzleNode.PuzzleData.Solutions[ViewSolution].States[index];
 
-						piece.Transform = currentState.Equals(solutionState) ? originalState : solutionState;
-					} else {
-						piece.Transform = originalState;
-					}
-					OnStateChanged();
+					piece.Transform = currentState.Equals(solutionState) ? originalState : solutionState;
+				} else {
+					piece.Transform = originalState;
 				}
-				else {
-					// Place the piece back to its original position when we picked it up
-					heldPiece.Transform = heldPieceOriginalState;
-					ClearHeldPiece();
-					OnStateChanged();
-				}
+				OnStateChanged();
 			}
+			else {
+				// Place the piece back to its original position when we picked it up
+				heldPiece.Transform = heldPieceOriginalState;
+				ClearHeldPiece();
+				OnStateChanged();
+			}
+		}
+	}
+
+	public override void _Process(double delta) {
+		if (viewScene.IsEdit) return;
+
+		if (heldPiece != null) {
+			SetHeldPieceToValidMousePosition();
 		}
 	}
 

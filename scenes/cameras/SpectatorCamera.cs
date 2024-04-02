@@ -1,11 +1,13 @@
 using Godot;
 using Packinator3D.datastructure;
+using Packinator3D.scenes.view;
 
 namespace Packinator3D.scenes.cameras;
 
 public partial class SpectatorCamera : Camera3D {
 	private Vector2 mouseDelta;
 	private float totalPitch;
+	private ViewScene viewScene;
 
 	[Export] private float Sensitivity { get; set; } = 0.005f;
 	[Export] private float Speed { get; set; } = 10f;
@@ -13,6 +15,7 @@ public partial class SpectatorCamera : Camera3D {
 	public override void _Ready() {
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 		totalPitch = -Rotation.X;
+		viewScene = GetParent() as ViewScene;
 	}
 
 	public override void _ExitTree() {
@@ -20,7 +23,7 @@ public partial class SpectatorCamera : Camera3D {
 	}
 
 	public override void _UnhandledInput(InputEvent @event) {
-		if (@event is InputEventMouseMotion mouseMotion) {
+		if (@event is InputEventMouseMotion mouseMotion && (viewScene is null || !viewScene.IsPaused)) {
 			mouseDelta += mouseMotion.Relative;
 		}
 	}

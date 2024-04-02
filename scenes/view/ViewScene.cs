@@ -8,6 +8,8 @@ public partial class ViewScene : Node3D
 	private EditMode editMode;
 	public bool IsEdit {get; set;}
 
+	public bool IsPaused => pauseMenu.Visible;
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
