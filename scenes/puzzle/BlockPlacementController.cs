@@ -11,7 +11,7 @@ namespace Packinator3D.scenes.puzzle;
 /// It requires a PuzzleNode and a Camera3D to be present in the scene.
 /// </summary>
 public partial class BlockPlacementController : Node3D {
-	private const float RayLength = 1000;
+	private const float RayLength = 100;
 
 	private Camera3D camera;
 	private PuzzleNode puzzleNode;
