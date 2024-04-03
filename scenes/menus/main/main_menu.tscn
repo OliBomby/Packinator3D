@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://6k3y8kpexili"]
+[gd_scene load_steps=12 format=3 uid="uid://6k3y8kpexili"]
 
 [ext_resource type="Environment" uid="uid://c7hvhnwnxbxc0" path="res://scenes/environments/view_environment.tres" id="1_2tfwk"]
 [ext_resource type="Script" path="res://scenes/menus/main/MainMenu.cs" id="1_xtvok"]
@@ -19,6 +19,8 @@ shadow_size = 10
 shadow_color = Color(0, 0.537255, 0.576471, 0.619608)
 shadow_offset = Vector2(5, 5)
 
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_5lpsf"]
+
 [node name="MainMenu" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -37,7 +39,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-color = Color(0.564706, 0.611765, 1, 0.337255)
+color = Color(0.564706, 0.611765, 1, 0.486275)
 
 [node name="MarginContainer2" type="Control" parent="."]
 layout_mode = 1
@@ -138,5 +140,11 @@ script = ExtResource("2_m1xgj")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="PuzzleBackground"]
 environment = ExtResource("1_2tfwk")
+camera_attributes = SubResource("CameraAttributesPractical_5lpsf")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866461, -0.126055, 0.483068, -0.230958, 0.756625, 0.6117, -0.44261, -0.641583, 0.626473, 1.55002, 0.847429, -1.61158)
+light_angular_distance = 1.71
+shadow_enabled = true
 
 [connection signal="pressed" from="MarginContainer2/GridContainer/VBoxContainer/Button3" to="." method="_on_quit_pressed"]

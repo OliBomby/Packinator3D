@@ -9,7 +9,8 @@ panorama = ExtResource("1_wsjd8")
 sky_material = SubResource("PanoramaSkyMaterial_vvb7b")
 
 [resource]
-background_color = Color(0.184314, 0.466667, 0.639216, 1)
+background_mode = 1
+background_color = Color(0.564706, 0.647059, 1, 1)
 sky = SubResource("Sky_0oya4")
 ambient_light_source = 3
 ambient_light_color = Color(1, 1, 1, 1)
