@@ -155,10 +155,15 @@ DebugPuzzlePath = "res://puzzles/pentomino-chair.txt"
 [node name="PauseMenu" parent="." instance=ExtResource("14_i0rss")]
 
 [node name="EditModeSelected" type="Label" parent="."]
-offset_left = 1.0
-offset_top = 624.0
-offset_right = 201.0
-offset_bottom = 647.0
+anchors_preset = -1
+anchor_left = 0.001
+anchor_top = 1.0
+anchor_right = 0.001
+anchor_bottom = 1.0
+offset_left = -0.152
+offset_top = -24.0
+offset_right = 199.848
+offset_bottom = -1.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_outline_size = 9
 
