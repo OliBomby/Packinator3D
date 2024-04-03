@@ -163,6 +163,7 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_outline_size = 9
 
 [node name="FpsCounter" type="Label" parent="."]
+visible = false
 offset_right = 40.0
 offset_bottom = 23.0
 script = ExtResource("15_doi0l")
