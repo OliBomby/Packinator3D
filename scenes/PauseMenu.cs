@@ -110,6 +110,42 @@ public partial class PauseMenu : Control
 			}
 		}
 	}
+	
+	private void HintMovePiece() {
+
+		if (puzzleNode.PuzzleData.Solutions.Count == 0) {
+			return;
+		}
+		
+		for(int i = 0; i < puzzleNode.PuzzlePieceNodes.Count; i++) {
+			var node = puzzleNode.PuzzlePieceNodes[i];
+			var solution = puzzleNode.PuzzleData.Solutions[0];
+			if (node.Transform != solution.States[i]) {
+				bool found = false;
+				
+				for(int j = 0; j < puzzleNode.PuzzlePieceNodes.Count; j++) {
+					if (i == j) continue;
+					var piece_data = puzzleNode.PuzzlePieceNodes[j].PieceData;
+					foreach(var pos in piece_data.Shape) {
+						var world_pos = puzzleNode.PuzzlePieceNodes[j].Transform * pos;
+						foreach(var pos2 in node.PieceData.Shape) {
+							var world_pos2 = solution.States[i] * pos2;
+							if (world_pos.Round() == world_pos2.Round()) {
+								found = true;
+								break;
+							}
+						}
+						if (found) break;
+					}
+					if (found) break;
+				}
+				if (found) continue;
+				
+				node.Transform = solution.States[i];
+				break;
+			}
+		}
+	}
 
 	private void _on_piece_width_value_changed(double value)
 	{
@@ -170,6 +206,11 @@ public partial class PauseMenu : Control
 		//yClip.Hide();
 	//}
 	
+	// Hint button
+	private void _on_button_pressed()
+	{
+		HintMovePiece();
+	}
 	
 	private void _on_invert_y_toggled(bool toggledOn)
 	{
@@ -213,3 +254,6 @@ public partial class PauseMenu : Control
 		puzzleNode.PuzzleData.Name = newText;
 	}
 }
+
+
+

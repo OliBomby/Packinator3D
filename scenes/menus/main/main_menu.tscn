@@ -1,6 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://6k3y8kpexili"]
+[gd_scene load_steps=11 format=3 uid="uid://6k3y8kpexili"]
 
+[ext_resource type="Environment" uid="uid://c7hvhnwnxbxc0" path="res://scenes/environments/view_environment.tres" id="1_2tfwk"]
 [ext_resource type="Script" path="res://scenes/menus/main/MainMenu.cs" id="1_xtvok"]
+[ext_resource type="Script" path="res://scenes/menus/main/PuzzleBackground.cs" id="2_m1xgj"]
 [ext_resource type="Texture2D" uid="uid://3opkde6xpdgw" path="res://scenes/menus/main/3D-15-3-2024.png" id="2_wyr85"]
 [ext_resource type="Script" path="res://scenes/menus/NavButton.cs" id="3_0dt5u"]
 [ext_resource type="PackedScene" uid="uid://bq2oefoojtys0" path="res://scenes/menus/select/select.tscn" id="4_g5e2f"]
@@ -35,7 +37,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-color = Color(0.564706, 0.611765, 1, 1)
+color = Color(0.564706, 0.611765, 1, 0.337255)
 
 [node name="MarginContainer2" type="Control" parent="."]
 layout_mode = 1
@@ -126,5 +128,15 @@ layout_mode = 2
 size_flags_vertical = 3
 text = "QUIT
 "
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.246, 7.32678)
+
+[node name="PuzzleBackground" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.43922)
+script = ExtResource("2_m1xgj")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="PuzzleBackground"]
+environment = ExtResource("1_2tfwk")
 
 [connection signal="pressed" from="MarginContainer2/GridContainer/VBoxContainer/Button3" to="." method="_on_quit_pressed"]
