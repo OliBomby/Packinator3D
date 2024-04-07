@@ -7,7 +7,8 @@ public partial class ViewScene : Node3D
 {
 	private PauseMenu pauseMenu;
 	private EditMode editMode;
-	public bool IsEdit {get; set;}
+	public bool IsEdit { get; set; }
+	public bool IsPlay { get; set; }
 
 	public bool IsPaused => pauseMenu.Visible;
 
@@ -24,6 +25,10 @@ public partial class ViewScene : Node3D
 
 		pauseMenu = GetNode<PauseMenu>("PauseMenu");
 		pauseMenu.HidePauseMenu();
+
+		if (IsPlay) {
+			pauseMenu.GetNode<Button>("HintButton").Show();
+		}
 	}
 
 	public override void _Input(InputEvent @event) {
