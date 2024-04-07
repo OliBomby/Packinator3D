@@ -91,6 +91,16 @@ text = "Show target shape"
 script = ExtResource("2_0bq4v")
 Sound = ExtResource("3_cikd0")
 
+[node name="EditTargetShape" type="CheckButton" parent="."]
+visible = false
+offset_left = 40.0
+offset_top = 252.0
+offset_right = 249.0
+offset_bottom = 283.0
+text = "Edit target shape"
+script = ExtResource("2_0bq4v")
+Sound = ExtResource("3_cikd0")
+
 [node name="ClipLabel" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = 1
@@ -225,9 +235,9 @@ editable = false
 visible = false
 layout_mode = 0
 offset_left = 40.0
-offset_top = 272.0
+offset_top = 306.0
 offset_right = 260.0
-offset_bottom = 303.0
+offset_bottom = 337.0
 text = "Hint"
 
 [connection signal="pressed" from="CloseButton" to="." method="HidePauseMenu"]

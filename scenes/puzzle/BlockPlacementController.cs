@@ -24,9 +24,6 @@ public partial class BlockPlacementController : Node3D {
 	[Export]
 	public bool IsSolved { get; set; }
 
-	[Export]
-	public int ViewSolution { get; set; }
-
 	[ExportGroup("Sounds")]
 	[Export]
 	public AudioStream PickUpSound { get; set; }
@@ -115,19 +112,13 @@ public partial class BlockPlacementController : Node3D {
 				var result = ShootRay(1);
 				if (!result.TryGetValue("collider", out var collider) || collider.Obj is not PuzzlePieceNode piece) return;
 
-				var originalState = piece.PieceData.State;
+				var originalState = piece.InitialState;
 				var currentState = piece.Transform;
+				var otherState = piece.OtherState;
+				// Reset the piece to the solution state if not in the solution state
+				// Reset the piece to the start state if in the solution state
+				piece.Transform = currentState.Equals(otherState) ? originalState : otherState;
 
-				if (ViewSolution >= 0 && ViewSolution < puzzleNode.PuzzleData.Solutions.Count) {
-					// Reset the piece to the solution state if not in the solution state
-					// Reset the piece to the start state if in the solution state
-					int index = puzzleNode.PuzzleData.Pieces.IndexOf(piece.PieceData);
-					var solutionState = puzzleNode.PuzzleData.Solutions[ViewSolution].States[index];
-
-					piece.Transform = currentState.Equals(solutionState) ? originalState : solutionState;
-				} else {
-					piece.Transform = originalState;
-				}
 				OnStateChanged();
 				resetSoundPlayer.Play();
 			}

@@ -18,7 +18,13 @@ public partial class PuzzlePieceNode : StaticBody3D
 
 	private uint collisionLayer = 1;
 
+	public Transform3D InitialState { get; set; }
+
+	public Transform3D OtherState { get; set; }
+
 	public PuzzlePieceNode(PuzzlePiece puzzlePieceData, float width = 0.9f) {
+		InitialState = puzzlePieceData.State;
+		OtherState = puzzlePieceData.State;
 		Width = width;
 		PieceData = puzzlePieceData;
 		AddChild(renderMesh = new MeshInstance3D {

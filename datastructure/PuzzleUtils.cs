@@ -57,10 +57,10 @@ public static class PuzzleUtils {
 	public static (bool[,,], Vector3) ShapeToVoxels(List<Vector3> shape) {
 		var (min, max) = GetDimensions(shape);
 		var size = max - min + Vector3.One;
-		var voxels = new bool[(int)size.X, (int)size.Y, (int)size.Z];
+		var voxels = new bool[Mathf.RoundToInt(size.X), Mathf.RoundToInt(size.Y), Mathf.RoundToInt(size.Z)];
 		foreach (var pos in shape) {
 			var p = pos - min;
-			voxels[(int)p.X, (int)p.Y, (int)p.Z] = true;
+			voxels[Mathf.RoundToInt(p.X), Mathf.RoundToInt(p.Y), Mathf.RoundToInt(p.Z)] = true;
 		}
 		return (voxels, min);
 	}

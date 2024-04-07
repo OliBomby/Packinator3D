@@ -126,6 +126,7 @@ block_build_select={
 3d_physics/layer_1="pieces"
 3d_physics/layer_2="ground"
 3d_physics/layer_3="selected piece"
+3d_physics/layer_4="targetshape"
 
 [rendering]
 

@@ -17,12 +17,14 @@ internal partial class EditMode : Node3D {
     private bool currentlyEditing;
     private bool editMode;
     private Label editModeSelected;
+    private bool allowEditTargetShape;
 
     // List of pieces
     private readonly List<List<BuildingBlock>> pieces;
     private readonly List<Transform3D> pieceStates;
     private PuzzleNode puzzleNode;
     private LineEdit nameEdit;
+    private readonly List<BuildingBlock> targetShapeBlocks;
 
     [ExportGroup("Sounds")]
     [Export]
@@ -46,6 +48,7 @@ internal partial class EditMode : Node3D {
         this.editMode = editMode;
         pieces = new List<List<BuildingBlock>>();
         pieceStates = new List<Transform3D>();
+        targetShapeBlocks = new List<BuildingBlock>();
     }
 
     public override void _Ready() {
@@ -54,6 +57,11 @@ internal partial class EditMode : Node3D {
         camera = GetNode<Camera3D>("../SpectatorCamera");
         editModeSelected = GetNode<Label>("../EditModeSelected");
         nameEdit = GetNode<LineEdit>("../PauseMenu/NameEdit");
+        var editTargetShape = GetNode<Button>("../PauseMenu/EditTargetShape");
+        allowEditTargetShape = !puzzleNode.IsSolved();
+        editTargetShape.ButtonPressed = allowEditTargetShape;
+        editTargetShape.Show();
+        editTargetShape.Toggled += EditTargetShapeOnToggled;
 
         PlaceSound = ResourceLoader.Load<AudioStreamOggVorbis>("res://sounds/place.ogg");
         DeleteSound = ResourceLoader.Load<AudioStreamOggVorbis>("res://sounds/delete.ogg");
@@ -66,6 +74,11 @@ internal partial class EditMode : Node3D {
 
         EnterEditMode();
         UpdateStatusText();
+    }
+
+    private void EditTargetShapeOnToggled(bool toggledon) {
+        allowEditTargetShape = toggledon;
+        BlockIndexUpdate();
     }
 
     private AudioStreamPlayer CreateSoundPlayer(AudioStream stream) {
@@ -89,12 +102,17 @@ internal partial class EditMode : Node3D {
 
         puzzleNode.PuzzleData.TargetShape = GetTargetShape();
 
-        puzzleNode.PuzzleData.Solutions = new List<Solution> {
-            new() {
-                States = pieceStates,
-                Time = DateTime.Now,
-            }
-        };
+        if (puzzleNode.IsSolved()) {
+            puzzleNode.PuzzleData.Solutions = new List<Solution> {
+                new() {
+                    States = pieceStates,
+                    Time = DateTime.Now,
+                }
+            };
+        }
+        else {
+            puzzleNode.PuzzleData.Solutions = new List<Solution>();
+        }
     }
 
     private void EditDisablePiece(int index) {
@@ -113,7 +131,8 @@ internal partial class EditMode : Node3D {
     }
 
     private void BuildPuzzlePiece(int index) {
-        BuildTargetShape();
+        if (!allowEditTargetShape)
+            BuildTargetShapeFromPieces();
 
         if (index < puzzleNode.PuzzlePieceNodes.Count)
             puzzleNode.RemoveChild(puzzleNode.PuzzlePieceNodes[index]);
@@ -127,7 +146,7 @@ internal partial class EditMode : Node3D {
 
     private PuzzlePiece GetPuzzlePiece(int index) {
         var piece = pieces[index];
-        return new() {
+        return new PuzzlePiece {
             Shape = piece.ConvertAll(block => block.PositionInShape),
             Color = piece[0].Color,
             State = pieceStates[index]
@@ -138,7 +157,19 @@ internal partial class EditMode : Node3D {
         puzzleNode.AddTargetShape(GetTargetShape());
     }
 
-    private List<Vector3> GetTargetShape() {
+    private void BuildTargetShapeFromPieces() {
+        foreach (var block in targetShapeBlocks) block.QueueFree();
+        targetShapeBlocks.Clear();
+
+        var targetShape = GetTargetShapeFromPieces();
+        foreach (var pos in targetShape) {
+            AddTargetBlock(pos);
+        }
+
+        puzzleNode.AddTargetShape(targetShape);
+    }
+
+    private List<Vector3> GetTargetShapeFromPieces() {
         List<Vector3> targetShape = new();
 
         foreach (var p in pieces)
@@ -148,8 +179,16 @@ internal partial class EditMode : Node3D {
         return targetShape;
     }
 
+    private List<Vector3> GetTargetShape() {
+        return targetShapeBlocks.Select(block => block.Position).ToList();
+    }
+
+    private int NumBlockIndex => allowEditTargetShape ? pieces.Count + 3 : pieces.Count + 2;
+
     private void UpdateStatusText() {
-        if (blockIndex == pieces.Count + 1)
+        if (blockIndex == pieces.Count + 2)
+            editModeSelected.Text = "Edit target shape";
+        else if (blockIndex == pieces.Count + 1)
             editModeSelected.Text = "View";
         else if (blockIndex == pieces.Count)
             editModeSelected.Text = "New piece";
@@ -158,9 +197,19 @@ internal partial class EditMode : Node3D {
     }
 
     private void BlockIndexUpdate() {
-        blockIndex = Mathf.PosMod(blockIndex, pieces.Count + 2);
+        blockIndex = Mathf.PosMod(blockIndex, NumBlockIndex);
 
         UpdateStatusText();
+
+        if (blockIndex == pieces.Count + 2) {
+            foreach (var targetShapeBlock in targetShapeBlocks) targetShapeBlock.Show();
+            for (var i = 0; i < pieces.Count; i++)
+                EditDisablePiece(i);
+        }
+        else {
+            foreach (var targetShapeBlock in targetShapeBlocks) targetShapeBlock.Hide();
+        }
+
         if (blockIndex >= pieces.Count)
             for (var i = 0; i < pieces.Count; i++)
                 EditEnablePiece(i, true);
@@ -204,6 +253,7 @@ internal partial class EditMode : Node3D {
 
         pieces.Clear();
         pieceStates.Clear();
+        targetShapeBlocks.Clear();
 
         foreach (var puzzlePiece in puzzleNode.PuzzlePieceNodes) {
             pieceStates.Add(puzzlePiece.Transform);
@@ -225,14 +275,27 @@ internal partial class EditMode : Node3D {
             pieces.Add(piece);
         }
 
+        foreach (var p in puzzleNode.PuzzleData.TargetShape) {
+            AddTargetBlock(p);
+        }
+
         blockIndex = pieces.Count;
         BlockIndexUpdate();
+    }
+
+    private void AddTargetBlock(Vector3 pos) {
+        var block = new BuildingBlock(Color.Color8(255, 100, 0), 0b1000u);
+        if (blockIndex != pieces.Count + 2)
+            block.Hide();
+        block.Position = pos;
+        targetShapeBlocks.Add(block);
+        puzzleNode.AddChild(block);
     }
 
     private bool TryPlaceTargetBlock() {
         if (blockIndex == pieces.Count + 1) return false;
 
-        uint collsionMask = blockIndex == pieces.Count ? 0b011u : 0b100u;
+        uint collisionMask = blockIndex == pieces.Count + 2 ? 0b1000u : blockIndex == pieces.Count ? 0b011u : 0b100u;
 
         var spaceState = GetWorld3D().DirectSpaceState;
         var mousePos = GetViewport().GetMousePosition();
@@ -240,26 +303,38 @@ internal partial class EditMode : Node3D {
         var origin = camera.ProjectRayOrigin(mousePos);
         var normal = camera.ProjectRayNormal(mousePos);
         var end = origin + normal * RayLength;
-        var query = PhysicsRayQueryParameters3D.Create(origin, end, collsionMask);
+        var query = PhysicsRayQueryParameters3D.Create(origin, end, collisionMask);
         var result = spaceState.IntersectRay(query);
 
         if (!IsCollisionValid(result, out var pos)) {
             if (blockIndex == pieces.Count)
                 return false;
 
-            query = PhysicsRayQueryParameters3D.Create(origin, end, 0b011);
+            uint mask = blockIndex == pieces.Count + 2 ? 0b010u : 0b011u;
+            query = PhysicsRayQueryParameters3D.Create(origin, end, mask);
             result = spaceState.IntersectRay(query);
             if (!IsCollisionValid(result, out pos))
                 return false;
         }
 
-        if (CheckForBlock(pos, out int blockIndex2, out var otherBlock)) {
+        if (blockIndex == pieces.Count + 2) {
+            if (CheckForBlockTarget(pos))
+                return false;
+        }
+        else if (CheckForBlock(pos, out int blockIndex2, out var otherBlock)) {
             // GD.Print("removing block.");
             if (blockIndex2 == blockIndex) return false;
             HandleRemoved(ref blockIndex2, otherBlock);
         }
 
         BuildingBlock block;
+        if (blockIndex == pieces.Count + 2) {
+            AddTargetBlock(pos);
+            BuildTargetShape();
+            placeSoundPlayer.Play();
+            return true;
+        }
+
         if (blockIndex == pieces.Count) {
             List<BuildingBlock> piece = new();
             pieceStates.Add(Transform3D.Identity);
@@ -313,7 +388,9 @@ internal partial class EditMode : Node3D {
     }
 
     private bool TryRemoveTargetBlock() {
-        if (blockIndex >= pieces.Count) return false;
+        if (blockIndex >= pieces.Count && blockIndex != pieces.Count + 2) return false;
+
+        uint collisionMask = blockIndex == pieces.Count + 2 ? 0b1000u : 0b100u;
 
         var spaceState = GetWorld3D().DirectSpaceState;
         var mousePos = GetViewport().GetMousePosition();
@@ -321,10 +398,20 @@ internal partial class EditMode : Node3D {
         var origin = camera.ProjectRayOrigin(mousePos);
         var normal = camera.ProjectRayNormal(mousePos);
         var end = origin + normal * RayLength;
-        var query = PhysicsRayQueryParameters3D.Create(origin, end, 0b100);
+        var query = PhysicsRayQueryParameters3D.Create(origin, end, collisionMask);
         var result = spaceState.IntersectRay(query);
 
         if (!result.TryGetValue("collider", out var collider) || collider.Obj is not BuildingBlock block) return false;
+
+        if (blockIndex == pieces.Count + 2) {
+            if (!targetShapeBlocks.Contains(block)) return false;
+            targetShapeBlocks.Remove(block);
+            block.QueueFree();
+            BuildTargetShape();
+            deleteSoundPlayer.Play();
+            return true;
+        }
+
         if (!pieces[blockIndex].Contains(block)) return false;
 
         HandleRemoved(ref blockIndex, block);
@@ -385,6 +472,15 @@ internal partial class EditMode : Node3D {
         }
 
         block = null;
+        return false;
+    }
+
+    private bool CheckForBlockTarget(Vector3 position) {
+        foreach (var b in targetShapeBlocks) {
+            if (!(b.Position.DistanceSquaredTo(position) < 0.1)) continue;
+            return true;
+        }
+
         return false;
     }
 }

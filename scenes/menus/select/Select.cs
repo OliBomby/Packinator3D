@@ -89,10 +89,9 @@ public partial class Select : Control
 
 		var viewScene = (ViewScene)ResourceLoader.Load<PackedScene>("res://scenes/view/view.tscn").Instantiate();
 		viewScene.IsEdit = edit;
-		viewScene.IsPlay = solutionIndex < 0;
-		viewScene.GetNode<PuzzleNode>("PuzzleNode").LoadData(puzzle, solutionIndex, true);
+		viewScene.IsPlay = solutionIndex < 0 && !edit;
+		viewScene.GetNode<PuzzleNode>("PuzzleNode").LoadData(puzzle, solutionIndex, !edit);
 		var placementController = viewScene.GetNode<BlockPlacementController>("BlockPlacementController");
-		placementController.ViewSolution = solutionIndex;
 		placementController.IsSolved = solutionIndex >= 0;
 
 		// Play sound
@@ -158,9 +157,13 @@ public partial class Select : Control
 		var puzzle = GetSelectedPuzzle();
 		if (puzzle is null) return;
 
-		if (puzzle.Solutions.Count == 1) {
-			LoadPuzzle(puzzle, 0, true);
-			return;
+		switch (puzzle.Solutions.Count) {
+			case 0:
+				LoadPuzzle(puzzle, -1, true);
+				return;
+			case 1:
+				LoadPuzzle(puzzle, 0, true);
+				return;
 		}
 
 		currentSolutionMenuPuzzle = puzzle;

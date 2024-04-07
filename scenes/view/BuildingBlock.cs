@@ -10,9 +10,10 @@ public partial class BuildingBlock : StaticBody3D
 	private readonly MeshInstance3D renderMesh;
 	private const uint SelectedCollisionLayer = 0b101;
 	private const uint DeselectedCollisionLayer = 0b001;
+	private readonly uint? collisionLayer;
 
-
-	public BuildingBlock(Color? color = null) {
+	public BuildingBlock(Color? color = null, uint? collisionLayer = null) {
+		this.collisionLayer = collisionLayer;
 		PositionInShape = new Vector3();
 		Color = color.GetValueOrDefault(Color.Color8(255, 100, 0));
 
@@ -67,17 +68,22 @@ public partial class BuildingBlock : StaticBody3D
 	private void CreateCollisionObject() {
 		uint shapeOwner = CreateShapeOwner(this);
 		ShapeOwnerAddShape(shapeOwner, new BoxShape3D());
-		CollisionMask = SelectedCollisionLayer;
-		CollisionLayer = SelectedCollisionLayer;
+		CollisionLayer = collisionLayer ?? SelectedCollisionLayer;
 	}
 
 	public void DisableCollisions() {
-		CollisionMask = DeselectedCollisionLayer;
+		if (collisionLayer.HasValue) {
+			CollisionLayer = 0;
+			return;
+		}
 		CollisionLayer = DeselectedCollisionLayer;
 	}
 
 	public void EnableCollisions() {
-		CollisionMask = SelectedCollisionLayer;
+		if (collisionLayer.HasValue) {
+			CollisionLayer = collisionLayer.Value;
+			return;
+		}
 		CollisionLayer = SelectedCollisionLayer;
 	}
 }
