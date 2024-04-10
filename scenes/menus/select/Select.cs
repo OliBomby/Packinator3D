@@ -87,6 +87,15 @@ public partial class Select : Control
 	private void LoadPuzzle(Puzzle puzzle, int solutionIndex=-1, bool edit=false) {
 		if (puzzle == null) return;
 
+		// We do not allow editing the normal levels,
+		// so we make a copy of the puzzle to edit and add it to the custom levels
+		if (edit && SaveManager.SaveData.Puzzles.Contains(puzzle)) {
+			var newPuzzle = puzzle.Copy();
+			newPuzzle.Name = puzzle.Name + " (Edited)";
+			SaveManager.SaveData.CustomPuzzles.Add(newPuzzle);
+			puzzle = newPuzzle;
+		}
+
 		var viewScene = (ViewScene)ResourceLoader.Load<PackedScene>("res://scenes/view/view.tscn").Instantiate();
 		viewScene.IsEdit = edit;
 		viewScene.IsPlay = solutionIndex < 0 && !edit;
@@ -201,16 +210,6 @@ public partial class Select : Control
 
 	private void OnSolutionMenuIndexPressed(int index) {
 		if (currentSolutionMenuPuzzle is null) return;
-
-		// We do not allow editing the normal levels,
-		// so we make a copy of the puzzle to edit and add it to the custom levels
-		if (currentSolutionMenuEditMode && SaveManager.SaveData.Puzzles.Contains(currentSolutionMenuPuzzle)) {
-			var newPuzzle = currentSolutionMenuPuzzle.Copy();
-			newPuzzle.Name = currentSolutionMenuPuzzle.Name + " (Edited)";
-			SaveManager.SaveData.CustomPuzzles.Add(newPuzzle);
-			currentSolutionMenuPuzzle = newPuzzle;
-		}
-
 		LoadPuzzle(currentSolutionMenuPuzzle, index, currentSolutionMenuEditMode);
 	}
 

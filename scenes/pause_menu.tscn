@@ -93,6 +93,7 @@ Sound = ExtResource("3_cikd0")
 
 [node name="EditTargetShape" type="CheckButton" parent="."]
 visible = false
+layout_mode = 0
 offset_left = 40.0
 offset_top = 252.0
 offset_right = 249.0
