@@ -1,6 +1,6 @@
 # PACKINATOR 3D
 
-PACKINATOR 3D is a game for visualizing and solving 3D block packing puzzles.
+PACKINATOR 3D is a game about visualizing and solving 3D block packing puzzles.
 
 [![PACKINATOR 3D TRAILER](https://img.youtube.com/vi/LPEFWYd_cEs/0.jpg)](https://www.youtube.com/watch?v=LPEFWYd_cEs)
 
